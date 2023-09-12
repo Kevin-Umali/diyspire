@@ -1,0 +1,28 @@
+{
+  "name": "make-me-project",
+  "version": "1.0.0",
+  "description": "A platform that provides unique DIY (Do It Yourself) project suggestions using OpenAI. Explore a variety of projects, their materials, and steps to create them.",
+  "main": "index.js",
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  },
+  "scripts": {
+    "dev:client": "cd client && npm run dev",
+    "build:client": "cd client && npm run build",
+    "dev:server": "cd server && npm run watch:dev",
+    "build:server": "cd server && npm run build",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "build": "concurrently \"npm run build:client\" \"npm run build:server\"",
+    "start": "concurrently \"cd server && npm start\" \"cd client && npm run preview\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kevin-Umali/make-me.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kevin-Umali/make-me/issues"
+  },
+  "homepage": "https://github.com/Kevin-Umali/make-me#readme"
+}
