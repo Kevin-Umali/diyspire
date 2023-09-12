@@ -1,7 +1,5 @@
-// src/components/MaterialInput.tsx
-
 import { FC } from "react";
-import { Input, VStack, Button, IconButton, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { Input, VStack, Button, IconButton, InputGroup, InputRightElement, HStack, Text } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 
 interface MaterialInputProps {
@@ -14,11 +12,6 @@ const MaterialInput: FC<MaterialInputProps> = ({ materials, setMaterials }) => {
     const updatedMaterials = [...materials];
     updatedMaterials[index] = value;
     setMaterials(updatedMaterials);
-
-    // Check if the current input being edited is the last one and it's not empty
-    // if (index === materials.length - 1 && value.trim() !== "") {
-    //   setMaterials([...updatedMaterials, ""]); // Append an empty input
-    // }
   };
 
   const handleDeleteInput = (index: number) => {
@@ -28,20 +21,26 @@ const MaterialInput: FC<MaterialInputProps> = ({ materials, setMaterials }) => {
   };
 
   const handleAddMore = () => {
-    setMaterials([...materials, ""]); // Append an empty input
+    setMaterials([...materials, ""]);
   };
 
   return (
-    <VStack spacing={4}>
+    <VStack spacing={4} align="stretch">
+      <HStack justify="space-between">
+        <Text fontSize="md">List of materials:</Text>
+        <Button width="150px" onClick={handleAddMore}>
+          Add More
+        </Button>
+      </HStack>
+
       {materials.map((material, index) => (
-        <InputGroup key={index} width="100%">
+        <InputGroup key={index}>
           <Input flex="1" placeholder="Type a material" required value={material} onChange={(e) => handleInputChange(index, e.target.value)} />
           <InputRightElement>
             <IconButton aria-label="Delete material" icon={<CloseIcon />} isDisabled={materials.length === 1} onClick={() => handleDeleteInput(index)} size="sm" />
           </InputRightElement>
         </InputGroup>
       ))}
-      <Button onClick={handleAddMore}>Add More</Button>
     </VStack>
   );
 };

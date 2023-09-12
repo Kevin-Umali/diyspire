@@ -26,7 +26,7 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects }) => {
 
       <TabPanels>
         {projects.map((project, index) => (
-          <TabPanel key={index} p={4}>
+          <TabPanel key={index} p={4} border="1px solid" borderColor="gray.200" borderRadius="md">
             <Heading size="md" mb={3}>
               {project.title}
             </Heading>

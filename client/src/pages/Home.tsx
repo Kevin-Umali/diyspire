@@ -15,14 +15,19 @@ import {
   StepStatus,
   Stepper,
   useSteps,
-  Spinner,
   useToast,
+  Flex,
+  Divider,
+  Icon,
 } from "@chakra-ui/react";
 import MaterialInput from "../components/MaterialInput";
 import CategoryFilter from "../components/CategoryFilter";
 import DifficultyFilter from "../components/DifficultyFilter";
 import { generateProjectIdeas } from "../api/open-ai-api";
 import ProjectTabs from "../components/ProjectTabs";
+import LoadingComponent from "../components/LoadingComponen";
+import { FaRegLightbulb, FaInfoCircle } from "react-icons/fa";
+import { categories } from "../constants";
 
 const steps = [
   { title: "Materials", description: "List your available materials or leave it as empty to use random materials" },
@@ -40,8 +45,6 @@ const Home = () => {
   });
   const [projects, setProjects] = useState([]);
 
-  const mockCategories = ["Anything", "Home Decor", "Fashion", "Garden Projects", "Kids Crafts"];
-
   const toast = useToast();
 
   const handleSubmit = async () => {
@@ -49,7 +52,7 @@ const Home = () => {
       goToNext();
 
       const response = await generateProjectIdeas(materials, selectedDifficulty, selectedCategory);
-      // Check if the data exists in the response
+
       if (response.data?.ideas) {
         setProjects(response.data.ideas);
 
@@ -71,10 +74,28 @@ const Home = () => {
 
   return (
     <VStack spacing={10} p={5} width="100%">
-      <Heading as="h1" mb={5}>
-        DIY Project Ideas
-      </Heading>
-      <Text mb={5}>Ever had a bunch of random materials and thought, "What can I make with these?" Type in what you've got, and we'll give you some DIY project ideas to consider!</Text>
+      <Box width="100%" bgGradient="linear(to-r, teal.400, blue.500)" borderRadius="lg" p={5} boxShadow="lg">
+        <Heading as="h1" mb={3} fontSize={["lg", "xl", "2xl"]}>
+          <Icon as={FaRegLightbulb} w={6} h={6} mr={2} />
+          DIY Project Ideas
+        </Heading>
+
+        <Text fontSize={["sm", "md"]} mb={3}>
+          Ever found yourself gazing at random materials scattered around your home, your imagination itching to craft something unique? You're not alone. Here at DIY Project Ideas, we're driven by
+          the joy of creation. Whether you have colorful strings, spare wood planks, beads, or even old magazines, there's a world of possibilities waiting for you. Feed your creativity and turn your
+          materials into masterpieces. Simply input what you have, sit back, and let us provide you with a treasure trove of DIY projects tailored just for you. Ready to embark on a journey of
+          creation?
+        </Text>
+
+        <Divider my={3} />
+
+        <Box display="flex" alignItems="center">
+          <Icon as={FaInfoCircle} w={5} h={5} mr={2} />
+          <Text fontSize="sm" fontStyle="italic" color="gray.600">
+            Note: Our system caches suggestions for 10 minutes. If you re-enter the same items within this timeframe, you'll see the same suggestions.
+          </Text>
+        </Box>
+      </Box>
 
       <Stepper index={activeStep} width="100%">
         {steps.map((step, index) => (
@@ -94,21 +115,27 @@ const Home = () => {
       </Stepper>
 
       {activeStep === 0 && (
-        <Box width="100%">
+        <Box width="100%" p={4} borderWidth="1px" borderRadius="md" borderColor="gray.200">
           <MaterialInput materials={materials} setMaterials={setMaterials} />
-          <DifficultyFilter onDifficultyChange={setSelectedDifficulty} />
-          <CategoryFilter categories={mockCategories} onCategoryChange={setSelectedCategory} />
-          <Button mt={4} onClick={handleSubmit}>
-            Next
-          </Button>
+          <Box mt={4}>
+            {" "}
+            <DifficultyFilter onDifficultyChange={setSelectedDifficulty} />
+          </Box>
+          <Box mt={4}>
+            {" "}
+            <CategoryFilter categories={categories} onCategoryChange={setSelectedCategory} />
+          </Box>
+          <Flex mt={4} justifyContent="flex-end">
+            {" "}
+            <Button width="150px" onClick={handleSubmit}>
+              {" "}
+              Next
+            </Button>
+          </Flex>
         </Box>
       )}
-      {activeStep === 1 && (
-        <Box width="100%" textAlign="center" pt={5}>
-          <Spinner size="xl" />
-          <Text mt={4}>Generating project ideas...</Text>
-        </Box>
-      )}
+
+      {activeStep === 1 && <LoadingComponent />}
       {activeStep === 2 && (
         <Box width="100%">
           <ProjectTabs projects={projects} />
