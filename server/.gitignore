@@ -1,6 +1,7 @@
 # Node.js related
 node_modules/
 dist/
+package-lock.json
 
 # Build artifacts
 *.js
