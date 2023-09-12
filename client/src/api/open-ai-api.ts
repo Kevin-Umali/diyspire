@@ -1,4 +1,4 @@
-const API_URL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://your-production-api-url.com";
+const API_URL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : import.meta.env.VITE_OPEN_AI_API_URL;
 
 export const generateProjectIdeas = async (materials: string[], difficulty: string, category: string, tools: string[], time: number, budget: number, endPurpose: string) => {
   const requestBody = {
