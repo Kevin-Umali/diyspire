@@ -3,6 +3,9 @@ import { Heading, Tab, TabList, TabPanel, Tabs, Text, useBreakpointValue, List, 
 interface Project {
   title: string;
   materials: string[];
+  tools: string[];
+  time: string;
+  budget: string;
   steps: string[];
   description: string;
 }
@@ -32,6 +35,15 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects }) => {
             </Heading>
             <Text fontSize="sm" mb={2}>
               <b>Materials:</b> {project.materials.join(", ")}
+            </Text>
+            <Text fontSize="sm" mb={2}>
+              <b>Tools:</b> {project.tools.join(", ")}
+            </Text>
+            <Text fontSize="sm" mb={2}>
+              <b>Time:</b> {project.time}
+            </Text>
+            <Text fontSize="sm" mb={2}>
+              <b>Budget:</b> {project.budget}
             </Text>
             <Divider my={2} />
             <Text fontSize="sm" mb={2}>

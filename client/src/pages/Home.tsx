@@ -25,9 +25,14 @@ import CategoryFilter from "../components/CategoryFilter";
 import DifficultyFilter from "../components/DifficultyFilter";
 import { generateProjectIdeas } from "../api/open-ai-api";
 import ProjectTabs from "../components/ProjectTabs";
-import LoadingComponent from "../components/LoadingComponen";
+import LoadingComponent from "../components/LoadingComponent";
 import { FaRegLightbulb, FaInfoCircle } from "react-icons/fa";
 import { categories } from "../constants";
+import BudgetFilter from "../components/BudgetFilter";
+import PurposeFilter from "../components/PurposeFilter";
+import TimeAvailabilityFilter from "../components/TimeAvailabilityFilter";
+import ToolsAvailableInput from "../components/ToolsAvailableInput";
+import SafetyCheck from "../components/SafetyCheck";
 
 const steps = [
   { title: "Materials", description: "List your available materials or leave it as empty to use random materials" },
@@ -39,19 +44,28 @@ const Home = () => {
   const [materials, setMaterials] = useState([""]);
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("Anything");
+  const [availableTime, setAvailableTime] = useState(1);
+  const [budget, setBudget] = useState(0);
+  const [tools, setTools] = useState([""]);
+  const [purpose, setPurpose] = useState("");
+  const [safetyConfirmed, setSafetyConfirmed] = useState(false);
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const { activeStep, goToNext, goToPrevious } = useSteps({
     index: 0,
     count: steps.length,
   });
+
   const [projects, setProjects] = useState([]);
 
   const toast = useToast();
 
   const handleSubmit = async () => {
     try {
+      if (!safetyConfirmed) throw new Error("Please check the safety checkbox");
+
       goToNext();
 
-      const response = await generateProjectIdeas(materials, selectedDifficulty, selectedCategory);
+      const response = await generateProjectIdeas(materials, selectedDifficulty, selectedCategory, tools, availableTime, budget, purpose);
 
       if (response.data?.ideas) {
         setProjects(response.data.ideas);
@@ -125,6 +139,32 @@ const Home = () => {
             {" "}
             <CategoryFilter categories={categories} onCategoryChange={setSelectedCategory} />
           </Box>
+
+          <Box mt={4}>
+            <Button onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}>{showAdvancedOptions ? "Hide Advanced Options" : "Show Advanced Options"}</Button>
+          </Box>
+
+          {showAdvancedOptions && (
+            <Box mt={4}>
+              <Box mt={4}>
+                <TimeAvailabilityFilter onTimeChange={setAvailableTime} />
+              </Box>
+              <Box mt={4}>
+                <BudgetFilter onBudgetChange={setBudget} />
+              </Box>
+              <Box mt={4}>
+                <ToolsAvailableInput tools={tools} setTools={setTools} />
+              </Box>
+              <Box mt={4}>
+                <PurposeFilter onPurposeChange={setPurpose} />
+              </Box>
+            </Box>
+          )}
+
+          <Box mt={4}>
+            <SafetyCheck onSafetyConfirmation={setSafetyConfirmed} />
+          </Box>
+
           <Flex mt={4} justifyContent="flex-end">
             {" "}
             <Button width="150px" onClick={handleSubmit}>
