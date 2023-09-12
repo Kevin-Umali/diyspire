@@ -19,6 +19,7 @@ dist/
 # Environment variables
 .env
 .env.*
+!.env.example
 
 # Compiled TypeScript
 tsconfig.tsbuildinfo
