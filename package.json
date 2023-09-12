@@ -12,7 +12,7 @@
     "dev:server": "cd server && npm run watch:dev",
     "build:server": "cd server && npm run build",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "build": "concurrently \"npm run build:client\" \"npm run build:server\"",
+    "build": "npm install && concurrently \"npm run build:client\" \"npm run build:server\"",
     "start": "concurrently \"cd server && npm start\" \"cd client && npm run preview\""
   },
   "repository": {
