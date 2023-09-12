@@ -49,7 +49,7 @@ router.post(
       ${
         budget === 0
           ? "Please ensure the project does not require any additional budget outside of the provided materials."
-          : `The available budget is maximum ₱${budget}.`
+          : `The available budget is maximum of ₱${budget} and minimum of ₱0.`
       }
       ${
         endPurpose !== "other"
