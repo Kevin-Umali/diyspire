@@ -28,10 +28,22 @@ const cache = apicache.options({
 }).middleware;
 
 app.use(helmet());
+
+const allowedOrigins = process.env
+  .WEBSITE_URL!.split(",")
+  .map((origin) => origin.trim());
+
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production" ? process.env.WEBSITE_URL : "*",
+    origin: function (origin, callback) {
+      if (process.env.NODE_ENV !== "production") {
+        callback(null, true);
+      } else if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     optionsSuccessStatus: 200,
   }),
 );
