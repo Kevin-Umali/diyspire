@@ -25,3 +25,9 @@ export const categories = [
   "Baking & Food Crafts",
   "Travel & Adventure DIYs",
 ];
+
+export const steps = [
+  { title: "Materials", description: "List your available materials" },
+  { title: "Generate", description: "Create project ideas" },
+  { title: "View", description: "See the generated projects" },
+];

@@ -19,6 +19,7 @@ import {
   Flex,
   Divider,
   Icon,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import MaterialInput from "../components/MaterialInput";
 import CategoryFilter from "../components/CategoryFilter";
@@ -27,21 +28,18 @@ import { generateProjectIdeas } from "../api/open-ai-api";
 import ProjectTabs from "../components/ProjectTabs";
 import LoadingComponent from "../components/LoadingComponent";
 import { FaRegLightbulb, FaInfoCircle } from "react-icons/fa";
-import { categories } from "../constants";
+import { categories, steps } from "../constants";
 import BudgetFilter from "../components/BudgetFilter";
 import PurposeFilter from "../components/PurposeFilter";
 import TimeAvailabilityFilter from "../components/TimeAvailabilityFilter";
 import ToolsAvailableInput from "../components/ToolsAvailableInput";
 import SafetyCheck from "../components/SafetyCheck";
 
-const steps = [
-  { title: "Materials", description: "List your available materials or leave it as empty to use random materials" },
-  { title: "Generate", description: "Create project ideas" },
-  { title: "View", description: "See the generated projects" },
-];
+type Orientation = "horizontal" | "vertical";
 
 const Home = () => {
   const [materials, setMaterials] = useState([""]);
+  const [onlySpecified, setOnlySpecified] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("Anything");
   const [availableTime, setAvailableTime] = useState(1);
@@ -57,6 +55,11 @@ const Home = () => {
 
   const [projects, setProjects] = useState([]);
 
+  const orientation: Orientation | undefined = useBreakpointValue({
+    base: "vertical",
+    md: "horizontal",
+  }) as Orientation | undefined;
+
   const toast = useToast();
 
   const handleSubmit = async () => {
@@ -65,7 +68,7 @@ const Home = () => {
 
       goToNext();
 
-      const response = await generateProjectIdeas(materials, selectedDifficulty, selectedCategory, tools, availableTime, budget, purpose);
+      const response = await generateProjectIdeas(materials, onlySpecified, selectedDifficulty, selectedCategory, tools, availableTime, budget, purpose);
 
       if (response.data?.ideas) {
         setProjects(response.data.ideas);
@@ -111,7 +114,7 @@ const Home = () => {
         </Box>
       </Box>
 
-      <Stepper index={activeStep} width="100%">
+      <Stepper index={activeStep} width="100%" orientation={orientation}>
         {steps.map((step, index) => (
           <Step key={index}>
             <StepIndicator>
@@ -130,7 +133,7 @@ const Home = () => {
 
       {activeStep === 0 && (
         <Box width="100%" p={4} borderWidth="1px" borderRadius="md" borderColor="gray.200">
-          <MaterialInput materials={materials} setMaterials={setMaterials} />
+          <MaterialInput materials={materials} setMaterials={setMaterials} onlySpecified={onlySpecified} setOnlySpecified={setOnlySpecified} />
           <Box mt={4}>
             <DifficultyFilter onDifficultyChange={setSelectedDifficulty} />
           </Box>
