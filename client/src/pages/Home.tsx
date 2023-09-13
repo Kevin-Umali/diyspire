@@ -50,7 +50,7 @@ const Home = () => {
   const [purpose, setPurpose] = useState("");
   const [safetyConfirmed, setSafetyConfirmed] = useState(false);
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
-  const { activeStep, goToNext, goToPrevious } = useSteps({
+  const { activeStep, goToNext, goToPrevious, setActiveStep } = useSteps({
     index: 0,
     count: steps.length,
   });
@@ -88,7 +88,7 @@ const Home = () => {
 
   return (
     <VStack spacing={10} p={5} width="100%">
-      <Box width="100%" bgGradient="linear(to-r, teal.400, blue.500)" borderRadius="lg" p={5} boxShadow="lg">
+      <Box width="100%" overflowX="auto" bgGradient="linear(to-r, teal.400, blue.500)" borderRadius="lg" p={5} boxShadow="lg">
         <Heading as="h1" mb={3} fontSize={["lg", "xl", "2xl"]}>
           <Icon as={FaRegLightbulb} w={6} h={6} mr={2} />
           DIY Project Ideas
@@ -132,11 +132,9 @@ const Home = () => {
         <Box width="100%" p={4} borderWidth="1px" borderRadius="md" borderColor="gray.200">
           <MaterialInput materials={materials} setMaterials={setMaterials} />
           <Box mt={4}>
-            {" "}
             <DifficultyFilter onDifficultyChange={setSelectedDifficulty} />
           </Box>
           <Box mt={4}>
-            {" "}
             <CategoryFilter categories={categories} onCategoryChange={setSelectedCategory} />
           </Box>
 
@@ -161,24 +159,38 @@ const Home = () => {
             </Box>
           )}
 
-          <Box mt={4}>
-            <SafetyCheck onSafetyConfirmation={setSafetyConfirmed} />
-          </Box>
+          <Flex mt={4} justifyContent="space-between" alignItems="center">
+            <Box>
+              <SafetyCheck onSafetyConfirmation={setSafetyConfirmed} />
+            </Box>
 
-          <Flex mt={4} justifyContent="flex-end">
-            {" "}
-            <Button width="150px" onClick={handleSubmit}>
-              {" "}
-              Next
-            </Button>
+            <Flex>
+              <Button variant="outline" width="150px" onClick={handleSubmit}>
+                Next
+              </Button>
+            </Flex>
           </Flex>
         </Box>
       )}
 
       {activeStep === 1 && <LoadingComponent />}
       {activeStep === 2 && (
-        <Box width="100%">
+        <Box width="100%" p={4} borderWidth="1px" borderRadius="md" borderColor="gray.200">
           <ProjectTabs projects={projects} />
+
+          <Flex mt={4} justifyContent="flex-end">
+            <Button
+              variant="outline"
+              width="250px"
+              onClick={() => {
+                setProjects([]);
+                setActiveStep(0);
+              }}
+              mr={4}
+            >
+              Generate new ideas
+            </Button>
+          </Flex>
         </Box>
       )}
     </VStack>

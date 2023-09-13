@@ -28,7 +28,7 @@ const MaterialInput: FC<MaterialInputProps> = ({ materials, setMaterials }) => {
     <VStack spacing={4} align="stretch">
       <HStack justify="space-between">
         <Text fontSize="md">List of materials:</Text>
-        <Button width="150px" onClick={handleAddMore}>
+        <Button width="150px" variant="outline" onClick={handleAddMore}>
           Add More
         </Button>
       </HStack>

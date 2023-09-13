@@ -19,8 +19,6 @@ export const generateProjectIdeas = async (materials: string[], difficulty: stri
     body: JSON.stringify(requestBody),
   });
 
-  console.log(JSON.stringify(requestBody));
-
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }

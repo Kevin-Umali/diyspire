@@ -12,7 +12,7 @@ const DifficultyFilter: React.FC<DifficultyFilterProps> = ({ onDifficultyChange 
       </HStack>
 
       <RadioGroup defaultValue="all" onChange={onDifficultyChange}>
-        <Stack spacing={5} direction="row">
+        <Stack spacing={5} direction={{ base: "column", md: "row" }}>
           <Radio value="all">All</Radio>
           <Radio value="beginner">Beginner</Radio>
           <Radio value="intermediate">Intermediate</Radio>

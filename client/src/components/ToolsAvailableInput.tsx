@@ -31,7 +31,9 @@ const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setToo
             </InputRightElement>
           </InputGroup>
         ))}
-        <Button onClick={() => setTools([...tools, ""])}>Add another tool</Button>
+        <Button variant="outline" onClick={() => setTools([...tools, ""])}>
+          Add another tool
+        </Button>
       </Stack>
     </Box>
   );

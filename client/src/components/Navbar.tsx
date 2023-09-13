@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      padding="1.5rem"
+      padding={{ base: "1rem", md: "1.5rem" }}
       bg={colorMode === "light" ? "white" : "gray.800"}
       color={colorMode === "light" ? "gray.600" : "white"}
       boxShadow="sm"
@@ -19,8 +19,8 @@ const Navbar: React.FC = () => {
     >
       <Flex align="center" mr={5}>
         <Box display={{ base: "block", md: "none" }} mr="2"></Box>
-        <Box display={{ base: "none", md: "block" }}>
-          <Heading size="md">MakeMeDIYspire</Heading>
+        <Box>
+          <Heading size={{ base: "sm", md: "md" }}>MakeMeDIYspire</Heading>
         </Box>
       </Flex>
 

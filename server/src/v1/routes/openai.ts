@@ -47,9 +47,7 @@ router.post(
           : `The available time to complete the project is ${time} hours.`
       }
       ${
-        budget === 0
-          ? "Please ensure the project does not require any additional budget outside of the provided materials."
-          : `The available budget is maximum of ₱${budget} and minimum of ₱0.`
+        budget === 0 ? "" : `The available budget ranges from ₱0 to ₱${budget}.`
       }
       ${
         endPurpose !== "other"

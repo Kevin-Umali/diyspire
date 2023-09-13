@@ -1,7 +1,7 @@
 import { Box, Text, Select } from "@chakra-ui/react";
 
 interface PurposeFilterProps {
-  onPurposeChange: (purpose: string) => void; // assuming purpose is a string.
+  onPurposeChange: (purpose: string) => void;
 }
 
 const PurposeFilter: React.FC<PurposeFilterProps> = ({ onPurposeChange }) => {
