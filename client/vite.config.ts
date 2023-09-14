@@ -9,14 +9,14 @@ export default defineConfig({
       usePolling: true,
     },
   },
-  // build: {
-  //   rollupOptions: {
-  //     output: {
-  //       manualChunks: {
-  //         vendor: ["react", "react-dom", "@chakra-ui/icons", "@chakra-ui/react", "@emotion/react", "@emotion/styled", "framer-motion", "react-router-dom", "react-icons"],
-  //       },
-  //     },
-  //   },
-  //   chunkSizeWarningLimit: 700, // Adjust this value based on your needs
-  // },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "@chakra-ui/icons", "@chakra-ui/react", "@emotion/react", "@emotion/styled", "framer-motion", "react-router-dom", "react-icons"],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 700, // Adjust this value based on your needs
+  },
 });
