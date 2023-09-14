@@ -1,16 +1,15 @@
-import { Radio, RadioGroup, Stack, HStack, Text, VStack } from "@chakra-ui/react";
+import { Radio, RadioGroup, Stack, HStack, Text, VStack, BoxProps } from "@chakra-ui/react";
 
-interface DifficultyFilterProps {
+interface DifficultyFilterProps extends BoxProps {
   onDifficultyChange: (difficulty: string) => void;
 }
 
-const DifficultyFilter: React.FC<DifficultyFilterProps> = ({ onDifficultyChange }) => {
+const DifficultyFilter: React.FC<DifficultyFilterProps> = ({ onDifficultyChange, ...props }) => {
   return (
-    <VStack spacing={4} align="stretch">
+    <VStack spacing={4} align="stretch" {...props}>
       <HStack spacing={4} alignItems="center">
         <Text fontSize="md">Difficulty:</Text>
       </HStack>
-
       <RadioGroup defaultValue="all" onChange={onDifficultyChange}>
         <Stack spacing={5} direction={{ base: "column", md: "row" }}>
           <Radio value="all">All</Radio>

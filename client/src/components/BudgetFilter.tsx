@@ -1,14 +1,22 @@
-import { Box, Text, NumberInput, NumberInputField } from "@chakra-ui/react";
+import { Box, Text, NumberInput, NumberInputField, BoxProps } from "@chakra-ui/react";
+import { useCallback } from "react";
 
-interface BudgetFilterProps {
+interface BudgetFilterProps extends BoxProps {
   onBudgetChange: (budget: number) => void;
 }
 
-const BudgetFilter: React.FC<BudgetFilterProps> = ({ onBudgetChange }) => {
+const BudgetFilter: React.FC<BudgetFilterProps> = ({ onBudgetChange, ...props }) => {
+  const handleChange = useCallback(
+    (value: string | number) => {
+      onBudgetChange(Number(value));
+    },
+    [onBudgetChange]
+  );
+
   return (
-    <Box>
+    <Box {...props}>
       <Text mb={2}>Budget (in PHP):</Text>
-      <NumberInput min={0} onChange={(value) => onBudgetChange(Number(value))}>
+      <NumberInput min={0} onChange={handleChange}>
         <NumberInputField />
       </NumberInput>
     </Box>
