@@ -8,11 +8,11 @@ body {
   box-sizing: border-box;
 }
 
-/* Style the root container to take up the entire viewport */
 #root {
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 100vh; /* Ensures that the root element takes up the full viewport height */
 }

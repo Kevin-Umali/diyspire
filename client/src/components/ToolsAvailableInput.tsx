@@ -1,26 +1,33 @@
-import { Box, Text, Input, Stack, Button, InputGroup, InputRightElement, IconButton } from "@chakra-ui/react";
+import { Box, Text, Input, Stack, Button, InputGroup, InputRightElement, IconButton, BoxProps } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
+import { useCallback } from "react";
 
-interface ToolsAvailableInputProps {
+interface ToolsAvailableInputProps extends BoxProps {
   tools: string[];
   setTools: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setTools }) => {
-  const handleInputChange = (index: number, value: string) => {
-    const newTools = [...tools];
-    newTools[index] = value;
-    setTools(newTools);
-  };
+const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setTools, ...props }) => {
+  const handleInputChange = useCallback(
+    (index: number, value: string) => {
+      const newTools = [...tools];
+      newTools[index] = value;
+      setTools(newTools);
+    },
+    [tools, setTools]
+  );
 
-  const handleDeleteTool = (index: number) => {
-    const newTools = [...tools];
-    newTools.splice(index, 1);
-    setTools(newTools);
-  };
+  const handleDeleteTool = useCallback(
+    (index: number) => {
+      const newTools = [...tools];
+      newTools.splice(index, 1);
+      setTools(newTools);
+    },
+    [tools, setTools]
+  );
 
   return (
-    <Box>
+    <Box {...props}>
       <Text mb={2}>Available Tools:</Text>
       <Stack spacing={3}>
         {tools.map((tool, index) => (

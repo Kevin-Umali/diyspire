@@ -1,20 +1,23 @@
-import { useState } from "react";
-import { Box, Text, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@chakra-ui/react";
+import { useState, useCallback } from "react";
+import { Box, Text, Slider, SliderTrack, SliderFilledTrack, SliderThumb, BoxProps } from "@chakra-ui/react";
 
-interface TimeAvailabilityFilterProps {
+interface TimeAvailabilityFilterProps extends BoxProps {
   onTimeChange: (time: number) => void;
 }
 
-const TimeAvailabilityFilter: React.FC<TimeAvailabilityFilterProps> = ({ onTimeChange }) => {
+const TimeAvailabilityFilter: React.FC<TimeAvailabilityFilterProps> = ({ onTimeChange, ...props }) => {
   const [timeValue, setTimeValue] = useState<number>(0);
 
-  const handleSliderChange = (value: number) => {
-    setTimeValue(value);
-    onTimeChange(value);
-  };
+  const handleSliderChange = useCallback(
+    (value: number) => {
+      setTimeValue(value);
+      onTimeChange(value);
+    },
+    [onTimeChange]
+  );
 
   return (
-    <Box>
+    <Box {...props}>
       <Text mb={2}>
         Available Time: {timeValue} hour{timeValue > 1 ? "s" : ""}
       </Text>
