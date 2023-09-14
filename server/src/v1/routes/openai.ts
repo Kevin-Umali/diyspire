@@ -1,12 +1,32 @@
 import express, { Request, Response, NextFunction } from "express";
 import { sendSuccess } from "../../utils/response-template";
+import { ideaValidationSchema } from "../schemas/idea";
+import { validationResult } from "express-validator/src/validation-result";
 
 const router = express.Router();
 
+interface IdeaRequestBody {
+  materials: string[];
+  onlySpecified: boolean;
+  difficulty: string;
+  category: string;
+  tools: string[];
+  time: number;
+  budget: number;
+  endPurpose: string;
+}
+
 router.post(
   "/idea",
+  ideaValidationSchema,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return sendSuccess(res, { errors: errors.array() }, 400);
+      }
+
       const {
         materials,
         onlySpecified,
@@ -16,7 +36,7 @@ router.post(
         time,
         budget,
         endPurpose,
-      } = req.body;
+      }: IdeaRequestBody = req.body;
 
       const openai = req.app.get("openai");
 
