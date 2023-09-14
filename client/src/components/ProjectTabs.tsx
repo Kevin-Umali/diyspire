@@ -3,7 +3,7 @@ import { FaFilePdf, FaShareAlt } from "react-icons/fa";
 import { exportToPDF } from "../utils";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
-export interface Project {
+interface Project {
   title: string;
   materials: string[];
   tools: string[];

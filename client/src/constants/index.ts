@@ -1,4 +1,6 @@
-export const categories = [
+import { Commit, FAQ, Footer, HowToGuide, Steps } from "../types";
+
+export const categories: string[] = [
   "Anything",
   "Home Decor",
   "Fashion",
@@ -26,8 +28,196 @@ export const categories = [
   "Travel & Adventure DIYs",
 ];
 
-export const steps = [
+export const steps: Steps[] = [
   { title: "Materials", description: "List your available materials" },
   { title: "Generate", description: "Create project ideas" },
   { title: "View", description: "See the generated projects" },
 ];
+
+export const footerData: Footer[] = [
+  {
+    label: "Explore",
+    href: "#",
+    links: [
+      { label: "Generate DIY Project Idea", href: "/" },
+      { label: "How-to Guides", href: "/how-to-guide" },
+      { label: "Updates", href: "/updates" },
+    ],
+  },
+  {
+    label: "FAQ",
+    href: "/faq#getting-started",
+    links: [
+      { label: "Getting Started", href: "/faq#getting-started" },
+      { label: "Usage Guidelines", href: "/faq#usage-guidelines" },
+      { label: "Security and Privacy", href: "/faq#security-privacy" },
+      { label: "Feedback and Suggestions", href: "/faq#feedback" },
+    ],
+  },
+  {
+    label: "Social",
+    href: "#",
+    links: [
+      { label: "Email", href: "#" },
+      { label: "Twitter", href: "#" },
+      { label: "Linkedin", href: "#" },
+    ],
+  },
+];
+
+export const faqs: FAQ[] = [
+  {
+    id: "getting-started",
+    question: "Getting Started",
+    answerType: "startedWithLink",
+  },
+  {
+    id: "makemediyspire",
+    question: "What is MakeMeDIYspire?",
+    answer:
+      "MakeMeDIYspire is a revolutionary platform powered by OpenAI. It provides unique DIY (Do It Yourself) project suggestions tailored for enthusiasts of all levels. Our platform not only offers project ideas but also outlines the materials required and the steps to bring these projects to life. Whether you're a seasoned DIYer or just starting, MakeMeDIYspire has something for you!",
+  },
+  {
+    id: "how",
+    question: "How does MakeMeDIYspire work?",
+    answerType: "howWithLink",
+  },
+  {
+    id: "usage-guidelines",
+    question: "Usage Guidelines",
+    answer: "MakeMeDIYspire is entirely free to use. Dive in, explore the multitude of ideas, and get started on your DIY journey!",
+  },
+  {
+    id: "security-privacy",
+    question: "Security and Privacy",
+    answer:
+      "MakeMeDIYspire is a platform solely designed to generate DIY project ideas. We don't store or collect any personal information from our users. Just visit, generate ideas, and rest assured about your online privacy.",
+  },
+  {
+    id: "feedback",
+    question: "How can I give feedback or suggestions?",
+    answerType: "feedbackWithLink",
+  },
+];
+
+export const guides: HowToGuide[] = [
+  {
+    title: "How to use the MakeMeDIYspire DIY Idea Generator",
+    intro: "Master the basics of the MakeMeDIYspire platform with this comprehensive guide. Learn how to utilize the DIY Idea Generator for your creative projects.",
+    body: [
+      {
+        type: "subheading",
+        content: "Getting Started",
+      },
+      {
+        type: "steps",
+        content: [
+          {
+            type: "text",
+            content: "Go to the MakeMeDIYspire home or root page",
+          },
+          {
+            type: "image",
+            content: "",
+            src: "/image/guide/homepage.jpg",
+            alt: "MakeMeDIYspire homepage",
+          },
+          {
+            type: "text",
+            content: "Input the materials you have at hand in the input box or leave it as empty to use random materials",
+          },
+          {
+            type: "gif",
+            content: "",
+            src: "/image/guide/input-process.gif",
+            alt: "Input process",
+          },
+          {
+            type: "text",
+            content: "Select difficulty and category",
+          },
+          {
+            type: "image",
+            content: "",
+            src: "/image/guide/difficulty-category-process.gif",
+            alt: "Selecting difficulty and category",
+          },
+          {
+            type: "text",
+            content: "If you are already done, click the safety checkbox",
+          },
+          {
+            type: "image",
+            content: "",
+            src: "/image/guide/safety-check.gif",
+            alt: "Marking the safety checkbox",
+          },
+          {
+            type: "text",
+            content: "Click the 'Next' or 'Generate' button to receive a list of possible DIY projects",
+          },
+          {
+            type: "text",
+            content: "It will proceed to the next step to generate project ideas",
+          },
+          {
+            type: "gif",
+            content: "",
+            src: "/image/guide/generate-loading.gif",
+            alt: "Loading generator",
+          },
+          {
+            type: "text",
+            content: "After generation, it will proceed to the next step where you can view the generated 3 DIY projects",
+          },
+          {
+            type: "image",
+            content: "",
+            src: "/image/guide/generated-projects.jpg",
+            alt: "Generated DIY projects",
+          },
+        ],
+      },
+      {
+        type: "subheading",
+        content: "Tips and Tricks",
+      },
+      {
+        type: "paragraph",
+        content: "Ensure that you input accurate materials to get more relevant results. The more precise you are, the better your suggestions will be.",
+      },
+      {
+        type: "paragraph",
+        content: "If you're looking for a challenge, select a higher difficulty and see what complex projects you can create!",
+      },
+      {
+        type: "paragraph",
+        content: "Don't forget to explore the various categories available, as they can guide the generator towards projects that truly interest you.",
+      },
+      {
+        type: "subheading",
+        content: "Troubleshooting",
+      },
+      {
+        type: "paragraph",
+        content: "If the generator isn't working as expected, ensure you've selected all necessary options. If issues persist, contact support for assistance.",
+      },
+    ],
+  },
+];
+
+export const commits: Record<string, Commit[]> = {
+  "2023": [
+    {
+      date: "Sep 13, 2023",
+      summary:
+        "On Sep 13, 2023, multiple enhancements were made. Origin whitelisting, fine-tuning, meta data updates, and user experience improvements took place. The backend underwent an API URL correction, removed a package-lock, and addressed deployment issues. Concurrency improvements were also made. The overall design was updated with new headers and footers.",
+      operations: ["code-updates", "bug-fixes", "ui-ux-improvements", "performance-enhancements"],
+    },
+    {
+      date: "Sep 12, 2023",
+      summary: "On Sep 12, 2023, foundational setup took place with the creation of README and environment configuration files.",
+      operations: ["documentation"],
+    },
+  ],
+};
