@@ -209,6 +209,12 @@ export const guides: HowToGuide[] = [
 export const commits: Record<string, Commit[]> = {
   "2023": [
     {
+      date: "Sep 14, 2023",
+      summary:
+        "On Sep 14, 2023, multiple important changes and optimizations were made to the project. These changes included removing the 'robots.txt' file and updating the routing code, optimizing the build process through manual chunking, removing metadata for robots, and optimizing the home page. Additionally, there was a fix for the SEO score in Lighthouse. The most significant improvement involved enhancing SEO, adding FAQ and How-to guides, and improving the project's overall structure.",
+      operations: ["code-updates", "performance-enhancements", "code-updates", "bug-fixes", "ui-ux-improvements"],
+    },
+    {
       date: "Sep 13, 2023",
       summary:
         "On Sep 13, 2023, multiple enhancements were made. Origin whitelisting, fine-tuning, meta data updates, and user experience improvements took place. The backend underwent an API URL correction, removed a package-lock, and addressed deployment issues. Concurrency improvements were also made. The overall design was updated with new headers and footers.",

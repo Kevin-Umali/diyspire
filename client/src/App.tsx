@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 import Home from "./pages/Home";
 import ErrorFallback from "./components/ErrorFallback";
@@ -15,16 +15,14 @@ function App() {
       <CSSReset />
       <Box>
         <Navbar />
-        <Router>
-          <div className="App">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/how-to-guide" element={<HowToGuide />} />
-              <Route path="/updates" element={<Updates />} />
-            </Routes>
-          </div>
-        </Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/how-to-guide" element={<HowToGuide />} />
+            <Route path="/updates" element={<Updates />} />
+          </Routes>
+        </div>
       </Box>
       <Footer />
     </ErrorBoundary>
