@@ -1,2 +1,16 @@
 User-agent: *
-Disallow:
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /private/
+Disallow: /backend/
+
+# Allow crawling of all static assets for all agents
+User-agent: *
+Allow: /css/
+Allow: /images/
+Allow: /js/
+
+# Additional directives for specific popular user-agents
+User-agent: Googlebot
+Allow: /important-directory/
+Disallow: /sensitive-data/

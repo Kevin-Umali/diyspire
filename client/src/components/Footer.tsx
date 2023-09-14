@@ -1,4 +1,4 @@
-import { Flex, Link, Text, Container, VStack, useColorModeValue, Divider, Box } from "@chakra-ui/react";
+import { Flex, Link, Text, Container, VStack, useColorModeValue, Divider, Box, Stack } from "@chakra-ui/react";
 import { footerData } from "../constants";
 
 const Footer: React.FC = () => {
@@ -12,23 +12,23 @@ const Footer: React.FC = () => {
           <Flex flexWrap="wrap" direction={{ base: "column", md: "row" }} alignItems="start" justifyContent="space-between">
             {footerData.map((data, index) => (
               <Flex key={index} direction="column" mb="3">
-                <Link fontWeight="500" href={data.href} color={linkColor}>
+                <Link fontWeight="500" href={data.href} color={linkColor} p={{ base: "2", sm: "1" }}>
                   {data.label}
                 </Link>
-                <Flex direction={{ base: "row", md: "column" }}>
+                <Stack direction={{ base: "column", md: "row" }} spacing={3}>
                   {data.links.map((link, index) => (
-                    <Link key={index} padding={1} fontSize={{ base: "sm", sm: "md" }} href={link.href} mr={{ base: 1, sm: 2, md: 0 }} color="gray.500" _hover={{ color: "blue.600" }}>
+                    <Link key={index} p={{ base: "2", sm: "1" }} fontSize={{ base: "sm", sm: "md" }} href={link.href} mr={{ base: 1, sm: 2, md: 0 }} color="gray.500" _hover={{ color: "blue.600" }}>
                       {link.label}
                     </Link>
                   ))}
-                </Flex>
+                </Stack>
               </Flex>
             ))}
           </Flex>
           <Flex alignItems="center">
             <Text color="gray.500" fontSize="0.875rem" pl="0.5rem">
               Powered by MakeMeDIYspire ✨ | Made with ❤️ by -
-              <Link href="#" isExternal color="blue.500">
+              <Link href="#" isExternal color="blue.500" p={{ base: "2", sm: "1" }}>
                 Kooma
               </Link>
             </Text>
