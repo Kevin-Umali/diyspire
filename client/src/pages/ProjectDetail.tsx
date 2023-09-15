@@ -35,7 +35,7 @@ interface ProjectLocationState {
   description: string;
 }
 
-const UNSPLASH_PROJECT_NAME = import.meta.env.UNSPLASH_PROJECT_NAME;
+const UNSPLASH_PROJECT_NAME = import.meta.env.VITE_UNSPLASH_PROJECT_NAME;
 
 const ProjectDetail: React.FC = () => {
   const location = useLocation();
