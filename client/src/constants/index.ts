@@ -34,31 +34,33 @@ export const steps: Steps[] = [
   { title: "View", description: "See the generated projects" },
 ];
 
+export const loadingMessages: string[] = ["Generating project ideas...", "Brewing some creativity...", "Almost there, hang tight...", "Fetching some inspiration..."];
+
 export const footerData: Footer[] = [
   {
     label: "Explore",
-    href: "#",
+    hash: "#",
     links: [
-      { label: "Generate DIY Project Idea", href: "/" },
-      { label: "How-to Guides", href: "/how-to-guide" },
-      { label: "Updates", href: "/updates" },
+      { label: "Generate DIY Project Idea", path: "/" },
+      { label: "How-to Guides", path: "/how-to-guide" },
     ],
   },
   {
     label: "FAQ",
-    href: "/faq#getting-started",
+    path: "/faq",
+    hash: "#getting-started",
     links: [
-      { label: "Getting Started", href: "/faq#getting-started" },
-      { label: "Usage Guidelines", href: "/faq#usage-guidelines" },
-      { label: "Security and Privacy", href: "/faq#security-privacy" },
-      { label: "Feedback and Suggestions", href: "/faq#feedback" },
+      { label: "Getting Started", path: "/faq", hash: "#getting-started" },
+      { label: "Usage Guidelines", path: "/faq", hash: "#usage-guidelines" },
+      { label: "Security and Privacy", path: "/faq", hash: "#security-privacy" },
+      { label: "Feedback and Suggestions", path: "/faq", hash: "#feedback" },
     ],
   },
   {
     label: "Social",
-    href: "#",
+    hash: "#",
     links: [
-      { label: "Email", href: "#" },
+      { label: "Email", href: "https://react-icons.github.io/react-icons/search?q=ellip" },
       { label: "Twitter", href: "#" },
       { label: "Linkedin", href: "#" },
     ],

@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import { Link as RouterLink } from "react-router-dom";
 import html2canvas from "html2canvas";
 
 export const exportToPDF = async (elementId: string, fileName: string) => {
@@ -37,5 +38,21 @@ export const exportToPDF = async (elementId: string, fileName: string) => {
   } catch (error) {
     console.error("Failed to generate PDF: ", error);
     return null;
+  }
+};
+
+export const getLinkProps = (link: { path?: string; hash?: string; href?: string }) => {
+  if (link.href) {
+    return {
+      href: link.href,
+      isExternal: true,
+      target: "_blank",
+      rel: "noopener noreferrer",
+    };
+  } else {
+    return {
+      as: RouterLink,
+      to: { pathname: link.path, hash: link.hash },
+    };
   }
 };

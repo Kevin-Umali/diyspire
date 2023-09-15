@@ -60,7 +60,7 @@ const HowToGuideComponent = () => {
   };
 
   return (
-    <Container maxW="7xl" py={5}>
+    <Container maxW="7xl" py={{ base: 5, sm: 10 }}>
       <Box textAlign="center" mb={10}>
         <Heading as="h1" mb={3} fontSize={["lg", "xl", "2xl"]}>
           "MakeMeDIYspire" Guides

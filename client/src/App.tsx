@@ -7,7 +7,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FAQ from "./pages/FAQ";
 import HowToGuide from "./pages/HowToGuide";
-import Updates from "./pages/Updates";
+import ProjectDetail from "./pages/ProjectDetail";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/how-to-guide" element={<HowToGuide />} />
-            <Route path="/updates" element={<Updates />} />
+            <Route path="/project-detail" element={<ProjectDetail />} />
           </Routes>
         </div>
       </Box>

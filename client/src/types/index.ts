@@ -28,13 +28,17 @@ export interface HowToGuide {
 
 export interface Footer {
   label: string;
-  href: string;
+  path?: string;
+  hash?: string;
+  href?: string;
   links: FooterLink[];
 }
 
 export interface FooterLink {
   label: string;
-  href: string;
+  path?: string;
+  hash?: string;
+  href?: string;
 }
 
 export interface Steps {

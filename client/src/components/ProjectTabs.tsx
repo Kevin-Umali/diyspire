@@ -1,7 +1,7 @@
-import { Heading, Tab, TabList, TabPanel, Tabs, Text, useBreakpointValue, List, ListItem, Divider, TabPanels, Button, Icon, Link, useToast } from "@chakra-ui/react";
-import { FaFilePdf, FaShareAlt } from "react-icons/fa";
+import { Heading, Tab, TabList, TabPanel, Tabs, Text, useBreakpointValue, List, ListItem, Divider, TabPanels, Button, Icon, useToast } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import { exportToPDF } from "../utils";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { FaEllipsisH, FaFilePdf, FaShareAlt } from "react-icons/fa";
 
 interface Project {
   title: string;
@@ -16,6 +16,8 @@ interface Project {
 interface ProjectTabsProps {
   projects: Project[];
 }
+
+type OmittedProject = Omit<Project, "steps">;
 
 const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects }) => {
   const tabOrientation = useBreakpointValue({ base: "vertical", md: "horizontal" }) as "vertical" | "horizontal" | undefined;
@@ -107,9 +109,7 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects }) => {
         {projects.map((project, index) => (
           <TabPanel key={index} p={4} itemID={`project-${project.title}`}>
             <Heading size="md" mb={3}>
-              <Link href={`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(project.title)}`} isExternal>
-                {project.title} <ExternalLinkIcon w={4} h={5} mr={2} />
-              </Link>
+              {project.title}
             </Heading>
             <Text fontSize="sm" mb={2}>
               <b>Materials:</b> {project.materials.join(", ")}
@@ -141,7 +141,10 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects }) => {
               Export to PDF
             </Button>
             <Button onClick={() => handleShare(project)} leftIcon={<Icon as={FaShareAlt} />} mt={3} ml={2}>
-              Share
+              Share PDF
+            </Button>
+            <Button as={RouterLink} to={{ pathname: "/project-detail" }} state={{ project: { ...project } as OmittedProject }} leftIcon={<Icon as={FaEllipsisH} />} mt={3} ml={2}>
+              Explain it more
             </Button>
           </TabPanel>
         ))}

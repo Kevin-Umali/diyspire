@@ -1,5 +1,5 @@
 import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Container, Heading, Link } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link as RouterLink } from "react-router-dom";
 import { faqs } from "../constants";
 import { FAQ } from "../types";
 
@@ -32,7 +32,7 @@ const FAQPage = () => {
           <>
             Utilizing the capabilities of OpenAI, our platform generates distinct DIY project ideas based on a variety of factors and categories. Once you select a project, you will receive a detailed
             list of materials needed and a step-by-step guide to complete the project. Refer to
-            <Link href="/how-to-guide" isExternal color="blue.500" ml={1} mr={1}>
+            <Link as={RouterLink} to={{ pathname: "/how-to-guide" }} isExternal color="blue.500" ml={1} mr={1}>
               How to use the MakeMeDIYspire DIY Idea Generator
             </Link>
             guide.
@@ -42,7 +42,7 @@ const FAQPage = () => {
         return (
           <>
             It's straightforward! Visit the{" "}
-            <Link href="/" isExternal color="blue.500" ml={1} mr={1}>
+            <Link as={RouterLink} to={{ pathname: "/" }} isExternal color="blue.500" ml={1} mr={1}>
               MakeMeDIYspire homepage
             </Link>
             , input your preferences, such as materials and other options, and we'll generate a unique DIY project suggestion tailored for you. No sign-up required!
@@ -54,7 +54,7 @@ const FAQPage = () => {
   };
 
   return (
-    <Container maxW="7xl" py={5}>
+    <Container maxW="7xl" py={{ base: 5, sm: 10 }}>
       <Box textAlign="center" mb={10}>
         <Heading as="h1" mb={3} fontSize={["lg", "xl", "2xl"]}>
           Frequently Asked Questions
