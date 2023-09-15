@@ -24,7 +24,8 @@
     "express-rate-limit": "^6.9.0",
     "express-validator": "^7.0.1",
     "helmet": "^7.0.0",
-    "openai": "^4.6.0"
+    "openai": "^4.6.0",
+    "unsplash-js": "^7.0.18"
   },
   "devDependencies": {
     "@types/apicache": "^1.6.2",
