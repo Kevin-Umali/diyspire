@@ -4,6 +4,8 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import apicache from "apicache";
 import OpenAI from "openai";
+import { createApi } from "unsplash-js";
+import * as nodeFetch from "node-fetch";
 
 import v1Routes from "./v1/routes";
 import { sendError } from "./utils/response-template";
@@ -17,8 +19,15 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
+const unsplash = createApi({
+  accessKey: process.env.UNSPLASH_ACCESS_KEY!,
+  fetch: nodeFetch.default as unknown as typeof fetch,
+});
+
 const app: Express = express();
+
 app.set("openai", openai);
+app.set("unsplash", unsplash);
 
 const cache = apicache.options({
   statusCodes: {
@@ -47,13 +56,14 @@ app.use(
     optionsSuccessStatus: 200,
   }),
 );
+
 app.use(express.json());
 
 app.use(limiter);
 
 // Bypass cache if in test environment
 if (process.env.NODE_ENV !== "test") {
-  app.use(cache("10 minutes"));
+  app.use(cache("10 hours"));
 }
 
 app.use("/v1", v1Routes);

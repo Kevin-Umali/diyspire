@@ -9,3 +9,7 @@ export const customEscape = (str: string): string => {
     .replace(/\\/g, "&#x5C;")
     .replace(/`/g, "&#96;");
 };
+
+export const escapeArrayStrings = (value: string[]): string[] => {
+  return value.map((v) => (typeof v === "string" ? customEscape(v.trim()) : v));
+};

@@ -1,7 +1,18 @@
 import { checkSchema } from "express-validator";
 import { escapeArrayStrings } from "../../utils";
 
-export const ideaValidationSchema = checkSchema({
+export const explainValidationSchema = checkSchema({
+  title: {
+    in: ["body"],
+    isString: {
+      errorMessage: "Title should be a string",
+    },
+    trim: true,
+    escape: true,
+    notEmpty: {
+      errorMessage: "Title is required",
+    },
+  },
   materials: {
     in: ["body"],
     isArray: {
@@ -14,24 +25,6 @@ export const ideaValidationSchema = checkSchema({
     customSanitizer: {
       options: escapeArrayStrings,
     },
-  },
-  onlySpecified: {
-    in: ["body"],
-    isBoolean: {
-      errorMessage: "onlySpecified should be a boolean",
-    },
-  },
-  difficulty: {
-    in: ["body"],
-    isString: true,
-    trim: true,
-    escape: true,
-  },
-  category: {
-    in: ["body"],
-    isString: true,
-    trim: true,
-    escape: true,
   },
   tools: {
     in: ["body"],
@@ -48,19 +41,25 @@ export const ideaValidationSchema = checkSchema({
   },
   time: {
     in: ["body"],
-    isNumeric: {
-      errorMessage: "Time should be a number",
+    isString: {
+      errorMessage: "Time should be a string",
     },
+    trim: true,
+    escape: true,
   },
   budget: {
     in: ["body"],
-    isNumeric: {
-      errorMessage: "Budget should be a number",
+    isString: {
+      errorMessage: "Budget should be a string",
     },
+    trim: true,
+    escape: true,
   },
-  endPurpose: {
+  description: {
     in: ["body"],
-    isString: true,
+    isString: {
+      errorMessage: "Description should be a string",
+    },
     trim: true,
     escape: true,
   },

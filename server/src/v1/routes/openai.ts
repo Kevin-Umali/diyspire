@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from "express";
 import { sendSuccess } from "../../utils/response-template";
 import { ideaValidationSchema } from "../schemas/idea";
 import { validationResult } from "express-validator/src/validation-result";
+import { explainValidationSchema } from "../schemas/explain";
+import OpenAI from "openai";
 
 const router = express.Router();
 
@@ -38,7 +40,7 @@ router.post(
         endPurpose,
       }: IdeaRequestBody = req.body;
 
-      const openai = req.app.get("openai");
+      const openai: OpenAI = req.app.get("openai");
 
       const materialsString = onlySpecified
         ? `Only use the following specified materials: ${materials.join(", ")}.`
@@ -104,6 +106,65 @@ router.post(
 
       if (completion?.choices?.[0]?.message?.content) {
         sendSuccess(res, JSON.parse(completion.choices[0].message.content));
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+interface ExplainRequestBody {
+  title: string;
+  materials: string[];
+  tools: string[];
+  time: string;
+  budget: string;
+  description: string;
+}
+
+router.post(
+  "/explain",
+  explainValidationSchema,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return sendSuccess(res, { errors: errors.array() }, 400);
+      }
+
+      const { title, materials, tools, time, budget, description } =
+        req.body as ExplainRequestBody;
+
+      const openai: OpenAI = req.app.get("openai");
+
+      const prompt = `
+      Please provide a detailed, step-by-step guide on how to build the project described below:
+      
+      Title: ${title}
+      Materials Required: ${materials.join(", ")}
+      Tools Needed: ${tools.join(", ")}
+      Estimated Time for Completion: ${time}
+      Budget Estimate: ${budget}
+      Project Overview: ${description}
+
+      Begin with an overview, and then break down each step, keeping in mind the materials and tools mentioned.
+      `;
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      });
+
+      if (completion?.choices?.[0]?.message?.content) {
+        sendSuccess(res, {
+          explanation: completion.choices[0].message.content,
+        });
       }
     } catch (error) {
       next(error);

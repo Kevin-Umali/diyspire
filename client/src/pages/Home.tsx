@@ -50,7 +50,7 @@ const Home = () => {
   const [purpose, setPurpose] = useState("");
   const [safetyConfirmed, setSafetyConfirmed] = useState(false);
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
-  const { activeStep, goToNext, goToPrevious, setActiveStep } = useSteps({
+  const { activeStep, goToNext, goToPrevious } = useSteps({
     index: 0,
     count: steps.length,
   });
@@ -104,19 +104,27 @@ const Home = () => {
   );
 
   return (
-    <Container as="main" maxW="7xl" py={5}>
+    <Container as="main" maxW="7xl" py={{ base: 5, sm: 10 }}>
       <VStack spacing={10} p={5} width="100%">
         <Box width="100%" overflowX="auto" borderRadius="lg" p={5} boxShadow="lg">
           <Heading as="h1" mb={3} fontSize={["lg", "xl", "2xl"]}>
             <Icon as={FaRegLightbulb} w={6} h={6} mr={2} />
             DIY Project Ideas
           </Heading>
-          <Text fontSize={["sm", "md"]} mb={3}>
-            Ever found yourself gazing at random materials scattered around your home, your imagination itching to craft something unique? You're not alone. Here at DIY Project Ideas, we're driven by
-            the joy of creation. Whether you have colorful strings, spare wood planks, beads, or even old magazines, there's a world of possibilities waiting for you. Feed your creativity and turn
-            your materials into masterpieces. Simply input what you have, sit back, and let us provide you with a treasure trove of DIY projects tailored just for you. Ready to embark on a journey of
-            creation?
+          <Text fontSize={["sm", "md"]} mb={2}>
+            Ever found yourself gazing at random materials scattered around your home, your imagination itching to craft something unique?
           </Text>
+          <Text fontSize={["sm", "md"]} mb={2}>
+            You're not alone. Here at DIY Project Ideas, we're driven by the joy of creation. Whether you have colorful strings, spare wood planks, beads, or even old magazines, there's a world of
+            possibilities waiting for you.
+          </Text>
+          <Text fontSize={["sm", "md"]} mb={2}>
+            Feed your creativity and turn your materials into masterpieces. Simply input what you have, sit back, and let us provide you with a treasure trove of DIY projects tailored just for you.
+          </Text>
+          <Text fontSize={["sm", "md"]} mb={2}>
+            Ready to embark on a journey of creation?
+          </Text>
+
           <Divider my={3} />
           <Box display="flex" alignItems="center">
             <Icon as={FaInfoCircle} w={5} h={5} mr={2} />
@@ -160,19 +168,6 @@ const Home = () => {
         {activeStep === 2 && (
           <Box width="100%" p={4} borderWidth="1px" borderRadius="md" borderColor="gray.200">
             <ProjectTabs projects={projects} />
-            <Flex mt={4} justifyContent="flex-end">
-              <Button
-                variant="outline"
-                width="250px"
-                onClick={() => {
-                  setProjects([]);
-                  setActiveStep(0);
-                }}
-                mr={4}
-              >
-                Generate new ideas
-              </Button>
-            </Flex>
           </Box>
         )}
       </VStack>
