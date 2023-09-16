@@ -72,25 +72,36 @@ const ProjectDetail: React.FC = () => {
 
     setIsLoading(true);
 
-    generateProjectExplanations(project.title, project.materials, project.tools, project.time, project.budget, project.description)
-      .then((response) => {
-        setProjectExplanation(response.data.explanation);
+    // Use Promise.allSettled to wait for both promises
+    Promise.allSettled([generateProjectExplanations(project.title, project.materials, project.tools, project.time, project.budget, project.description), searchImages(project.title)])
+      .then(([explanationResult, imageResult]) => {
+        // Check the status of the first promise
+        if (explanationResult.status === "fulfilled") {
+          setProjectExplanation(explanationResult.value.data.explanation);
+        } else {
+          toast({
+            title: "Explanation Error",
+            description: explanationResult.reason.message,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
 
-        return searchImages(project.title);
-      })
-      .then((imageResponse) => {
-        setRelatedImages(imageResponse.data);
-      })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .catch((error: any) => {
-        toast({
-          title: "An error occurred.",
-          description: error.message,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "top-right",
-        });
+        // Check the status of the second promise
+        if (imageResult.status === "fulfilled") {
+          setRelatedImages(imageResult.value.data);
+        } else {
+          toast({
+            title: "Image Search Error",
+            description: imageResult.reason.message,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
       })
       .finally(() => {
         setIsLoading(false);
@@ -114,6 +125,7 @@ const ProjectDetail: React.FC = () => {
         ) : (
           <Flex direction="column">
             <Image
+              loading="lazy"
               rounded={"md"}
               alt={relatedImages?.alt_description || ""}
               src={imageUrl}
@@ -129,11 +141,11 @@ const ProjectDetail: React.FC = () => {
               {photographerName && (
                 <Text fontSize={"sm"} mt={2} textAlign="center">
                   Photo by
-                  <Link mx={1} href={`${photographerLink}?utm_source=${UNSPLASH_PROJECT_NAME}&utm_medium=referral`} isExternal>
+                  <Link mx={1} href={`${photographerLink}?utm_source=${UNSPLASH_PROJECT_NAME}&utm_medium=referral`} textDecorationLine="underline" isExternal>
                     {`${photographerName}`}
                   </Link>
                   on
-                  <Link ml={1} href={`https://unsplash.com/?utm_source=${UNSPLASH_PROJECT_NAME}&utm_medium=referral`} isExternal>
+                  <Link ml={1} href={`https://unsplash.com/?utm_source=${UNSPLASH_PROJECT_NAME}&utm_medium=referral`} textDecorationLine="underline" isExternal>
                     Unsplash
                   </Link>
                 </Text>
@@ -144,11 +156,11 @@ const ProjectDetail: React.FC = () => {
               <Icon as={FaInfoCircle} mr={2} />
               <Text fontSize={"sm"}>
                 Note: The image may not accurately represent the project title. For more specific results, you can click to
-                <Link mx={1} href={googleSearchLink} isExternal>
+                <Link mx={1} href={googleSearchLink} textDecorationLine="underline" isExternal>
                   search on Google <ExternalLinkIcon w={4} h={5} />
                 </Link>
                 or watch tutorials on
-                <Link ml={1} href={youtubeSearchLink} isExternal>
+                <Link ml={1} href={youtubeSearchLink} textDecorationLine="underline" isExternal>
                   YouTube <ExternalLinkIcon w={4} h={5} />
                 </Link>
                 .

@@ -6,8 +6,9 @@ import { Box, CSSReset } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FAQ from "./pages/FAQ";
-import HowToGuide from "./pages/HowToGuide";
+import HowToGuideDetails from "./pages/HowToGuideDetail";
 import ProjectDetail from "./pages/ProjectDetail";
+import HowToGuidesList from "./pages/HowToGuideList";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/faq" element={<FAQ />} />
-            <Route path="/how-to-guide" element={<HowToGuide />} />
+            <Route path="/guide" element={<HowToGuidesList />} />
+            <Route path="/guide/:path" element={<HowToGuideDetails />} />
             <Route path="/project-detail" element={<ProjectDetail />} />
           </Routes>
         </div>

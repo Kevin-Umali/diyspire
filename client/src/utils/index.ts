@@ -56,3 +56,10 @@ export const getLinkProps = (link: { path?: string; hash?: string; href?: string
     };
   }
 };
+
+export const trimLeadingWhitespace = (text: string) => {
+  return text
+    .split("\n")
+    .map((line) => line.trimStart())
+    .join("\n");
+};
