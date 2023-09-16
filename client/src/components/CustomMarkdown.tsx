@@ -48,30 +48,30 @@ const CustomMarkdown: React.FC<CustomMarkdownrProps> = ({ content }) => {
           h3: { component: Heading, props: { as: "h3", size: "md", mb: 4 } },
           h4: { component: Heading, props: { as: "h4", size: "sm", mb: 4 } },
           h5: { component: Heading, props: { as: "h5", size: "xs", mb: 3 } },
-          h6: { component: Heading, props: { as: "h6", size: "xs", mb: 3 } }, // Modified size and added margin
-          p: { component: Text, props: { mb: 5 } }, // increased margin
+          h6: { component: Heading, props: { as: "h6", size: "xs", mb: 3 } },
+          p: { component: Text, props: { mb: 5 } },
           ul: { component: List, props: { styleType: "disc", ml: 4, mb: 4 } },
           ol: { component: List, props: { styleType: "decimal", ml: 4, mb: 4 } },
-          li: { component: ListItem, props: { mb: 3 } }, // added margin
-          a: { component: Link, props: { mb: 2, textDecorationLine: "underline" } }, // added margin
-          img: { component: Image, props: { mb: 4, loading: "lazy" } }, // added margin
+          li: { component: ListItem, props: { mb: 3 } },
+          a: { component: Link, props: { mb: 2, textDecorationLine: "underline" } },
+          img: { component: Image, props: { mb: 4, loading: "lazy" } },
           pre: {
             component: MarkdownPre,
-            props: { mb: 4 }, // added margin
+            props: { mb: 4 },
           },
-          code: Code, // inline code
-          blockquote: { component: StyledBlockquote, props: { mb: 4 } }, // added margin
+          code: Code,
+          blockquote: { component: StyledBlockquote, props: { mb: 4 } },
           table: Table,
           thead: Thead,
           tbody: Tbody,
           tr: Tr,
           th: Th,
           td: Td,
-          hr: { component: Divider, props: { my: 4 } }, // added margin to both top & bottom
+          hr: { component: Divider, props: { my: 4 } },
           kbd: Kbd,
-          dl: { component: DL, props: { mb: 4 } }, // added margin
-          dt: { component: DT, props: { mb: 2 } }, // added margin
-          dd: { component: DD, props: { mb: 2 } }, // added margin
+          dl: { component: DL, props: { mb: 4 } },
+          dt: { component: DT, props: { mb: 2 } },
+          dd: { component: DD, props: { mb: 2 } },
         },
       }}
     >

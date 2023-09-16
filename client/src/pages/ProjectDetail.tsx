@@ -72,10 +72,8 @@ const ProjectDetail: React.FC = () => {
 
     setIsLoading(true);
 
-    // Use Promise.allSettled to wait for both promises
     Promise.allSettled([generateProjectExplanations(project.title, project.materials, project.tools, project.time, project.budget, project.description), searchImages(project.title)])
       .then(([explanationResult, imageResult]) => {
-        // Check the status of the first promise
         if (explanationResult.status === "fulfilled") {
           setProjectExplanation(explanationResult.value.data.explanation);
         } else {
@@ -89,7 +87,6 @@ const ProjectDetail: React.FC = () => {
           });
         }
 
-        // Check the status of the second promise
         if (imageResult.status === "fulfilled") {
           setRelatedImages(imageResult.value.data);
         } else {

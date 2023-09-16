@@ -13,7 +13,6 @@ import { sendError } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
 
-// Load environment variables from .env file
 dotenv.config();
 
 const openai = new OpenAI({
@@ -65,7 +64,6 @@ app.use(express.json());
 
 app.use(limiter);
 
-// Bypass cache if in test environment
 if (process.env.NODE_ENV !== "test") {
   app.use(cache("10 hours"));
 }
@@ -78,4 +76,4 @@ app.get("*", (_, res: Response) => {
 
 app.use(errorHandlerMiddleware);
 
-export default app; // Export the app instance
+export default app;

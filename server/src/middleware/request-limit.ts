@@ -11,8 +11,8 @@ const keyGenerator = (request: Request, _response: Response): string => {
 };
 
 const limiter = rateLimit({
-  windowMs: 10000, // 10 seconds
-  max: 5, // Limit each IP to 5 requests per windowMs
+  windowMs: 10000,
+  max: 5,
   message: "You can't make any more requests at the moment. Try again later",
   keyGenerator: keyGenerator,
 });

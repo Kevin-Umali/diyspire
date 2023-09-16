@@ -30,7 +30,7 @@ export type Operation = "code-updates" | "bug-fixes" | "feature-additions" | "pe
 export interface Commit {
   date: string;
   summary: string;
-  operations: Operation[]; // This ensures only allowed operation types are used.
+  operations: Operation[];
 }
 
 export interface HowToGuide {
