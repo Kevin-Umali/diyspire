@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["node"],
     "target": "es6",
     "module": "commonjs",
     "strict": true,
@@ -8,6 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist"
   },
-  "include": ["src/**/*", "src/__tests__/**/*.ts"],
+  "include": ["src/**/*", "src/__tests__/**/*.ts", "prisma/*"],
   "exclude": ["node_modules"]
 }

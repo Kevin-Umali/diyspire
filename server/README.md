@@ -40,3 +40,23 @@ For production:
 ```bash
 npm run start
 ```
+
+### Database Setup (Prisma)
+
+This project uses Prisma as an ORM to interact with the database. Follow these steps to set up and seed the database:
+
+1. Ensure you have PostgreSQL installed and running on your system.
+
+2. Apply database migrations to create the schema:
+
+   ```bash
+   npx prisma migrate dev --name init
+   ```
+
+3. If seed doesn't automatically run, it will seed the database with initial data
+
+   ```bash
+   npx prisma db seed
+   ```
+
+This sets up the database schema and populates it with initial data, allowing your server to interact with the database using Prisma.

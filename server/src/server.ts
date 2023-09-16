@@ -6,8 +6,9 @@ import apicache from "apicache";
 import OpenAI from "openai";
 import { createApi } from "unsplash-js";
 import * as nodeFetch from "node-fetch";
+import { PrismaClient } from "@prisma/client";
 
-import v1Routes from "./v1/routes";
+import routes from "./routes";
 import { sendError } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
@@ -24,10 +25,13 @@ const unsplash = createApi({
   fetch: nodeFetch.default as unknown as typeof fetch,
 });
 
+const prisma = new PrismaClient();
+
 const app: Express = express();
 
 app.set("openai", openai);
 app.set("unsplash", unsplash);
+app.set("prisma", prisma);
 
 const cache = apicache.options({
   statusCodes: {
@@ -66,7 +70,7 @@ if (process.env.NODE_ENV !== "test") {
   app.use(cache("10 hours"));
 }
 
-app.use("/v1", v1Routes);
+app.use("/api/v1", routes);
 
 app.get("*", (_, res: Response) => {
   sendError(res, "API Path Not Found", 404);
