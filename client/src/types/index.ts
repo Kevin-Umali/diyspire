@@ -5,27 +5,6 @@ export interface FAQ {
   answerType?: string;
 }
 
-export interface StepContent {
-  type: "text" | "image" | "gif" | "video";
-  content: string;
-  src?: string; // Used for images, gifs, and videos
-  alt?: string; // Used for image and gif alt text
-}
-
-export interface GuideSection {
-  type: "paragraph" | "image" | "subheading" | "steps" | "video";
-  content: string | StepContent[];
-  src?: string;
-  alt?: string;
-}
-
-export interface HowToGuide {
-  title: string;
-  intro: string;
-  body: GuideSection[];
-  buttonURL?: string; // Optional URL for the button
-}
-
 export interface Footer {
   label: string;
   path?: string;
@@ -52,4 +31,19 @@ export interface Commit {
   date: string;
   summary: string;
   operations: Operation[]; // This ensures only allowed operation types are used.
+}
+
+export interface HowToGuide {
+  id: number;
+  path: string;
+  metadataId: number;
+  content: string;
+  metadata: Metadata;
+}
+
+export interface Metadata {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl?: string | null;
 }

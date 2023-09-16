@@ -1,5 +1,5 @@
 import { checkSchema } from "express-validator";
-import { escapeArrayStrings } from "../../utils";
+import { escapeArrayStrings } from "../utils";
 
 export const explainValidationSchema = checkSchema({
   title: {

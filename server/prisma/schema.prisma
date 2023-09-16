@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model HowToGuide {
+  id         Int      @id @default(autoincrement())
+  path       String   @unique
+  metadata   Metadata @relation(fields: [metadataId], references: [id])
+  metadataId Int      @unique
+  content    String   @db.Text
+}
+
+model Metadata {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String
+  imageUrl    String?
+  howToGuide  HowToGuide?
+}
