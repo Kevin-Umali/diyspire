@@ -34,3 +34,7 @@ debug.log
 
 # Windows thumbnail cache
 Thumbs.db
+
+# Prisma
+!prisma/schema.prisma
+!prisma/seed.ts
