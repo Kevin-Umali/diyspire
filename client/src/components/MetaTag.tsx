@@ -4,12 +4,12 @@ import { useLocation } from "react-router-dom";
 interface MetaTagProps {
   title: string;
   description?: string;
-  type?: string; // For OG type (defaults to "website")
-  imageUrl?: string; // If you have a dynamic image URL for OG and Twitter cards
+  type?: string;
+  imageUrl?: string;
 }
 
 const MetaTag: React.FC<MetaTagProps> = ({ title, description, type = "website", imageUrl }) => {
-  const location = useLocation(); // From react-router-dom to get the current URL path
+  const location = useLocation();
 
   useEffect(() => {
     document.title = title;

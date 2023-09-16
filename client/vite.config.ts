@@ -28,7 +28,6 @@ export default defineConfig({
             "markdown-to-jsx",
             "react-error-boundary",
             "react-syntax-highlighter",
-            "simplemde",
           ],
         },
       },
