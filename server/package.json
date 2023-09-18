@@ -7,7 +7,7 @@
     "start": "node dist/src/index.js",
     "start:dev": "ts-node src/index.ts",
     "watch:dev": "nodemon",
-    "build": "npm install && tsc",
+    "build": "npx prisma generate && npm install && tsc",
     "lint": "eslint \"src/**/*.ts\" --quiet --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "clean": "npm run lint && npm run format",
