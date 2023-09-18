@@ -1,43 +1,30 @@
 import { useState, useEffect } from "react";
 import { Container, SimpleGrid, Divider, useToast, useDisclosure, Box, Button, Text } from "@chakra-ui/react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { generateProjectExplanations, saveShareLinkData, searchImages } from "../api/open-ai-api";
+import { useParams, useNavigate } from "react-router-dom";
+import { getShareLinkData } from "../api/open-ai-api";
 import { ProjectImage, ProjectInfo, ProjectSteps, ShareModal } from "../components/project-details";
 import { RelatedImages, ProjectLocationState } from "../types";
 
-const ProjectDetail: React.FC = () => {
-  const location = useLocation();
+const ProjectDetailById: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [isLoading, setIsLoading] = useState(true);
   const [projectExplanation, setProjectExplanation] = useState<string | null>(null);
   const [relatedImages, setRelatedImages] = useState<RelatedImages | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
-  const [project] = useState<ProjectLocationState | null>(location?.state?.project);
+  const [project, setProject] = useState<ProjectLocationState | null>(null);
   const toast = useToast();
 
   useEffect(() => {
     async function fetchData() {
       try {
-        if (project) {
-          const [explanationResult, imageResult] = await Promise.allSettled([
-            generateProjectExplanations(project.title, project.materials, project.tools, project.time, project.budget, project.description),
-            searchImages(project.title),
-          ]);
-
-          if (explanationResult.status === "fulfilled") {
-            setProjectExplanation(explanationResult.value.data.explanation);
-          } else {
-            handleFetchError(explanationResult.reason.message, "Explanation Error");
-          }
-
-          if (imageResult.status === "fulfilled") {
-            setRelatedImages(imageResult.value.data);
-          } else {
-            handleFetchError(imageResult.reason.message, "Image Search Error");
-          }
+        if (id) {
+          const response = await getShareLinkData(id);
+          setProjectExplanation(response.data.explanation);
+          setRelatedImages(response.data.projectImage);
+          setProject(response.data.projectDetails);
         } else {
           return;
         }
@@ -50,7 +37,7 @@ const ProjectDetail: React.FC = () => {
     }
 
     fetchData();
-  }, [project, toast]);
+  }, [id, toast]);
 
   const handleFetchError = (errorMessage: string, title: string) => {
     toast({
@@ -61,36 +48,6 @@ const ProjectDetail: React.FC = () => {
       isClosable: true,
       position: "top-right",
     });
-  };
-
-  const handleSaveProject = async () => {
-    try {
-      setIsSaving(true);
-
-      const response = await saveShareLinkData(project, relatedImages, projectExplanation);
-
-      setShareLink(`${import.meta.env.VITE_PROJECT_URL}/project-detail/${response.data.id}`);
-
-      toast({
-        title: "Project Saved",
-        description: "The project details have been successfully saved.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top-right",
-      });
-    } catch (error) {
-      toast({
-        title: "Saving Error",
-        description: "An error occurred while saving the project details.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top-right",
-      });
-    } finally {
-      setIsSaving(false);
-    }
   };
 
   if (!project) {
@@ -116,11 +73,11 @@ const ProjectDetail: React.FC = () => {
           relatedImages={relatedImages}
           projectTitle={project.title}
           onOpen={() => {
-            handleSaveProject();
+            setShareLink(`${import.meta.env.VITE_PROJECT_URL}/project-detail/${id}`);
             onOpen();
           }}
         />
-        <ShareModal isOpen={isOpen} onClose={onClose} isSaving={isSaving} shareLink={shareLink} />
+        <ShareModal isOpen={isOpen} onClose={onClose} isSaving={false} shareLink={shareLink} />
         <ProjectInfo isLoading={isLoading} project={project} />
       </SimpleGrid>
       <Divider mt={10} />
@@ -129,4 +86,4 @@ const ProjectDetail: React.FC = () => {
   );
 };
 
-export default ProjectDetail;
+export default ProjectDetailById;

@@ -12,12 +12,11 @@ interface ProjectImageProps {
   relatedImages: RelatedImages | null;
   projectTitle: string;
   onOpen: () => void;
-  showShareButton: boolean;
 }
 
 const UNSPLASH_PROJECT_NAME = import.meta.env.VITE_UNSPLASH_PROJECT_NAME;
 
-const ProjectImage: React.FC<ProjectImageProps> = ({ isLoading, projectTitle, relatedImages, onOpen, showShareButton }) => {
+const ProjectImage: React.FC<ProjectImageProps> = ({ isLoading, projectTitle, relatedImages, onOpen }) => {
   const imageUrl = relatedImages?.urls ? relatedImages.urls.regular : "https://via.placeholder.com/500";
   const photographerName = relatedImages?.user?.name;
   const photographerLink = relatedImages?.user?.link;
@@ -74,11 +73,9 @@ const ProjectImage: React.FC<ProjectImageProps> = ({ isLoading, projectTitle, re
         </Text>
       </Flex>
 
-      {showShareButton && (
-        <Button onClick={onOpen} mt={4} leftIcon={<FaShare />}>
-          Share
-        </Button>
-      )}
+      <Button onClick={onOpen} mt={4} leftIcon={<FaShare />}>
+        Share
+      </Button>
     </Flex>
   );
 };

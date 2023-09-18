@@ -7,8 +7,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FAQ from "./pages/FAQ";
 import HowToGuideDetails from "./pages/HowToGuideDetail";
-import ProjectDetail from "./pages/ProjectDetail";
 import HowToGuidesList from "./pages/HowToGuideList";
+import ProjectDetail from "./pages/ProjectDetail";
+import ProjectDetailById from "./pages/ProjectDetailById";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
             <Route path="/guide" element={<HowToGuidesList />} />
             <Route path="/guide/:path" element={<HowToGuideDetails />} />
             <Route path="/project-detail" element={<ProjectDetail />} />
-            <Route path="/project-detail/:id" element={<ProjectDetail />} />
+            <Route path="/project-detail/:id" element={<ProjectDetailById />} />
           </Routes>
         </div>
       </Box>
