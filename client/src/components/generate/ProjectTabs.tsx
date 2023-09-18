@@ -1,6 +1,6 @@
 import { Heading, Tab, TabList, TabPanel, Tabs, Text, useBreakpointValue, List, ListItem, Divider, TabPanels, Button, Icon, useToast } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import { exportToPDF } from "../utils";
+import { exportToPDF } from "../../utils";
 import { FaEllipsisH, FaFilePdf, FaShareAlt } from "react-icons/fa";
 
 interface Project {
@@ -144,7 +144,7 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects }) => {
               Share PDF
             </Button>
             <Button as={RouterLink} to={{ pathname: "/project-detail" }} state={{ project: { ...project } as OmittedProject }} leftIcon={<Icon as={FaEllipsisH} />} mt={3} ml={2}>
-              Explain it more
+              Detailed Steps
             </Button>
           </TabPanel>
         ))}

@@ -1,3 +1,5 @@
+import { ProjectLocationState, RelatedImages } from "../types";
+
 const API_URL = process.env.NODE_ENV === "development" ? "http://localhost:3000/api" : import.meta.env.VITE_OPEN_AI_API_URL;
 
 export const generateProjectIdeas = async (materials: string[], onlySpecified: boolean, difficulty: string, category: string, tools: string[], time: number, budget: number, endPurpose: string) => {
@@ -92,6 +94,46 @@ export const getGuideByPath = async (path: string) => {
 
 export const getAllGuides = async () => {
   const response = await fetch(API_URL + "/v1/guide", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+export const saveShareLinkData = async (projectDetails: ProjectLocationState | null, projectImage: RelatedImages | null, explanation: string | null) => {
+  const requestBody = {
+    projectDetails,
+    projectImage,
+    explanation,
+  };
+
+  const response = await fetch(API_URL + "/v1/share", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestBody),
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+export const getShareLinkData = async (id: string) => {
+  const endpoint = `${API_URL}/v1/share/${id}`;
+  const response = await fetch(endpoint, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

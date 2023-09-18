@@ -24,18 +24,20 @@ import {
 } from "@chakra-ui/react";
 import { FaRegLightbulb, FaInfoCircle } from "react-icons/fa";
 
-import MaterialInput from "../components/MaterialInput";
-import CategoryFilter from "../components/CategoryFilter";
-import DifficultyFilter from "../components/DifficultyFilter";
 import { generateProjectIdeas } from "../api/open-ai-api";
-import ProjectTabs from "../components/ProjectTabs";
-import LoadingComponent from "../components/LoadingComponent";
 import { categories, steps } from "../constants";
-import BudgetFilter from "../components/BudgetFilter";
-import PurposeFilter from "../components/PurposeFilter";
-import TimeAvailabilityFilter from "../components/TimeAvailabilityFilter";
-import ToolsAvailableInput from "../components/ToolsAvailableInput";
-import SafetyCheck from "../components/SafetyCheck";
+import {
+  BudgetFilter,
+  CategoryFilter,
+  DifficultyFilter,
+  LoadingComponent,
+  MaterialInput,
+  ProjectTabs,
+  PurposeFilter,
+  SafetyCheck,
+  TimeAvailabilityFilter,
+  ToolsAvailableInput,
+} from "../components/generate";
 
 type Orientation = "horizontal" | "vertical";
 
@@ -129,7 +131,7 @@ const Home = () => {
           <Box display="flex" alignItems="center">
             <Icon as={FaInfoCircle} w={5} h={5} mr={2} />
             <Text fontSize="sm" fontStyle="italic" color="gray.600">
-              Note: Our system caches suggestions for 10 minutes. If you re-enter the same items within this timeframe, you'll see the same suggestions.
+              Note: Our system caches suggestions for 2 hours. If you re-enter the same items within this timeframe, you'll see the same suggestions.
             </Text>
           </Box>
         </Box>

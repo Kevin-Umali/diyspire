@@ -31,6 +31,7 @@ export const searchImages = async (
           width: photo.width,
           height: photo.height,
           color: photo.color,
+          alt_description: photo.alt_description,
           urls: photo.urls,
           links: photo.links,
           user: {

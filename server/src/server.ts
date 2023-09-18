@@ -2,16 +2,21 @@ import express, { Express, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
-import apicache from "apicache";
 import OpenAI from "openai";
 import { createApi } from "unsplash-js";
 import * as nodeFetch from "node-fetch";
 import { PrismaClient } from "@prisma/client";
 
-import routes from "./routes";
+import {
+  guideRoutes,
+  unsplashRoutes,
+  openaiRoutes,
+  shareRoutes,
+} from "./routes/index.routes";
 import { sendError } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
+import getConditionalCache from "./middleware/cache-response";
 
 dotenv.config();
 
@@ -31,13 +36,6 @@ const app: Express = express();
 app.set("openai", openai);
 app.set("unsplash", unsplash);
 app.set("prisma", prisma);
-
-const cache = apicache.options({
-  statusCodes: {
-    include: [200],
-  },
-  appendKey: (req) => JSON.stringify(req.body),
-}).middleware;
 
 app.use(helmet());
 
@@ -64,11 +62,13 @@ app.use(express.json());
 
 app.use(limiter);
 
-if (process.env.NODE_ENV !== "test") {
-  app.use(cache("10 hours"));
-}
+const oneDayCacheMiddleware = getConditionalCache("24 hours");
+app.use("/api/v1/guide", oneDayCacheMiddleware, guideRoutes);
+app.use("/api/v1/image", oneDayCacheMiddleware, unsplashRoutes);
+app.use("/api/v1/share", oneDayCacheMiddleware, shareRoutes);
 
-app.use("/api/v1", routes);
+const openaiCacheMiddleware = getConditionalCache("2 hours");
+app.use("/api/v1/generate", openaiCacheMiddleware, openaiRoutes);
 
 app.get("*", (_, res: Response) => {
   sendError(res, "API Path Not Found", 404);

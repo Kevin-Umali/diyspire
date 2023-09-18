@@ -23,6 +23,7 @@ function App() {
             <Route path="/guide" element={<HowToGuidesList />} />
             <Route path="/guide/:path" element={<HowToGuideDetails />} />
             <Route path="/project-detail" element={<ProjectDetail />} />
+            <Route path="/project-detail/:id" element={<ProjectDetail />} />
           </Routes>
         </div>
       </Box>

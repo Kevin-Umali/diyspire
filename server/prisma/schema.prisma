@@ -25,3 +25,10 @@ model Metadata {
   imageUrl    String?
   howToGuide  HowToGuide?
 }
+
+model ProjectShareLink {
+  id             String  @id @default(uuid())
+  projectDetails Json
+  projectImage   Json
+  explanation    String?
+}

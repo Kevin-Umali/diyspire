@@ -13,18 +13,18 @@ const howToGuideData: Prisma.HowToGuideCreateInput[] = [
     ### Getting Started
     
     1. Go to the MakeMeDIYspire home or root page
-       ![MakeMeDIYspire homepage](/image/guide/homepage.jpg)
+       ![MakeMeDIYspire homepage](https://gxzbitundyxasssqfgde.supabase.co/storage/v1/object/public/makemediyspire-bucket/homepage.jpg)
     2. Input the materials you have at hand in the input box or leave it as empty to use random materials
-       ![Input process](/image/guide/input-process.gif)
+       ![Input process](https://gxzbitundyxasssqfgde.supabase.co/storage/v1/object/public/makemediyspire-bucket/input-process.gif)
     3. Select difficulty and category
-       ![Selecting difficulty and category](/image/guide/difficulty-category-process.gif)
+       ![Selecting difficulty and category](https://gxzbitundyxasssqfgde.supabase.co/storage/v1/object/public/makemediyspire-bucket/difficulty-category-process.gif)
     4. If you are already done, click the safety checkbox
-       ![Marking the safety checkbox](/image/guide/safety-check.gif)
+       ![Marking the safety checkbox](https://gxzbitundyxasssqfgde.supabase.co/storage/v1/object/public/makemediyspire-bucket/safety-check.gif)
     5. Click the 'Next' or 'Generate' button to receive a list of possible DIY projects
     6. It will proceed to the next step to generate project ideas
-       ![Loading generator](/image/guide/generate-loading.gif)
+       ![Loading generator](https://gxzbitundyxasssqfgde.supabase.co/storage/v1/object/public/makemediyspire-bucket/generate-loading.gif)
     7. After generation, it will proceed to the next step where you can view the generated 3 DIY projects
-       ![Generated DIY projects](/image/guide/generated-projects.jpg)
+       ![Generated DIY projects](https://gxzbitundyxasssqfgde.supabase.co/storage/v1/object/public/makemediyspire-bucket/generated-projects.jpg)
     
     ### Tips and Tricks
     
@@ -34,8 +34,7 @@ const howToGuideData: Prisma.HowToGuideCreateInput[] = [
     
     ### Troubleshooting
     
-    If the generator isn't working as expected, ensure you've selected all necessary options. If issues persist, contact support for assistance.
-    `.trim(),
+    If the generator isn't working as expected, ensure you've selected all necessary options. If issues persist, contact support for assistance.`.trim(),
     metadata: {
       create: {
         title: "How to use the MakeMeDIYspire DIY Idea Generator",

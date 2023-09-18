@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Spinner, Text } from "@chakra-ui/react";
-import { loadingMessages } from "../constants";
-import useInterval from "../hooks/useInterval";
+import { loadingMessages } from "../../constants";
+import useInterval from "../../hooks/useInterval";
 
 const LoadingComponent: React.FC = () => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
