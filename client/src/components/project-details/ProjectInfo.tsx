@@ -29,7 +29,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ isLoading, project }) => {
         <Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}>
           {project.title}
         </Heading>
-        <Text color={subHeading} fontWeight={300} fontSize={"2xl"} mt={2}>
+        <Text color={subHeading} fontWeight={300} fontSize={"lg"} mt={2}>
           {project.time} | {project.budget}
         </Text>
         <Stack direction="row" alignItems="center" mt={2}>
@@ -40,7 +40,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ isLoading, project }) => {
 
       <Stack spacing={{ base: 4, sm: 6 }} direction={"column"} divider={<StackDivider />}>
         <VStack spacing={{ base: 4, sm: 6 }}>
-          <Text color={description} fontSize={"xl"} fontWeight={"300"} noOfLines={ellipsisBreakpoint}>
+          <Text color={description} fontSize={"lg"} fontWeight={"300"} noOfLines={ellipsisBreakpoint}>
             {project.description}
           </Text>
         </VStack>

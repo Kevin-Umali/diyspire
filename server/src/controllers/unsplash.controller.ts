@@ -26,6 +26,10 @@ export const searchImages = async (
       const photo = result.response.results[0];
 
       if (photo) {
+        await unsplash.photos.trackDownload({
+          downloadLocation: photo.links.download_location,
+        });
+
         sendSuccess(res, {
           id: photo.id,
           width: photo.width,

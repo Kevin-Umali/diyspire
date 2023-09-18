@@ -46,7 +46,7 @@ const Home = () => {
   const [onlySpecified, setOnlySpecified] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("Anything");
-  const [availableTime, setAvailableTime] = useState(1);
+  const [availableTime, setAvailableTime] = useState(0);
   const [budget, setBudget] = useState(0);
   const [tools, setTools] = useState([""]);
   const [purpose, setPurpose] = useState("");
