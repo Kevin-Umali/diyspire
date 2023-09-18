@@ -65,6 +65,10 @@ const ProjectDetail: React.FC = () => {
 
   const handleSaveProject = async () => {
     try {
+      if (shareLink) {
+        return;
+      }
+
       setIsSaving(true);
 
       const response = await saveShareLinkData(project, relatedImages, projectExplanation);
