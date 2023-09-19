@@ -1,6 +1,7 @@
-import { Box, Flex, Heading, IconButton, useColorMode } from "@chakra-ui/react";
+import { Box, Flex, Heading, IconButton, Link, useColorMode } from "@chakra-ui/react";
 import { FaGithub } from "react-icons/fa";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import { Link as RouterLink } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -20,12 +21,16 @@ const Navbar: React.FC = () => {
       <Flex align="center" mr={5}>
         <Box display={{ base: "block", md: "none" }} mr="2"></Box>
         <Box>
-          <Heading size={{ base: "sm", md: "md" }}>MakeMeDIYspire</Heading>
+          <Heading size={{ base: "sm", md: "md" }}>
+            <Link as={RouterLink} to={{ pathname: "/" }} _hover={{ textDecoration: "none" }} cursor={"pointer"}>
+              MakeMeDIYspire
+            </Link>
+          </Heading>
         </Box>
       </Flex>
 
       <Box display="flex" alignItems="center">
-        <IconButton as="a" href="https://github.com/yourusername/yourrepo" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository" icon={<FaGithub />} size="sm" mr={2} />
+        <IconButton as="a" href="https://github.com/Kevin-Umali/make-me" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository" icon={<FaGithub />} size="sm" mr={2} />
         <IconButton
           aria-label={`Switch to ${colorMode === "light" ? "dark" : "light"} mode`}
           variant="ghost"
