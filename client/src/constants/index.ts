@@ -60,9 +60,9 @@ export const footerData: Footer[] = [
     label: "Social",
     hash: "#",
     links: [
-      { label: "Email", href: "https://react-icons.github.io/react-icons/search?q=ellip" },
-      { label: "Twitter", href: "#" },
-      { label: "Linkedin", href: "#" },
+      { label: "Email", href: "https://mail.google.com/" },
+      { label: "Twitter", href: "https://twitter.com/" },
+      { label: "Linkedin", href: "https://www.linkedin.com/" },
     ],
   },
 ];

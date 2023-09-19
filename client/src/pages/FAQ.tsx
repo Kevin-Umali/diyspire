@@ -33,7 +33,7 @@ const FAQPage = () => {
           <>
             Utilizing the capabilities of OpenAI, our platform generates distinct DIY project ideas based on a variety of factors and categories. Once you select a project, you will receive a detailed
             list of materials needed and a step-by-step guide to complete the project. Refer to
-            <Link as={RouterLink} to={{ pathname: "/how-to-guide" }} isExternal color="blue.500" ml={1} mr={1} textDecorationLine="underline">
+            <Link as={RouterLink} to={{ pathname: "/how-to-guide" }} color="blue.500" ml={1} mr={1} textDecorationLine="underline">
               How to use the MakeMeDIYspire DIY Idea Generator
             </Link>
             guide.
@@ -43,7 +43,7 @@ const FAQPage = () => {
         return (
           <>
             It's straightforward! Visit the{" "}
-            <Link as={RouterLink} to={{ pathname: "/" }} isExternal color="blue.500" ml={1} mr={1} textDecorationLine="underline">
+            <Link as={RouterLink} to={{ pathname: "/" }} color="blue.500" ml={1} mr={1} textDecorationLine="underline">
               MakeMeDIYspire homepage
             </Link>
             , input your preferences, such as materials and other options, and we'll generate a unique DIY project suggestion tailored for you. No sign-up required!
