@@ -59,4 +59,10 @@ This project uses Prisma as an ORM to interact with the database. Follow these s
    npx prisma db seed
    ```
 
+   or
+
+   ```bash
+   npx prisma migrate reset
+   ```
+
 This sets up the database schema and populates it with initial data, allowing your server to interact with the database using Prisma.
