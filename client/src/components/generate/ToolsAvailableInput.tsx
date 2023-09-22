@@ -14,7 +14,7 @@ const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setToo
       newTools[index] = value;
       setTools(newTools);
     },
-    [tools, setTools]
+    [tools, setTools],
   );
 
   const handleDeleteTool = useCallback(
@@ -23,7 +23,7 @@ const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setToo
       newTools.splice(index, 1);
       setTools(newTools);
     },
-    [tools, setTools]
+    [tools, setTools],
   );
 
   return (

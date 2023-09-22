@@ -6,11 +6,6 @@ import validationMiddleware from "../middleware/schema-validation";
 const router = express.Router();
 
 router.get("/:id", getProjectById);
-router.post(
-  "",
-  shareProjectValidationSchema,
-  validationMiddleware,
-  saveProject,
-);
+router.post("", shareProjectValidationSchema, validationMiddleware, saveProject);
 
 export default router;

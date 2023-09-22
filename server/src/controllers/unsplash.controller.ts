@@ -2,15 +2,9 @@ import { Request, Response, NextFunction } from "express";
 
 import { sendSuccess } from "../utils/response-template";
 
-export const searchImages = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const searchImages = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const query: string = decodeURIComponent(
-      req.query.query ? req.query.query.toString() : "",
-    );
+    const query: string = decodeURIComponent(req.query.query ? req.query.query.toString() : "");
 
     const unsplash = req.app.get("unsplash");
 
@@ -45,11 +39,7 @@ export const searchImages = async (
           },
         });
       } else {
-        sendSuccess(
-          res,
-          { errors: "No photos found for the given query." },
-          400,
-        );
+        sendSuccess(res, { errors: "No photos found for the given query." }, 400);
       }
     }
   } catch (error) {

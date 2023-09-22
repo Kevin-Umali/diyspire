@@ -20,7 +20,10 @@ interface ProjectTabsProps {
 type OmittedProject = Omit<Project, "steps">;
 
 const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects }) => {
-  const tabOrientation = useBreakpointValue({ base: "vertical", md: "horizontal" }) as "vertical" | "horizontal" | undefined;
+  const tabOrientation = useBreakpointValue({
+    base: "vertical",
+    md: "horizontal",
+  }) as "vertical" | "horizontal" | undefined;
   const toast = useToast();
 
   const handleShare = async (project: Project) => {

@@ -2,11 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { sendSuccess } from "../utils/response-template";
 import { PrismaClient } from "@prisma/client";
 
-export async function getHowToGuideByPath(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export async function getHowToGuideByPath(req: Request, res: Response, next: NextFunction) {
   try {
     const path = req.params.path;
 
@@ -32,11 +28,7 @@ export async function getHowToGuideByPath(
   }
 }
 
-export async function getAllGuidePaths(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export async function getAllGuidePaths(req: Request, res: Response, next: NextFunction) {
   try {
     const prisma = req.app.get("prisma") as PrismaClient;
 

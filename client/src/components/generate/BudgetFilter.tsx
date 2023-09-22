@@ -10,7 +10,7 @@ const BudgetFilter: React.FC<BudgetFilterProps> = ({ onBudgetChange, ...props })
     (value: string | number) => {
       onBudgetChange(Number(value));
     },
-    [onBudgetChange]
+    [onBudgetChange],
   );
 
   return (

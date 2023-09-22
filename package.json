@@ -4,7 +4,9 @@
   "description": "A platform that provides unique DIY (Do It Yourself) project suggestions using OpenAI. Explore a variety of projects, their materials, and steps to create them.",
   "main": "index.js",
   "devDependencies": {
-    "concurrently": "^8.2.1"
+    "concurrently": "^8.2.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1"
   },
   "scripts": {
     "dev:client": "cd client && npm run dev",
@@ -13,7 +15,13 @@
     "build:server": "cd server && npm run build",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "build": "npm install && concurrently \"npm run build:client\" \"npm run build:server\"",
-    "start": "concurrently \"cd server && npm start\" \"cd client && npm run preview\""
+    "start": "concurrently \"cd server && npm start\" \"cd client && npm run preview\"",
+    "lint:all": "cd server && npm run lint && cd ../client && npm run lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "cd client && npx lint-staged && cd ../server && npx lint-staged"
+    }
   },
   "repository": {
     "type": "git",

@@ -7,12 +7,7 @@ import { createApi } from "unsplash-js";
 import * as nodeFetch from "node-fetch";
 import { PrismaClient } from "@prisma/client";
 
-import {
-  guideRoutes,
-  unsplashRoutes,
-  openaiRoutes,
-  shareRoutes,
-} from "./routes/index.routes";
+import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes } from "./routes/index.routes";
 import { sendError } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
@@ -39,9 +34,7 @@ app.set("prisma", prisma);
 
 app.use(helmet());
 
-const allowedOrigins = process.env
-  .WEBSITE_URL!.split(",")
-  .map((origin) => origin.trim());
+const allowedOrigins = process.env.WEBSITE_URL!.split(",").map((origin) => origin.trim());
 
 app.use(
   cors({
