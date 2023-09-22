@@ -5,7 +5,6 @@ import { ProjectLocationState } from "../../types";
 
 interface ProjectInfoProps {
   isLoading: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   project: ProjectLocationState;
 }
 
@@ -14,6 +13,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ isLoading, project }) => {
   const description = useColorModeValue("gray.500", "gray.400");
   const toolsAndMaterials = useColorModeValue("yellow.500", "yellow.300");
   const ellipsisBreakpoint = useBreakpointValue({ base: undefined, lg: 3 });
+
   if (isLoading) {
     return (
       <>

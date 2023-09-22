@@ -102,7 +102,7 @@ const Home = () => {
         <PurposeFilter onPurposeChange={setPurpose} mt={4} />
       </Box>
     ),
-    [tools]
+    [tools],
   );
 
   return (

@@ -52,7 +52,11 @@ export const footerData: Footer[] = [
     links: [
       { label: "Getting Started", path: "/faq", hash: "#getting-started" },
       { label: "Usage Guidelines", path: "/faq", hash: "#usage-guidelines" },
-      { label: "Security and Privacy", path: "/faq", hash: "#security-privacy" },
+      {
+        label: "Security and Privacy",
+        path: "/faq",
+        hash: "#security-privacy",
+      },
       { label: "Feedback and Suggestions", path: "/faq", hash: "#feedback" },
     ],
   },

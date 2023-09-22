@@ -51,9 +51,15 @@ const CustomMarkdown: React.FC<CustomMarkdownrProps> = ({ content }) => {
           h6: { component: Heading, props: { as: "h6", size: "xs", mb: 3 } },
           p: { component: Text, props: { mb: 5 } },
           ul: { component: List, props: { styleType: "disc", ml: 4, mb: 4 } },
-          ol: { component: List, props: { styleType: "decimal", ml: 4, mb: 4 } },
+          ol: {
+            component: List,
+            props: { styleType: "decimal", ml: 4, mb: 4 },
+          },
           li: { component: ListItem, props: { mb: 3 } },
-          a: { component: Link, props: { mb: 2, textDecorationLine: "underline" } },
+          a: {
+            component: Link,
+            props: { mb: 2, textDecorationLine: "underline" },
+          },
           img: { component: Image, props: { mb: 4, loading: "lazy" } },
           pre: {
             component: MarkdownPre,

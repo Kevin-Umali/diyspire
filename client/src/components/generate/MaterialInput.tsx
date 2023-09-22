@@ -16,7 +16,7 @@ const MaterialInput: FC<MaterialInputProps> = ({ materials, setMaterials, onlySp
       updatedMaterials[index] = value;
       setMaterials(updatedMaterials);
     },
-    [materials, setMaterials]
+    [materials, setMaterials],
   );
 
   const handleDeleteInput = useCallback(
@@ -25,7 +25,7 @@ const MaterialInput: FC<MaterialInputProps> = ({ materials, setMaterials, onlySp
       updatedMaterials.splice(index, 1);
       setMaterials(updatedMaterials);
     },
-    [materials, setMaterials]
+    [materials, setMaterials],
   );
 
   const handleAddMore = useCallback(() => {

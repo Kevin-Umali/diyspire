@@ -8,7 +8,6 @@ import { RelatedImages } from "../../types";
 
 interface ProjectImageProps {
   isLoading: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   relatedImages: RelatedImages | null;
   projectTitle: string;
   onOpen: () => void;

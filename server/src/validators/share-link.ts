@@ -167,8 +167,7 @@ export const shareProjectValidationSchema = checkSchema({
   },
   "projectImage.links.download_location": {
     in: ["body"],
-    errorMessage:
-      "Image download location link is required and should be a string.",
+    errorMessage: "Image download location link is required and should be a string.",
     isString: true,
     trim: true,
     notEmpty: {

@@ -14,50 +14,21 @@ interface IdeaRequestBody {
   endPurpose: string;
 }
 
-export const generateIdea = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const generateIdea = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {
-      materials,
-      onlySpecified,
-      difficulty,
-      category,
-      tools,
-      time,
-      budget,
-      endPurpose,
-    }: IdeaRequestBody = req.body;
+    const { materials, onlySpecified, difficulty, category, tools, time, budget, endPurpose }: IdeaRequestBody = req.body;
 
     const openai: OpenAI = req.app.get("openai");
 
-    const materialsString = onlySpecified
-      ? `Only use the following specified materials: ${materials.join(", ")}.`
-      : `Include any materials, especially the specified ones: ${materials.join(
-          ", ",
-        )}.`;
+    const materialsString = onlySpecified ? `Only use the following specified materials: ${materials.join(", ")}.` : `Include any materials, especially the specified ones: ${materials.join(", ")}.`;
 
-    const toolsString =
-      tools.length > 0
-        ? `Work with these tools: ${tools.join(", ")}.`
-        : "Recommend tools that might be beneficial for the projects.";
+    const toolsString = tools.length > 0 ? `Work with these tools: ${tools.join(", ")}.` : "Recommend tools that might be beneficial for the projects.";
 
-    const timeString =
-      time === 0
-        ? "There's no strict time constraint."
-        : `The available time to complete the project is approximately ${time} hours.`;
+    const timeString = time === 0 ? "There's no strict time constraint." : `The available time to complete the project is approximately ${time} hours.`;
 
-    const budgetString =
-      budget === 0
-        ? "The budget is flexible."
-        : `The budget is set between ₱0 and ₱${budget}.`;
+    const budgetString = budget === 0 ? "The budget is flexible." : `The budget is set between ₱0 and ₱${budget}.`;
 
-    const purposeString =
-      endPurpose !== "other"
-        ? `The desired outcome of these projects is primarily for ${endPurpose}.`
-        : "The end goal for these projects is versatile.";
+    const purposeString = endPurpose !== "other" ? `The desired outcome of these projects is primarily for ${endPurpose}.` : "The end goal for these projects is versatile.";
 
     const prompt: string = `
       Please generate a response in the following JSON format:
@@ -112,14 +83,9 @@ interface ExplainRequestBody {
   description: string;
 }
 
-export const explainProjectByTitle = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const explainProjectByTitle = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { title, materials, tools, time, budget, description } =
-      req.body as ExplainRequestBody;
+    const { title, materials, tools, time, budget, description } = req.body as ExplainRequestBody;
 
     const openai: OpenAI = req.app.get("openai");
 

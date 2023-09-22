@@ -1,8 +1,5 @@
 import express from "express";
-import {
-  getAllGuidePaths,
-  getHowToGuideByPath,
-} from "../controllers/guide.controller";
+import { getAllGuidePaths, getHowToGuideByPath } from "../controllers/guide.controller";
 
 const router = express.Router();
 

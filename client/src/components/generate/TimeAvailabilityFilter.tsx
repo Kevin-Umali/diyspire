@@ -13,7 +13,7 @@ const TimeAvailabilityFilter: React.FC<TimeAvailabilityFilterProps> = ({ onTimeC
       setTimeValue(value);
       onTimeChange(value);
     },
-    [onTimeChange]
+    [onTimeChange],
   );
 
   return (

@@ -5,11 +5,6 @@ import validationMiddleware from "../middleware/schema-validation";
 
 const router = express.Router();
 
-router.get(
-  "/search",
-  searchValidationSchema,
-  validationMiddleware,
-  searchImages,
-);
+router.get("/search", searchValidationSchema, validationMiddleware, searchImages);
 
 export default router;
