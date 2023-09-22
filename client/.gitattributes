@@ -1,0 +1,39 @@
+# Handle line endings automatically for files detected as text
+# and leave all files detected as binary untouched.
+* text=auto
+
+# Binary files - these should not be modified in any way.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.svg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.ttf binary
+*.otf binary
+
+# Force TypeScript and JavaScript to use LF
+*.ts eol=lf
+*.tsx eol=lf
+*.js eol=lf
+*.jsx eol=lf
+
+# CSS and SCSS files should use LF too.
+*.css eol=lf
+*.scss eol=lf
+
+# Ensure `.env` files are treated as text, but with Unix line endings for consistency.
+.env* eol=lf
+
+# Don't allow Git to change line endings in shell scripts.
+*.sh eol=lf
+
+# Ensure JSON files use LF for consistency.
+*.json eol=lf
+
+# Markdown files can use platform's default or can be forced to a specific line ending.
+*.md text
