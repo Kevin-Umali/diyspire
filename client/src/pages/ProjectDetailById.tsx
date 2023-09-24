@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, SimpleGrid, Divider, useToast, useDisclosure, Box, Button, Text } from "@chakra-ui/react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getShareLinkData } from "../api/open-ai-api";
+import { getShareLinkData } from "../api/backend-api";
 import { ProjectImage, ProjectInfo, ProjectSteps, ShareModal } from "../components/project-details";
 import { RelatedImages, ProjectLocationState } from "../types";
 

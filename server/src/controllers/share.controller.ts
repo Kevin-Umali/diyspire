@@ -44,7 +44,7 @@ export const saveProject = async (req: Request, res: Response, next: NextFunctio
       return;
     }
 
-    return sendSuccess(res, { id: savedProject.id });
+    return sendSuccess(res, { id: savedProject.id }, 201);
   } catch (error) {
     next(error);
   }

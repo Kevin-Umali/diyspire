@@ -13,3 +13,9 @@ export const customEscape = (str: string): string => {
 export const escapeArrayStrings = (value: string[]): string[] => {
   return value.map((v) => (typeof v === "string" ? customEscape(v.trim()) : v));
 };
+
+export const getStartOfDay = (date: Date) => {
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+  return startOfDay;
+};
