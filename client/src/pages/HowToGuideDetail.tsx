@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Box, Container, Heading, useToast } from "@chakra-ui/react";
 import CustomMarkdown from "../components/CustomMarkdown";
 import { useParams, useNavigate } from "react-router-dom";
-import { getGuideByPath } from "../api/open-ai-api";
+import { getGuideByPath } from "../api/backend-api";
 import { HowToGuide } from "../types";
 import { trimLeadingWhitespace } from "../utils";
 import MetaTag from "../components/MetaTag";

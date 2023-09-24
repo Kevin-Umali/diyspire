@@ -7,7 +7,7 @@ import { createApi } from "unsplash-js";
 import * as nodeFetch from "node-fetch";
 import { PrismaClient } from "@prisma/client";
 
-import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes } from "./routes/index.routes";
+import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes, counterRoutes } from "./routes/index.routes";
 import { sendError } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
@@ -62,6 +62,8 @@ app.use("/api/v1/share", oneDayCacheMiddleware, shareRoutes);
 
 const openaiCacheMiddleware = getConditionalCache("2 hours");
 app.use("/api/v1/generate", openaiCacheMiddleware, openaiRoutes);
+
+app.use("/api/v1/counter", counterRoutes);
 
 app.get("*", (_, res: Response) => {
   sendError(res, "API Path Not Found", 404);

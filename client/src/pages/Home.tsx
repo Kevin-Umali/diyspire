@@ -21,10 +21,11 @@ import {
   Icon,
   useBreakpointValue,
   Container,
+  useSafeLayoutEffect,
 } from "@chakra-ui/react";
 import { FaRegLightbulb, FaInfoCircle } from "react-icons/fa";
 
-import { generateProjectIdeas } from "../api/open-ai-api";
+import { generateProjectIdeas, getTotalCountOfGeneratedIdea, incrementCounterOfGeneratedIdea } from "../api/backend-api";
 import { categories, steps } from "../constants";
 import {
   BudgetFilter,
@@ -59,12 +60,37 @@ const Home = () => {
 
   const [projects, setProjects] = useState([]);
 
+  const [totalCount, setTotalCount] = useState<number>(0);
+
   const orientation: Orientation | undefined = useBreakpointValue({
     base: "vertical",
     md: "horizontal",
   }) as Orientation | undefined;
 
   const toast = useToast();
+
+  const fetchTotalCount = async () => {
+    try {
+      const response = await getTotalCountOfGeneratedIdea();
+      if (response?.data?.totalCount) {
+        setTotalCount(response.data.totalCount);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast({
+        title: "An error occurred.",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  };
+
+  useSafeLayoutEffect(() => {
+    fetchTotalCount();
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     try {
@@ -78,6 +104,9 @@ const Home = () => {
         setProjects(response.data.ideas);
 
         goToNext();
+
+        await incrementCounterOfGeneratedIdea();
+        setTotalCount((count) => count + 1);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -135,6 +164,14 @@ const Home = () => {
             </Text>
           </Box>
         </Box>
+        {totalCount}
+        {totalCount !== null && (
+          <Box p={4} borderRadius="lg" mb={2}>
+            <Text fontSize={["md", "lg"]} textAlign="center" fontWeight="bold">
+              🎉 Total generated ideas so far: {totalCount} 🎉
+            </Text>
+          </Box>
+        )}
         <Stepper index={activeStep} width="100%" orientation={orientation}>
           {steps.map((step, index) => (
             <Step key={step.title}>

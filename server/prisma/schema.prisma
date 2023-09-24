@@ -32,3 +32,10 @@ model ProjectShareLink {
   projectImage   Json
   explanation    String?
 }
+
+model IdeaGenerationCounter {
+  id        Int      @id @default(autoincrement())
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

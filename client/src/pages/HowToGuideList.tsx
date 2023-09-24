@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Container, Heading, Text, LinkBox, LinkOverlay, VStack, useToast } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import { getAllGuides } from "../api/open-ai-api";
+import { getAllGuides } from "../api/backend-api";
 import MetaTag from "../components/MetaTag";
 
 type Guide = {
