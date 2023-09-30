@@ -15,9 +15,7 @@ const MarkdownPre: React.FC<{
   };
 }> = ({ children }) => {
   const { colorMode } = useColorMode();
-  console.log("children", children.props);
   const language = typeof children.props.className === "string" ? children.props.className.replace("language-", "").replace("lang-", "") : undefined;
-  console.log("language", language);
   const style = colorMode === "dark" ? materialDark : oneLight;
 
   if (typeof children.props.children === "string") {
