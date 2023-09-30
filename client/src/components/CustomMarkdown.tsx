@@ -15,9 +15,7 @@ const MarkdownPre: React.FC<{
   };
 }> = ({ children }) => {
   const { colorMode } = useColorMode();
-  console.log("children", children.props);
   const language = typeof children.props.className === "string" ? children.props.className.replace("language-", "").replace("lang-", "") : undefined;
-  console.log("language", language);
   const style = colorMode === "dark" ? materialDark : oneLight;
 
   if (typeof children.props.children === "string") {
@@ -60,7 +58,7 @@ const CustomMarkdown: React.FC<CustomMarkdownrProps> = ({ content }) => {
             component: Link,
             props: { mb: 2, textDecorationLine: "underline" },
           },
-          img: { component: Image, props: { mb: 4, loading: "lazy" } },
+          img: { component: Image, props: { mb: 4 } },
           pre: {
             component: MarkdownPre,
             props: { mb: 4 },

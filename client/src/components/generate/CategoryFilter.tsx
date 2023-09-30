@@ -11,7 +11,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, onCategoryC
       <HStack spacing={4} alignItems="center">
         <Text fontSize="md">Category:</Text>
       </HStack>
-      <Select mt={2} defaultValue={"Anything"} placeholder="Select category" onChange={(e) => onCategoryChange(e.target.value)}>
+      <Select mt={2} defaultValue={0} placeholder="Select category" onChange={(e) => onCategoryChange(e.target.value)}>
         {categories.map((category) => (
           <option key={category} value={category}>
             {category}
