@@ -60,7 +60,7 @@ const CustomMarkdown: React.FC<CustomMarkdownrProps> = ({ content }) => {
             component: Link,
             props: { mb: 2, textDecorationLine: "underline" },
           },
-          img: { component: Image, props: { mb: 4, loading: "lazy" } },
+          img: { component: Image, props: { mb: 4 } },
           pre: {
             component: MarkdownPre,
             props: { mb: 4 },

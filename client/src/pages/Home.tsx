@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   VStack,
   Box,
@@ -21,7 +21,6 @@ import {
   Icon,
   useBreakpointValue,
   Container,
-  useSafeLayoutEffect,
 } from "@chakra-ui/react";
 import { FaRegLightbulb, FaInfoCircle } from "react-icons/fa";
 
@@ -50,7 +49,7 @@ const Home = () => {
   const [availableTime, setAvailableTime] = useState(0);
   const [budget, setBudget] = useState(0);
   const [tools, setTools] = useState([""]);
-  const [purpose, setPurpose] = useState("");
+  const [purpose, setPurpose] = useState("Personal Use");
   const [safetyConfirmed, setSafetyConfirmed] = useState(false);
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const { activeStep, goToNext, goToPrevious } = useSteps({
@@ -88,7 +87,7 @@ const Home = () => {
     }
   };
 
-  useSafeLayoutEffect(() => {
+  useEffect(() => {
     fetchTotalCount();
   }, []);
 

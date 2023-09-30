@@ -8,10 +8,10 @@ const PurposeFilter: React.FC<PurposeFilterProps> = ({ onPurposeChange, ...props
   return (
     <Box {...props}>
       <Text mb={2}>End Result Purpose:</Text>
-      <Select onChange={(e) => onPurposeChange(e.target.value)}>
-        <option value="personal">Personal Use</option>
-        <option value="gift">Gift</option>
-        <option value="other">Other</option>
+      <Select defaultValue={0} onChange={(e) => onPurposeChange(e.target.value)}>
+        <option value="Personal Use">Personal Use</option>
+        <option value="Gift">Gift</option>
+        <option value="Other">Other</option>
       </Select>
     </Box>
   );
