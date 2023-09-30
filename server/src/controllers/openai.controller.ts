@@ -17,7 +17,6 @@ interface IdeaRequestBody {
 export const generateIdea = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { materials, onlySpecified, difficulty, category, tools, time, budget, endPurpose }: IdeaRequestBody = req.body;
-    console.log(materials, onlySpecified, difficulty, category, tools, time, budget, endPurpose);
 
     const openai: OpenAI = req.app.get("openai");
 
@@ -62,7 +61,6 @@ export const generateIdea = async (req: Request, res: Response, next: NextFuncti
     }
     `;
 
-    console.log(prompt);
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
