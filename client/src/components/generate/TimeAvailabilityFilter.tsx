@@ -1,32 +1,57 @@
-import { useState, useCallback } from "react";
-import { Box, Text, Slider, SliderTrack, SliderFilledTrack, SliderThumb, BoxProps } from "@chakra-ui/react";
+import React from "react";
+import { Box, Text, NumberInput, NumberInputField, HStack, BoxProps, Menu, MenuButton, MenuItem, MenuList, Button } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 interface TimeAvailabilityFilterProps extends BoxProps {
-  onTimeChange: (time: number) => void;
+  timeValue: number;
+  timeUnit: string | null;
+  onValueChange: (value: number) => void;
+  onUnitChange: (unit: string) => void;
 }
 
-const TimeAvailabilityFilter: React.FC<TimeAvailabilityFilterProps> = ({ onTimeChange, ...props }) => {
-  const [timeValue, setTimeValue] = useState<number>(0);
+const TimeAvailabilityFilter: React.FC<TimeAvailabilityFilterProps> = ({ timeValue, timeUnit, onValueChange, onUnitChange, ...props }) => {
+  const handleValueChange = (_: string, valueAsNumber: number) => {
+    if (isNaN(valueAsNumber)) {
+      onValueChange(0);
+    } else {
+      onValueChange(valueAsNumber);
+    }
+  };
 
-  const handleSliderChange = useCallback(
-    (value: number) => {
-      setTimeValue(value);
-      onTimeChange(value);
-    },
-    [onTimeChange],
-  );
+  const handleUnitChange = (unit: string) => {
+    onUnitChange(unit);
+  };
 
   return (
     <Box {...props}>
-      <Text mb={2}>
-        Available Time: {timeValue} hour{timeValue > 1 ? "s" : ""}
-      </Text>
-      <Slider defaultValue={0} min={0} max={24} onChange={handleSliderChange}>
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <SliderThumb></SliderThumb>
-      </Slider>
+      <Text mb={2}>Available Time: {timeValue !== 0 && timeUnit ? `${timeValue} ${timeUnit}` : null}</Text>
+      <HStack spacing={4}>
+        <NumberInput min={0} onChange={handleValueChange} value={timeValue}>
+          <NumberInputField />
+        </NumberInput>
+        <Menu>
+          {({ onClose }) => (
+            <>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />} w="200px" variant="outline">
+                {timeUnit ?? "Select unit"}
+              </MenuButton>
+              <MenuList>
+                {["minutes", "hours", "days", "weeks", "months"].map((unit) => (
+                  <MenuItem
+                    key={unit}
+                    onClick={() => {
+                      handleUnitChange(unit);
+                      onClose();
+                    }}
+                  >
+                    {unit.charAt(0).toUpperCase() + unit.slice(1)}(s)
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </>
+          )}
+        </Menu>
+      </HStack>
     </Box>
   );
 };

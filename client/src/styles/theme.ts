@@ -56,6 +56,47 @@ const theme = extendTheme({
         borderColor: colorMode === "dark" ? "border.dark" : "border.light",
       }),
     },
+    Button: {
+      baseStyle: {
+        borderRadius: 0,
+      },
+    },
+    Input: {
+      baseStyle: {
+        field: {
+          borderRadius: 0,
+        },
+      },
+    },
+    NumberInput: {
+      baseStyle: {
+        field: {
+          borderRadius: 0,
+        },
+      },
+    },
+    Tabs: {
+      baseStyle: {
+        tab: {
+          borderTopRadius: 0,
+        },
+      },
+    },
+    Menu: {
+      baseStyle: ({ colorMode }: { colorMode: string }) => ({
+        borderRadius: 0,
+        list: {
+          bg: colorMode === "dark" ? "background.dark" : "background.light",
+        },
+        item: {
+          bg: colorMode === "dark" ? "background.dark" : "background.light",
+          _hover: {
+            bg: colorMode === "dark" ? "primary.dark" : "primary.light",
+            color: colorMode === "dark" ? "text.light" : "text.dark",
+          },
+        },
+      }),
+    },
   },
   config: {
     initialColorMode: "light",

@@ -1,6 +1,5 @@
 import { Heading, List, ListItem, Code, Table, Thead, Tbody, Tr, Th, Td, Divider, Kbd, Text, Image, Box, Link, BoxProps, TextProps, useColorMode } from "@chakra-ui/react";
 import Markdown from "markdown-to-jsx";
-import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { Heading, Stack, SkeletonText, Box, List, ListItem, StackDivider, VStack, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react";
 import { FaPaperPlane } from "react-icons/fa";
 import { ProjectLocationState } from "../../types";
@@ -16,10 +15,10 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ isLoading, project }) => {
 
   if (isLoading) {
     return (
-      <>
+      <Stack spacing={{ base: 6, md: 5 }}>
         <SkeletonText noOfLines={1} skeletonHeight="20" />
         <SkeletonText noOfLines={5} spacing="4" />
-      </>
+      </Stack>
     );
   }
 

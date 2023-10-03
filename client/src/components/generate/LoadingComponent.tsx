@@ -11,7 +11,7 @@ const LoadingComponent: React.FC = () => {
   }, 5000);
 
   return (
-    <Box width="100%" textAlign="center" pt={5} bgGradient="linear(to-r, blue.500, teal.400)" borderRadius="lg" p={4}>
+    <Box width="100%" textAlign="center" pt={5} bgGradient="linear(to-r, blue.500, teal.400)" p={4}>
       <Spinner size="xl" thickness="4px" speed="0.65s" />
       <Text mt={4} fontSize="xl" fontWeight="medium">
         {loadingMessages[currentMessageIndex]}

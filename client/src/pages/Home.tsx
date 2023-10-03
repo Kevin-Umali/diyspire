@@ -46,7 +46,8 @@ const Home = () => {
   const [onlySpecified, setOnlySpecified] = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("Anything");
-  const [availableTime, setAvailableTime] = useState(0);
+  const [timeValue, setTimeValue] = useState<number>(0);
+  const [timeUnit, setTimeUnit] = useState<string | null>(null);
   const [budget, setBudget] = useState(0);
   const [tools, setTools] = useState([""]);
   const [purpose, setPurpose] = useState("Personal Use");
@@ -97,7 +98,7 @@ const Home = () => {
 
       goToNext();
 
-      const response = await generateProjectIdeas(materials, onlySpecified, selectedDifficulty, selectedCategory, tools, availableTime, budget, purpose);
+      const response = await generateProjectIdeas(materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, purpose);
 
       if (response.data?.ideas) {
         setProjects(response.data.ideas);
@@ -119,24 +120,24 @@ const Home = () => {
       });
       goToPrevious();
     }
-  }, [safetyConfirmed, goToNext, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, availableTime, budget, purpose, toast, goToPrevious]);
+  }, [safetyConfirmed, goToNext, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, purpose, toast, goToPrevious]);
 
   const advancedOptions = useMemo(
     () => (
       <Box mt={4}>
-        <TimeAvailabilityFilter onTimeChange={setAvailableTime} />
+        <TimeAvailabilityFilter timeValue={timeValue} timeUnit={timeUnit} onValueChange={setTimeValue} onUnitChange={setTimeUnit} />
         <BudgetFilter onBudgetChange={setBudget} mt={4} />
         <ToolsAvailableInput tools={tools} setTools={setTools} mt={4} />
-        <PurposeFilter onPurposeChange={setPurpose} mt={4} />
+        <PurposeFilter purpose={purpose} onPurposeChange={setPurpose} mt={4} />
       </Box>
     ),
-    [tools],
+    [timeUnit, timeValue, tools, purpose],
   );
 
   return (
     <Container as="main" maxW="7xl" py={{ base: 5, sm: 10 }}>
       <VStack spacing={10} p={5} width="100%">
-        <Box width="100%" overflowX="auto" borderRadius="lg" p={5} boxShadow="lg">
+        <Box width="100%" overflowX="auto" p={5} boxShadow="lg">
           <Heading as="h1" mb={3} fontSize={["lg", "xl", "2xl"]}>
             <Icon as={FaRegLightbulb} w={6} h={6} mr={2} />
             DIY Project Ideas
@@ -165,7 +166,7 @@ const Home = () => {
         </Box>
         {totalCount}
         {totalCount !== null && (
-          <Box p={4} borderRadius="lg" mb={2}>
+          <Box p={4} mb={2}>
             <Text fontSize={["md", "lg"]} textAlign="center" fontWeight="bold">
               🎉 Total generated ideas so far: {totalCount} 🎉
             </Text>
@@ -186,7 +187,7 @@ const Home = () => {
           ))}
         </Stepper>
         {activeStep === 0 && (
-          <Box width="100%" p={4} borderWidth="1px" borderRadius="md" borderColor="gray.200">
+          <Box width="100%" p={4} borderWidth="1px" borderColor="gray.200">
             <MaterialInput materials={materials} setMaterials={setMaterials} onlySpecified={onlySpecified} setOnlySpecified={setOnlySpecified} />
             <DifficultyFilter onDifficultyChange={setSelectedDifficulty} mt={4} />
             <CategoryFilter categories={categories} onCategoryChange={setSelectedCategory} mt={4} />
@@ -204,7 +205,7 @@ const Home = () => {
         )}
         {activeStep === 1 && <LoadingComponent />}
         {activeStep === 2 && (
-          <Box width="100%" p={4} borderWidth="1px" borderRadius="md" borderColor="gray.200">
+          <Box width="100%" p={4} borderWidth="1px" borderColor="gray.200">
             <ProjectTabs projects={projects} />
           </Box>
         )}
