@@ -48,9 +48,9 @@ export const ideaValidationSchema = checkSchema({
   },
   time: {
     in: ["body"],
-    isNumeric: {
-      errorMessage: "Time should be a number",
-    },
+    isString: true,
+    trim: true,
+    escape: true,
   },
   budget: {
     in: ["body"],

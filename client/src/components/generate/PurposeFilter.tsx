@@ -1,18 +1,50 @@
-import { Box, Text, Select, BoxProps } from "@chakra-ui/react";
+import { Menu, MenuButton, MenuItem, MenuList, Button, Text, Box, BoxProps } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 interface PurposeFilterProps extends BoxProps {
+  purpose: string;
   onPurposeChange: (purpose: string) => void;
 }
 
-const PurposeFilter: React.FC<PurposeFilterProps> = ({ onPurposeChange, ...props }) => {
+const PurposeFilter: React.FC<PurposeFilterProps> = ({ purpose, onPurposeChange, ...props }) => {
   return (
     <Box {...props}>
       <Text mb={2}>End Result Purpose:</Text>
-      <Select defaultValue={0} onChange={(e) => onPurposeChange(e.target.value)}>
-        <option value="Personal Use">Personal Use</option>
-        <option value="Gift">Gift</option>
-        <option value="Other">Other</option>
-      </Select>
+      <Menu>
+        {({ onClose }) => (
+          <>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />} w="200px" variant="outline">
+              {purpose ?? "Select Purpose"}
+            </MenuButton>
+            <MenuList>
+              <MenuItem
+                onClick={() => {
+                  onPurposeChange("Personal Use");
+                  onClose();
+                }}
+              >
+                Personal Use
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onPurposeChange("Gift");
+                  onClose();
+                }}
+              >
+                Gift
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onPurposeChange("Other");
+                  onClose();
+                }}
+              >
+                Other
+              </MenuItem>
+            </MenuList>
+          </>
+        )}
+      </Menu>
     </Box>
   );
 };

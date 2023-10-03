@@ -1,7 +1,4 @@
-// ProjectImage.tsx
-
-import React from "react";
-import { Flex, Image, Link, Text, Button, Skeleton, Icon } from "@chakra-ui/react";
+import { Flex, Image, Link, Text, Button, Skeleton, Icon, SkeletonText } from "@chakra-ui/react";
 import { FaInfoCircle, FaShare } from "react-icons/fa";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { RelatedImages } from "../../types";
@@ -24,7 +21,12 @@ const ProjectImage: React.FC<ProjectImageProps> = ({ isLoading, projectTitle, re
   const youtubeSearchLink = `https://www.youtube.com/results?search_query=${projectTitle} Tutorial`;
 
   if (isLoading) {
-    return <Skeleton height={{ lg: "500px" }} />;
+    return (
+      <Flex direction="column">
+        <Skeleton height={{ lg: "500px" }} />
+        <SkeletonText noOfLines={5} spacing="4" />
+      </Flex>
+    );
   }
 
   return (

@@ -9,7 +9,7 @@ interface IdeaRequestBody {
   difficulty: string;
   category: string;
   tools: string[];
-  time: number;
+  time: string;
   budget: number;
   endPurpose: string;
 }
@@ -26,7 +26,7 @@ export const generateIdea = async (req: Request, res: Response, next: NextFuncti
 
     const toolsDescription = tools.filter(Boolean).length > 0 ? `Work with these tools: ${tools.join(", ")}.` : "Recommend tools that might be beneficial for the projects.";
 
-    const timeDescription = time === 0 ? "There's no strict time constraint." : `The available time to complete the project is approximately ${time} hours.`;
+    const timeDescription = time.length !== 0 ? "There's no strict time constraint." : `The available time to complete the project is approximately ${time}.`;
 
     const budgetDescription = budget === 0 ? "The budget is flexible." : `The budget is set between ₱0 and ₱${budget}.`;
 
@@ -53,7 +53,7 @@ export const generateIdea = async (req: Request, res: Response, next: NextFuncti
                 "tools": ["List of required tools"],
                 "time": "Estimated time to complete the project",
                 "budget": "Estimated budget for the project in ₱, including the materials and tools cost if needed",
-                "steps": ["Detailed step-by-step guide to complete the project"],
+                "tags": ["Tags/Hashtag about this project"],
                 "description": "A short descriptive text of the project"
             },
             ... // Please provide three ideas in total.

@@ -48,7 +48,7 @@ const HowToGuidesList = () => {
 
       <VStack spacing={3} align="start">
         {guides.map((guide, index) => (
-          <LinkBox key={index} width="100%" p={4} borderWidth="1px" borderRadius="md">
+          <LinkBox key={index} width="100%" p={4} borderWidth="1px">
             <LinkOverlay as={RouterLink} to={`/guide/${guide.path}`}>
               {guide.metadata.title}
             </LinkOverlay>

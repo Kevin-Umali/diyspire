@@ -20,7 +20,18 @@ const fetchApi = async (endpoint: string, method: string = "GET", body?: object)
   return await response.json();
 };
 
-export const generateProjectIdeas = async (materials: string[], onlySpecified: boolean, difficulty: string, category: string, tools: string[], time: number, budget: number, endPurpose: string) => {
+export const generateProjectIdeas = async (
+  materials: string[],
+  onlySpecified: boolean,
+  difficulty: string,
+  category: string,
+  tools: string[],
+  timeValue: number,
+  timeUnit: string | null,
+  budget: number,
+  endPurpose: string,
+) => {
+  const time = timeValue !== 0 && timeUnit ? `${timeValue} ${timeUnit}` : "";
   return fetchApi("/v1/generate/idea", "POST", { materials, onlySpecified, difficulty, category, tools, time, budget, endPurpose });
 };
 

@@ -12,12 +12,7 @@ const Footer: React.FC = () => {
         <VStack spacing={5} alignItems="initial">
           <Flex flexWrap="wrap" direction={{ base: "column", md: "row" }} alignItems="start" justifyContent="space-between">
             {footerData.map((data, index) => (
-              <Flex
-                key={index}
-                direction="column"
-                mb="3"
-                flexBasis={{ base: "100%", md: "25%" }} // <-- Add this for setting the width
-              >
+              <Flex key={index} direction="column" mb="3" flexBasis={{ base: "100%", md: "25%" }}>
                 <Link {...getLinkProps(data)} fontWeight="500" color={linkColor} p={{ base: "2", sm: "1" }}>
                   {data.label}
                 </Link>

@@ -54,6 +54,7 @@ export interface ProjectLocationState {
   tools: string[];
   time: string;
   budget: string;
+  tags: string[];
   description: string;
 }
 

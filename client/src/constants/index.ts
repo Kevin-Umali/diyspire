@@ -1,4 +1,35 @@
+import {
+  FaUserAstronaut,
+  FaHome,
+  FaTshirt,
+  FaTree,
+  FaChild,
+  FaGem,
+  FaHammer,
+  FaPaperclip,
+  FaMugHot,
+  FaCut,
+  FaRecycle,
+  FaGift,
+  FaRobot,
+  FaPaintBrush,
+  FaMountain,
+  FaCookieBite,
+  FaDog,
+  FaCouch,
+  FaPalette,
+  FaCamera,
+  FaGuitar,
+  FaCar,
+  FaLeaf,
+  FaRegStar,
+  FaStar,
+  FaStarHalfAlt,
+  FaStarOfLife,
+} from "react-icons/fa";
 import { Commit, FAQ, Footer, Steps } from "../types";
+// eslint-disable-next-line import/named
+import { IconType } from "react-icons";
 
 export const categories: string[] = [
   "Anything",
@@ -26,6 +57,41 @@ export const categories: string[] = [
   "Eco-friendly Crafts",
   "Baking & Food Crafts",
   "Travel & Adventure DIYs",
+];
+
+export const categoryIcons: { [key: string]: IconType } = {
+  Anything: FaUserAstronaut,
+  "Home Decor": FaHome,
+  Fashion: FaTshirt,
+  "Garden Projects": FaTree,
+  "Kids Crafts": FaChild,
+  "Jewelry Making": FaGem,
+  Woodworking: FaHammer,
+  "Paper Crafts": FaPaperclip,
+  "Pottery & Clay Projects": FaMugHot,
+  "Textile & Sewing": FaCut,
+  Upcycling: FaRecycle,
+  "Holiday Crafts": FaGift,
+  "Tech DIYs": FaRobot,
+  "Beauty & Personal Care": FaPaintBrush,
+  "Outdoor Projects": FaMountain,
+  "Kitchen Crafts": FaCookieBite,
+  "Pet Crafts": FaDog,
+  "Furniture Makeovers": FaCouch,
+  "Art Projects": FaPalette,
+  "Photography DIYs": FaCamera,
+  "Musical Instruments": FaGuitar,
+  "Car & Mechanical Crafts": FaCar,
+  "Eco-friendly Crafts": FaLeaf,
+  "Baking & Food Crafts": FaCookieBite,
+  "Travel & Adventure DIYs": FaMountain,
+};
+
+export const difficulties: { level: string; icon: IconType }[] = [
+  { level: "all", icon: FaStarOfLife },
+  { level: "beginner", icon: FaRegStar },
+  { level: "intermediate", icon: FaStarHalfAlt },
+  { level: "advanced", icon: FaStar },
 ];
 
 export const steps: Steps[] = [
