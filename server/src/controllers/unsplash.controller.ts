@@ -17,7 +17,8 @@ export const searchImages = async (req: Request, res: Response, next: NextFuncti
     if (result.errors) {
       sendSuccess(res, { errors: result.errors }, 400);
     } else {
-      const randomIndex = Math.floor(Math.random() * 6);
+      const maxLength = result.response.results.length < 5 ? result.response.results.length : 6;
+      const randomIndex = Math.floor(Math.random() * maxLength);
       const photo = result.response.results[randomIndex];
 
       if (photo) {
