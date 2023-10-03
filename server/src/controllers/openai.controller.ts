@@ -62,8 +62,13 @@ export const generateIdea = async (req: Request, res: Response, next: NextFuncti
     `;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-0613",
       messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful assistant that provides detailed, step-by-step guides for building DIY projects based on provided details such as title, materials, tools, time, budget, and a brief overview.",
+        },
         {
           role: "user",
           content: prompt,
@@ -108,8 +113,13 @@ export const explainProjectByTitle = async (req: Request, res: Response, next: N
     `;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-0613",
       messages: [
+        {
+          role: "system",
+          content:
+            "You are an instructive assistant capable of generating clear, detailed, and step-by-step guides for DIY projects based on provided information such as title, materials, tools, time, budget, and a short description. Your guidance should be easy to follow, accurate, and considerate of safety and functionality in the execution of the project.",
+        },
         {
           role: "user",
           content: prompt,
