@@ -17,7 +17,8 @@ export const searchImages = async (req: Request, res: Response, next: NextFuncti
     if (result.errors) {
       sendSuccess(res, { errors: result.errors }, 400);
     } else {
-      const photo = result.response.results[0];
+      const randomIndex = Math.floor(Math.random() * 6);
+      const photo = result.response.results[randomIndex];
 
       if (photo) {
         await unsplash.photos.trackDownload({
