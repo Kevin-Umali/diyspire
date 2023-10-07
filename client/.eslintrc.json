@@ -1,0 +1,36 @@
+{
+  "root": true,
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "prettier"],
+  "plugins": ["@typescript-eslint", "tailwindcss", "import", "unused-imports"],
+  "rules": {
+    "import/no-unused-modules": "error",
+    "unused-imports/no-unused-imports": "error",
+    "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-console": ["warn", { "allow": ["warn", "error", "info", "debug"] }],
+    "@next/next/no-html-link-for-pages": "off"
+  },
+  "settings": {
+    "tailwindcss": {
+      "callees": ["cn", "cva"],
+      "config": "tailwind.config.cjs"
+    },
+    "next": {
+      "rootDir": ["apps/*/"]
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parser": "@typescript-eslint/parser"
+    },
+    {
+      "files": ["components/ui/**/*.{tsx, ts}"],
+      "rules": {
+        "import/no-unused-modules": "off",
+        "unused-imports/no-unused-imports": "off",
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    }
+  ]
+}
