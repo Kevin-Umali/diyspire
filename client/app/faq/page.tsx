@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import FAQPage from "./faq";
 
 export const metadata: Metadata = {

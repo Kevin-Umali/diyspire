@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface PurposeFilterProps {
   purpose: string;
@@ -17,7 +18,7 @@ const PurposeFilter: React.FC<PurposeFilterProps> = ({ purpose, onPurposeChange 
 
   return (
     <div className="mb-4">
-      <Label htmlFor="purpose" className="block text-md font-medium mb-2">
+      <Label htmlFor="purpose" className="text-md mb-2 block font-medium">
         End Result Purpose:
       </Label>
       <Select onValueChange={(e) => handlePurposeChange(e)} defaultValue={selectedPurpose ?? ""} aria-label="Select a purpose for the end result">

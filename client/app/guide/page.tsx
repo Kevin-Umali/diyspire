@@ -1,5 +1,6 @@
-import HowToGuidesList from "./guide";
 import { Metadata } from "next";
+
+import HowToGuidesList from "./guide";
 
 export const metadata: Metadata = {
   title: "MakeMeDIYspire How-to Guides",

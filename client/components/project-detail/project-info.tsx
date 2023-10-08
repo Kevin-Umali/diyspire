@@ -1,7 +1,8 @@
 import { ProjectLocationState } from "@/interfaces";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Label } from "@/components/ui/label";
 import { TimerIcon } from "lucide-react";
+
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProjectInfoProps {
   isLoading: boolean;
@@ -26,23 +27,23 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ isLoading, project }) => {
   return (
     <div className="space-y-6 md:space-y-5">
       <header>
-        <h1 className="text-2xl sm:text-4xl lg:text-5xl leading-tight font-semibold">{project.title}</h1>
-        <Label className="text-lg mt-2 font-light">
+        <h1 className="text-2xl font-semibold leading-tight sm:text-4xl lg:text-5xl">{project.title}</h1>
+        <Label className="mt-2 text-lg font-light">
           {project.time} | {project.budget}
         </Label>
-        <div className="flex items-center mt-2">
+        <div className="mt-2 flex items-center">
           <TimerIcon aria-label={`Complete in ${project.time}`} />
           <Label className="ml-2">Complete in {project.time}</Label>
         </div>
       </header>
 
-      <div className="space-y-4 sm:space-y-6 flex flex-col divide-y">
+      <div className="flex flex-col space-y-4 divide-y sm:space-y-6">
         <div className="space-y-4 sm:space-y-6">
           <Label className="text-lg font-light lg:line-clamp-3">{project.description}</Label>
         </div>
 
         <div className="pt-4">
-          <Label className="text-base lg:text-lg font-medium uppercase mb-4">Materials</Label>
+          <Label className="mb-6 text-base font-medium uppercase lg:text-lg">Materials</Label>
           <ul className="space-y-2">
             {project.materials.map((material, index) => (
               <li key={index}>{material}</li>
@@ -51,7 +52,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ isLoading, project }) => {
         </div>
 
         <div className="pt-4">
-          <Label className="text-base lg:text-lg font-medium uppercase mb-4">Tools</Label>
+          <Label className="mb-6 text-base font-medium uppercase lg:text-lg">Tools</Label>
           <ul className="space-y-2">{project.tools.length >= 1 ? project.tools.map((tool, index) => <li key={index}>{tool}</li>) : <li>Nothing</li>}</ul>
         </div>
       </div>
