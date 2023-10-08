@@ -8,7 +8,7 @@ import * as nodeFetch from "node-fetch";
 import { PrismaClient } from "@prisma/client";
 
 import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes, counterRoutes } from "./routes/index.routes";
-import { sendError } from "./utils/response-template";
+import { sendError, sendSuccess } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
 import getConditionalCache from "./middleware/cache-response";
@@ -55,10 +55,23 @@ app.use(express.json());
 
 app.use(limiter);
 
+app.get(
+  "/api/v1/ping",
+  cors({
+    origin: "https://console.cron-job.org",
+    optionsSuccessStatus: 200,
+  }),
+  (req, res) => {
+    sendSuccess(res, { status: "Server is active" });
+  },
+);
+
 const oneDayCacheMiddleware = getConditionalCache("24 hours");
 app.use("/api/v1/guide", oneDayCacheMiddleware, guideRoutes);
 app.use("/api/v1/image", oneDayCacheMiddleware, unsplashRoutes);
-app.use("/api/v1/share", oneDayCacheMiddleware, shareRoutes);
+
+const oneYearCacheMiddleware = getConditionalCache("12 months");
+app.use("/api/v1/share", oneYearCacheMiddleware, shareRoutes);
 
 const openaiCacheMiddleware = getConditionalCache("2 hours");
 app.use("/api/v1/generate", openaiCacheMiddleware, openaiRoutes);

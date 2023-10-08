@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import { sendSuccess } from "../utils/response-template";
+import { randomInt } from "crypto";
 
 export const searchImages = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,7 +19,7 @@ export const searchImages = async (req: Request, res: Response, next: NextFuncti
       sendSuccess(res, { errors: result.errors }, 400);
     } else {
       const maxLength = result.response.results.length < 5 ? result.response.results.length : 6;
-      const randomIndex = Math.floor(Math.random() * maxLength);
+      const randomIndex = randomInt(maxLength);
       const photo = result.response.results[randomIndex];
 
       if (photo) {
