@@ -15,7 +15,7 @@
     "build:server": "cd server && npm run build",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "build": "npm install && concurrently \"npm run build:client\" \"npm run build:server\"",
-    "lint:all": "cd server && npm run lint && cd ../client && npm run lint"
+    "lint:all": "cd server && npm run lint && cd ../client && npm run lint:fix"
   },
   "husky": {
     "hooks": {

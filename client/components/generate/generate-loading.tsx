@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { loadingMessages } from "@/constants";
-import useInterval from "@/hooks/useInterval";
 import { Info, Loader } from "lucide-react";
+
+import useInterval from "@/hooks/useInterval";
 import { Label } from "@/components/ui/label";
 
 const GenerateLoading: React.FC = () => {
@@ -12,13 +13,13 @@ const GenerateLoading: React.FC = () => {
   }, 5000);
 
   return (
-    <div className="w-full text-center pt-5 p-4 min-h-[150px] flex flex-col items-center justify-center">
-      <Loader className="w-10 h-10 animate-spin mx-auto" />
+    <div className="flex min-h-[150px] w-full flex-col items-center justify-center p-4 pt-5 text-center">
+      <Loader className="mx-auto h-10 w-10 animate-spin" />
       <p className="mt-4 text-lg font-medium" aria-live="polite" aria-atomic="true">
         {loadingMessages[currentMessageIndex]}
       </p>
-      <div className="mb-4 mt-4 flex items-center">
-        <span className="mr-2 flex items-center">
+      <div className="my-4 flex flex-col items-center space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
+        <span className="flex items-center justify-center">
           <Info size={24} />
         </span>
         <Label className="text-sm">

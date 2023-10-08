@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { categoryIcons } from "@/constants";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
@@ -19,19 +20,21 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, onCategoryC
 
   return (
     <div className={`space-y-4 ${className}`}>
-      <div className="flex items-center space-x-4 mb-2">
-        <Label className="block text-md font-medium">Filter by Category:</Label>
+      <div className="mb-2 flex items-center space-x-4">
+        <Label className="text-md block font-medium">Filter by Category:</Label>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
         {categories.map((category) => {
           const isSelected = selectedCategory === category;
           const IconComponent = categoryIcons[category];
           return (
             <Button
               key={category}
-              variant="outline"
               onClick={() => handleCategoryClick(category)}
-              className={`p-2 border cursor-pointer ${isSelected ? "text-black bg-secondary dark:text-white" : ""} flex items-center justify-center space-x-2 transition duration-300 ease-in-out`}
+              variant="outline"
+              className={`cursor-pointer border p-2 ${
+                isSelected ? "border-primary" : "border-secondary"
+              } flex items-center justify-center space-x-2 text-black transition duration-300 ease-in-out focus:bg-transparent active:bg-transparent dark:text-white`}
               aria-label={`Filter by ${category} category`}
             >
               {IconComponent && <IconComponent size={20} />}

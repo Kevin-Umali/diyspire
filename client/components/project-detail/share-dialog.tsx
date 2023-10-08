@@ -1,10 +1,11 @@
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Check, Copy, Share2 } from "lucide-react";
+
+import useClipboard from "@/hooks/useClipboard";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import useClipboard from "@/hooks/useClipboard";
-import { Check, Copy, Share2 } from "lucide-react";
 
 interface ShareDialogProps {
   isOpen: boolean;
@@ -42,7 +43,7 @@ const ShareDialog: React.FC<ShareDialogProps> = ({ isOpen, onClose, isSaving, sh
     if (isSaving) {
       return (
         <div className="flex flex-col items-center">
-          <div className="loader mt-3 mb-3"></div>
+          <div className="loader my-3"></div>
           <Label className="text-center">Generating share link...</Label>
         </div>
       );
@@ -54,10 +55,10 @@ const ShareDialog: React.FC<ShareDialogProps> = ({ isOpen, onClose, isSaving, sh
           <Input value={shareLink} readOnly className="mb-3" />
           <div className="flex items-center">
             <Button onClick={onCopy} disabled={!shareLink} aria-label={hasCopied ? "Link Copied" : "Copy Link"}>
-              {hasCopied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+              {hasCopied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
             </Button>
             <Button onClick={handleWebShare} disabled={!navigator.share} aria-label="Share Link">
-              <Share2 className="w-5 h-5" />
+              <Share2 className="h-5 w-5" />
             </Button>
           </div>
         </div>

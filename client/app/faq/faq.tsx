@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { faqs } from "@/constants";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { FAQLinkData } from "@/interfaces";
+
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function FAQPage() {
   const [accordionDefaultValue, setAccordionDefaultValue] = useState<string>(`item-0`);
@@ -16,7 +17,7 @@ export default function FAQPage() {
       index % 2 === 0 ? (
         segment
       ) : (
-        <Link key={segment} href={links?.[segment]?.href ?? "#"}>
+        <Link className="mx-1 underline" key={segment} href={links?.[segment]?.href ?? "#"}>
           {links?.[segment]?.text ?? segment}
         </Link>
       ),
@@ -36,8 +37,8 @@ export default function FAQPage() {
 
   return (
     <>
-      <div className="container mx-auto py-5 px-4 sm:py-10">
-        <div className="text-center mb-10">
+      <div className="container mx-auto px-4 py-5 sm:py-10">
+        <div className="mb-10 text-center">
           <h1 className="mb-3 text-lg sm:text-xl lg:text-2xl">Frequently Asked Questions</h1>
         </div>
 

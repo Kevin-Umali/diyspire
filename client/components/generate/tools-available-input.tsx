@@ -1,8 +1,9 @@
 import { useCallback } from "react";
+import { PlusCircle, X } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PlusCircle, X } from "lucide-react";
 
 interface ToolsAvailableInputProps {
   tools: string[];
@@ -31,7 +32,7 @@ const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setToo
 
   return (
     <div className={`mb-4 ${className}`}>
-      <Label className="block text-md font-medium mb-2">Available Tools:</Label>
+      <Label className="text-md mb-2 block font-medium">Available Tools:</Label>
       <div className="space-y-3">
         {tools.map((tool, index) => (
           <div key={tool || index} className="flex items-center space-x-2">
@@ -41,8 +42,8 @@ const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setToo
             </Button>
           </div>
         ))}
-        <Button className="w-full lg:w-auto focus:outline-none focus:ring-20 focus:ring-opacity-50 space-x-2" onClick={() => setTools([...tools, ""])} aria-label="Add another tool">
-          <PlusCircle className="w-5 h-5" />
+        <Button className="focus:ring-20 w-full space-x-2 focus:outline-none focus:ring-opacity-50 lg:w-auto" onClick={() => setTools([...tools, ""])} aria-label="Add another tool">
+          <PlusCircle className="h-5 w-5" />
           <span>Add another tool</span>
         </Button>
       </div>

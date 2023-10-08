@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import ProjectDetail from "./project-detail";
 
 export const metadata: Metadata = {

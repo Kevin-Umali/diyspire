@@ -1,6 +1,6 @@
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface TimeAvailabilityFilterProps {
   timeValue: number;
@@ -13,7 +13,7 @@ interface TimeAvailabilityFilterProps {
 const TimeAvailabilityFilter: React.FC<TimeAvailabilityFilterProps> = ({ timeValue, timeUnit, onValueChange, onUnitChange, className }) => {
   return (
     <div className={className}>
-      <Label className="mb-2 block text-md font-medium">
+      <Label className="text-md mb-2 block font-medium">
         Available Time:
         {timeValue > 0 && timeUnit ? ` ${timeValue} ${timeUnit}` : ""}
       </Label>

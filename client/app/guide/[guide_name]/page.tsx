@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { getGuideByPath } from "@/lib";
+
 import HowToGuideDetail from "./guide-name";
 
 export async function generateMetadata({ params }: { params: { guide_name: string } }): Promise<Metadata> {

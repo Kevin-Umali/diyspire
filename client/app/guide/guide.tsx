@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+
 import { getAllGuides } from "@/lib/index";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { Label } from "@/components/ui/label";
 
 type Guide = {
   path: string;
@@ -41,10 +42,10 @@ export default function HowToGuidesList() {
 
   return (
     <>
-      <div className="container mx-auto px-5 sm:px-10 py-12">
-        <div className="text-center mb-12">
-          <h1 className="mb-3 text-3xl lg:text-4xl font-semibold">&ldquo;MakeMeDIYspire&rdquo; Guides</h1>
-          <Label className="text-sm sm:text-md inline-block mt-2">From usage to troubleshooting, explore our detailed guides to get the most out of the DIY project generator.</Label>
+      <div className="container mx-auto px-5 py-12 sm:px-10">
+        <div className="mb-12 text-center">
+          <h1 className="mb-3 text-3xl font-semibold lg:text-4xl">&ldquo;MakeMeDIYspire&rdquo; Guides</h1>
+          <Label className="sm:text-md mt-2 inline-block text-sm">From usage to troubleshooting, explore our detailed guides to get the most out of the DIY project generator.</Label>
         </div>
 
         {loading ? (

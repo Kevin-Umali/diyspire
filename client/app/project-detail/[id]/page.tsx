@@ -1,6 +1,7 @@
-import { getShareLinkData } from "@/lib";
-import ProjectDetailById from "./project-detail-by-id";
 import { Metadata } from "next";
+import { getShareLinkData } from "@/lib";
+
+import ProjectDetailById from "./project-detail-by-id";
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const sharedLinkData = await getShareLinkData(params.id);

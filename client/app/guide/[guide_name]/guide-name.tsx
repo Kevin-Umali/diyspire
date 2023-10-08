@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getGuideByPath } from "@/lib/index";
-import { HowToGuide } from "@/interfaces";
-import { useRouter } from "next/navigation";
 import Head from "next/head";
-import CustomMarkdown from "@/components/custom-markdown";
-import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { HowToGuide } from "@/interfaces";
+
+import { getGuideByPath } from "@/lib/index";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
+import CustomMarkdown from "@/components/custom-markdown";
 
 export default function HowToGuideDetail({ params }: { params: { guide_name: string } }) {
   const router = useRouter();
@@ -69,7 +70,7 @@ export default function HowToGuideDetail({ params }: { params: { guide_name: str
         </div>
       ) : (
         <>
-          <div className="text-center mb-10">
+          <div className="mb-10 text-center">
             <h1 className="mb-3 text-lg sm:text-xl lg:text-2xl">&ldquo;MakeMeDIYspire&rdquo; Guides</h1>
           </div>
 
