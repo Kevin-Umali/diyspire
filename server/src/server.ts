@@ -1,6 +1,7 @@
 import express, { Express, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
+import compression from "compression";
 import dotenv from "dotenv";
 import OpenAI from "openai";
 import { createApi } from "unsplash-js";
@@ -52,6 +53,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(compression());
 
 app.use(limiter);
 

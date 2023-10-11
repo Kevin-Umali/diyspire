@@ -13,7 +13,7 @@ const GenerateLoading: React.FC = () => {
   }, 5000);
 
   return (
-    <div className="flex min-h-[150px] w-full flex-col items-center justify-center p-4 pt-5 text-center">
+    <div className="flex min-h-[250px] w-full flex-col items-center justify-center p-4 pt-5 text-center">
       <Loader className="mx-auto h-10 w-10 animate-spin" />
       <p className="mt-4 text-lg font-medium" aria-live="polite" aria-atomic="true">
         {loadingMessages[currentMessageIndex]}

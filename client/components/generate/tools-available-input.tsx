@@ -31,22 +31,29 @@ const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setToo
   );
 
   return (
-    <div className={`mb-4 ${className}`}>
-      <Label className="text-md mb-2 block font-medium">Available Tools:</Label>
-      <div className="space-y-3">
+    <div className={`space-y-4 border px-4 pb-10 pt-5 sm:px-20 ${className}`}>
+      <div className="mb-2 flex flex-col items-center text-center sm:flex-col sm:items-center sm:text-center">
+        <div className="mb-2 flex flex-col items-center space-x-0 sm:mb-0 sm:flex-row sm:space-x-2">
+          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">{6}</div>
+          <Label className="text-md block font-medium">What tools are available?</Label>
+        </div>
+        <Label className="text-xs">List down all the tools you have for the DIY project</Label>
+      </div>
+
+      <div className="flex w-full flex-col items-center space-y-3">
         {tools.map((tool, index) => (
-          <div key={tool || index} className="flex items-center space-x-2">
-            <Input className="flex-1" value={tool} placeholder="Enter a tool" onChange={(e) => handleInputChange(index, e.target.value)} />
+          <div key={index} className="flex w-full items-center space-x-2">
+            <Input className="flex-1 rounded border p-2" value={tool} placeholder="Enter a tool" onChange={(e) => handleInputChange(index, e.target.value)} />
             <Button aria-label="Delete tool" disabled={tools.length === 1} onClick={() => handleDeleteTool(index)}>
               <X />
             </Button>
           </div>
         ))}
-        <Button className="focus:ring-20 w-full space-x-2 focus:outline-none focus:ring-opacity-50 lg:w-auto" onClick={() => setTools([...tools, ""])} aria-label="Add another tool">
-          <PlusCircle className="h-5 w-5" />
-          <span>Add another tool</span>
-        </Button>
       </div>
+      <Button className="mt-4 w-full focus:outline-none focus:ring-2 focus:ring-opacity-50" onClick={() => setTools([...tools, ""])} aria-label="Add another tool">
+        <PlusCircle className="mr-2 h-5 w-5" />
+        <span>Add another tool</span>
+      </Button>
     </div>
   );
 };

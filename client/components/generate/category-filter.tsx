@@ -1,48 +1,83 @@
 import { useState } from "react";
-import { categoryIcons } from "@/constants";
+import { Categories } from "@/interfaces";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 interface CategoryFilterProps {
-  categories: string[];
+  categories: Categories;
   onCategoryChange: (selectedCategory: string) => void;
   className?: string;
 }
 
 const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, onCategoryChange, className }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>("Anything");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>("General");
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>("Anything");
+  const [subCategories, setSubCategories] = useState<string[]>(Object.keys(categories["General"].subcategories));
 
-  const handleCategoryClick = (category: string) => {
+  const handleCategoryClick = (category: string, subcategories: any) => {
     setSelectedCategory(category);
-    onCategoryChange(category);
+    setSubCategories(Object.keys(subcategories));
+  };
+
+  const handleSubCategoryClick = (subCategory: string) => {
+    onCategoryChange(subCategory);
+    setSelectedSubCategory(subCategory);
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      <div className="mb-2 flex items-center space-x-4">
-        <Label className="text-md block font-medium">Filter by Category:</Label>
+    <div className={`space-y-4 border px-4 pb-10 pt-5 sm:px-20 ${className}`}>
+      <div className="mb-2 flex flex-col items-center text-center sm:flex-col sm:items-center sm:text-center">
+        <div className="mb-2 flex flex-col items-center space-x-0 sm:mb-0 sm:flex-row sm:space-x-2">
+          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">1</div>
+          <Label className="text-md block font-medium">Which category of DIY projects interests you?</Label>
+        </div>
+        <Label className="text-xs">Choose a category to explore projects</Label>
       </div>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
-        {categories.map((category) => {
-          const isSelected = selectedCategory === category;
-          const IconComponent = categoryIcons[category];
-          return (
-            <Button
-              key={category}
-              onClick={() => handleCategoryClick(category)}
-              variant="outline"
-              className={`cursor-pointer border p-2 ${
-                isSelected ? "border-primary" : "border-secondary"
-              } flex items-center justify-center space-x-2 text-black transition duration-300 ease-in-out focus:bg-transparent active:bg-transparent dark:text-white`}
-              aria-label={`Filter by ${category} category`}
-            >
-              {IconComponent && <IconComponent size={20} />}
-              <span className="text-sm">{category}</span>
-            </Button>
-          );
-        })}
+      <div className="flex justify-center">
+        <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {Object.keys(categories).map((category) => {
+            const isSelected = selectedCategory === category;
+            const { icon: IconComponent, subcategories } = categories[category];
+            return (
+              <div
+                key={category}
+                onClick={() => handleCategoryClick(category, subcategories)}
+                className={`flex cursor-pointer flex-col items-center justify-center space-y-2 p-2 transition duration-300 ease-in-out`}
+                aria-label={`Filter by ${category} category`}
+                tabIndex={0}
+              >
+                {IconComponent && (
+                  <Button variant="outline" size="icon" className={`h-12 w-12 rounded-full ${isSelected ? "border-primary" : ""}`} aria-label={`Filter by ${category} category`}>
+                    <IconComponent size={20} />
+                  </Button>
+                )}
+                <span className="text-sm">{category}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
+      {subCategories.length > 0 && (
+        <div className="mt-4 text-center">
+          <Label className="text-md block font-medium">Select Subcategory</Label>
+          <div className="mt-2 grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {subCategories.map((subCategory) => (
+              <Button
+                key={subCategory}
+                onClick={() => handleSubCategoryClick(subCategory)}
+                variant="outline"
+                className={`cursor-pointer border p-2 ${
+                  selectedSubCategory === subCategory ? "border-primary" : ""
+                } flex items-center justify-center space-x-2 transition duration-300 ease-in-out focus:bg-transparent active:bg-transparent`}
+                aria-label={`Filter by ${subCategory} subcategory`}
+              >
+                {subCategory}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

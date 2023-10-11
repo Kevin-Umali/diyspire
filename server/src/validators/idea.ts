@@ -54,9 +54,9 @@ export const ideaValidationSchema = checkSchema({
   },
   budget: {
     in: ["body"],
-    isNumeric: {
-      errorMessage: "Budget should be a number",
-    },
+    isString: true,
+    trim: true,
+    escape: true,
   },
   endPurpose: {
     in: ["body"],

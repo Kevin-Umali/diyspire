@@ -38,33 +38,32 @@ const MaterialInput: React.FC<MaterialInputProps> = ({ materials, setMaterials, 
   }, [materials, setMaterials]);
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      <div className="mb-2 flex items-center justify-between">
-        <div className="space-y-1 text-left">
-          <Label className="text-md block font-medium">List of materials:</Label>
-          <Label className="text-xs">Leave it as empty to use random materials</Label>
+    <div className={`space-y-4 border px-4 pb-10 pt-5 sm:px-20 ${className}`}>
+      <div className="mb-2 flex flex-col items-center text-center sm:flex-col sm:items-center sm:text-center">
+        <div className="mb-2 flex flex-col items-center space-x-0 sm:mb-0 sm:flex-row sm:space-x-2">
+          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">3</div>
+          <Label className="text-md block font-medium">Do you have materials in hand or what materials do you want to use?</Label>
         </div>
-        <Button className="focus:ring-20 focus:ring-opacity-50s space-x-2 focus:outline-none" onClick={handleAddMore} aria-label="Add more materials">
-          <PlusCircle className="h-5 w-5" />
-          <span>Add More</span>
-        </Button>
+        <Label className="text-xs">Leave it empty to use random materials</Label>
       </div>
       {materials.map((material, index) => (
-        <div key={index} className="flex items-center space-x-2">
-          <Input className="flex-1 rounded border p-2" placeholder="Type a material" required value={material} onChange={(e) => handleInputChange(index, e.target.value)} />
+        <div key={index} className="flex items-center justify-center space-x-2">
+          <Input className="flex-1 border p-2" placeholder="Type a material" required value={material} onChange={(e) => handleInputChange(index, e.target.value)} />
           <Button aria-label="Delete material" onClick={() => handleDeleteInput(index)} disabled={materials.length === 1}>
             <X />
           </Button>
         </div>
       ))}
       {materials.some((mat) => mat.trim() !== "") && (
-        <div className="inline-flex cursor-pointer items-center space-x-2">
-          <Checkbox id="onlySpecifiedMaterials" />
-          <Label htmlFor="onlySpecifiedMaterials" onClick={() => setOnlySpecified(!onlySpecified)}>
-            Use only these materials
-          </Label>
+        <div className="inline-flex cursor-pointer items-center justify-center space-x-2">
+          <Checkbox id="onlySpecifiedMaterials" checked={onlySpecified} onChange={() => setOnlySpecified(!onlySpecified)} />
+          <Label htmlFor="onlySpecifiedMaterials">Use only these materials</Label>
         </div>
       )}
+      <Button className="mt-4 w-full focus:outline-none focus:ring-2 focus:ring-opacity-50" onClick={handleAddMore} aria-label="Add more materials">
+        <PlusCircle className="mr-2 h-5 w-5" />
+        <span>Add More</span>
+      </Button>
     </div>
   );
 };

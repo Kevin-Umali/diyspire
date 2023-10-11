@@ -5,8 +5,28 @@ import { PrismaClient } from "@prisma/client";
 export async function getHowToGuideByPath(req: Request, res: Response, next: NextFunction) {
   try {
     const path = req.params.path;
+    const { onlyMetadata = "false" } = req.query;
 
     const prisma = req.app.get("prisma") as PrismaClient;
+
+    if (onlyMetadata === "true") {
+      const guideMetadata = await prisma.howToGuide.findUnique({
+        where: {
+          path: path,
+        },
+        select: {
+          path: true,
+          metadata: true,
+        },
+      });
+
+      if (!guideMetadata?.metadata) {
+        sendSuccess(res, { message: "Metadata not found." }, 404);
+        return;
+      }
+
+      return sendSuccess(res, guideMetadata);
+    }
 
     const guide = await prisma.howToGuide.findUnique({
       where: {

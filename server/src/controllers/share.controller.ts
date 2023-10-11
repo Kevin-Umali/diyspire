@@ -1,12 +1,33 @@
 import { Request, Response, NextFunction } from "express";
 import { sendSuccess } from "../utils/response-template";
 import { PrismaClient } from "@prisma/client";
+import { parsePrisma } from "../utils";
 
 export const getProjectById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
+    const { onlyMetadata = "false" } = req.query;
 
     const prisma = req.app.get("prisma") as PrismaClient;
+
+    if (onlyMetadata === "true") {
+      const projectDetail = await prisma.projectShareLink.findUnique({
+        where: {
+          id: id,
+        },
+        select: {
+          projectDetails: true,
+        },
+      });
+
+      if (!projectDetail?.projectDetails) {
+        sendSuccess(res, { message: "Metadata not found." }, 404);
+        return;
+      }
+
+      const { title, description, tags } = parsePrisma<{ title: string; description: string; tags: string[] }>(projectDetail.projectDetails);
+      return sendSuccess(res, { title, description, tags });
+    }
 
     const project = await prisma.projectShareLink.findUnique({
       where: {

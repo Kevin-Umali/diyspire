@@ -1,98 +1,175 @@
-import { Commit, FAQ, Footer, Steps } from "@/interfaces";
+import { Budget, Categories, Commit, FAQ, Footer, Steps } from "@/interfaces";
 import {
+  Activity,
   Asterisk,
+  Atom,
+  Bike,
   Blocks,
   CakeSlice,
   Camera,
   Car,
   ChefHat,
   Cpu,
+  Dumbbell,
+  Equal,
   Flower,
   Gem,
   Gift,
+  Globe,
   Hammer,
+  Heart,
   Home,
   Leaf,
+  Lightbulb,
   Map,
   Mountain,
   Music,
+  Music2,
+  Music3,
+  Music4,
+  Paintbrush,
   Palette,
   Paperclip,
   PawPrint,
   Pencil,
   PencilRuler,
+  Puzzle,
   Recycle,
+  Rocket,
   Ruler,
   Scissors,
+  Shell,
   Shirt,
+  ShoppingBasket,
   ShowerHead,
   Sofa,
+  Star,
+  TentTree,
   Torus,
+  ToyBrick,
   User,
 } from "lucide-react";
 
-export const categories: string[] = [
-  "Anything",
-  "Home Decor",
-  "Fashion",
-  "Garden Projects",
-  "Kids Crafts",
-  "Jewelry Making",
-  "Woodworking",
-  "Paper Crafts",
-  "Pottery & Clay Projects",
-  "Textile & Sewing",
-  "Upcycling",
-  "Holiday Crafts",
-  "Tech DIYs",
-  "Beauty & Personal Care",
-  "Outdoor Projects",
-  "Kitchen Crafts",
-  "Pet Crafts",
-  "Furniture Makeovers",
-  "Art Projects",
-  "Photography DIYs",
-  "Musical Instruments",
-  "Car & Mechanical Crafts",
-  "Eco-friendly Crafts",
-  "Baking & Food Crafts",
-  "Travel & Adventure DIYs",
-];
+export const categories: Categories = {
+  General: {
+    icon: User,
+    subcategories: {
+      Anything: User,
+    },
+  },
+  "Home & Garden": {
+    icon: Home,
+    subcategories: {
+      "Home Decor": Home,
+      "Garden Projects": Flower,
+      "Outdoor Projects": Mountain,
+      "Furniture Makeovers": Sofa,
+    },
+  },
+  "Fashion & Beauty": {
+    icon: Shirt,
+    subcategories: {
+      Fashion: Shirt,
+      "Jewelry Making": Gem,
+      "Beauty & Personal Care": ShowerHead,
+    },
+  },
+  "Crafts & Art": {
+    icon: Palette,
+    subcategories: {
+      "Kids Crafts": Blocks,
+      "Paper Crafts": Paperclip,
+      "Holiday Crafts": Gift,
+      "Pet Crafts": PawPrint,
+      "Art Projects": Paintbrush,
+      Upcycling: Recycle,
+    },
+  },
+  "Technology & Engineering": {
+    icon: Cpu,
+    subcategories: {
+      "Tech DIYs": Cpu,
+      "Photography DIYs": Camera,
+      "Car & Mechanical Crafts": Car,
+      Electronics: Lightbulb,
+    },
+  },
+  "Musical Instruments": {
+    icon: Music,
+    subcategories: {
+      "Any Musical Instruments": Music,
+      "String Instruments": Music2,
+      "Wind Instruments": Music3,
+      "Percussion Instruments": Music4,
+      "Electronic Instruments": Activity,
+    },
+  },
+  "Culinary & Baking": {
+    icon: ChefHat,
+    subcategories: {
+      "Kitchen Crafts": ChefHat,
+      "Baking & Food Crafts": CakeSlice,
+    },
+  },
+  "Textiles & Fabrics": {
+    icon: Scissors,
+    subcategories: {
+      "Textile & Sewing": Scissors,
+      Knitting: Equal,
+      Crochet: Shell,
+    },
+  },
+  "Environmental & Eco-friendly": {
+    icon: Leaf,
+    subcategories: {
+      "Pottery & Clay Projects": Torus,
+      "Eco-friendly Crafts": Leaf,
+    },
+  },
+  "Adventure & Outdoor": {
+    icon: Map,
+    subcategories: {
+      "Travel & Adventure DIYs": Globe,
+      "Outdoor & Camping": TentTree,
+      "Biking Projects": Bike,
+    },
+  },
+  "Woodworking & Pottery": {
+    icon: Hammer,
+    subcategories: {
+      Woodworking: Hammer,
+      "Pottery & Clay Projects": Torus,
+    },
+  },
+  "Puzzles & Games": {
+    icon: Puzzle,
+    subcategories: {
+      "Game Creation": Puzzle,
+      "Toy Crafting": ToyBrick,
+    },
+  },
+  "Health & Wellness": {
+    icon: Heart,
+    subcategories: {
+      "Fitness Equipment": Dumbbell,
+      "Wellness Products": ShoppingBasket,
+    },
+  },
+  "Space & Astronomy": {
+    icon: Atom,
+    subcategories: {
+      "Astronomy Projects": Star,
+      "Space Crafts": Rocket,
+    },
+  },
+};
 
 export const difficulties: { level: string; icon: React.ElementType }[] = [
-  { level: "all", icon: Asterisk },
+  { level: "any difficulty", icon: Asterisk },
   { level: "beginner", icon: Pencil },
   { level: "intermediate", icon: Ruler },
   { level: "advanced", icon: PencilRuler },
 ];
-
-export const categoryIcons: { [key: string]: React.ElementType } = {
-  Anything: User,
-  "Home Decor": Home,
-  Fashion: Shirt,
-  "Garden Projects": Flower,
-  "Kids Crafts": Blocks,
-  "Jewelry Making": Gem,
-  Woodworking: Hammer,
-  "Paper Crafts": Paperclip,
-  "Pottery & Clay Projects": Torus,
-  "Textile & Sewing": Scissors,
-  Upcycling: Recycle,
-  "Holiday Crafts": Gift,
-  "Tech DIYs": Cpu,
-  "Beauty & Personal Care": ShowerHead,
-  "Outdoor Projects": Mountain,
-  "Kitchen Crafts": ChefHat,
-  "Pet Crafts": PawPrint,
-  "Furniture Makeovers": Sofa,
-  "Art Projects": Palette,
-  "Photography DIYs": Camera,
-  "Musical Instruments": Music,
-  "Car & Mechanical Crafts": Car,
-  "Eco-friendly Crafts": Leaf,
-  "Baking & Food Crafts": CakeSlice,
-  "Travel & Adventure DIYs": Map,
-};
 
 export const steps: Steps[] = [
   { title: "Materials", description: "List your available materials" },
@@ -204,3 +281,10 @@ export const commits: Record<string, Commit[]> = {
     },
   ],
 };
+
+export const budgetOptions: Budget[] = [
+  { label: "Flexible", value: "0" },
+  { label: "< 1000 PHP", value: "less than 1000" },
+  { label: "1000 - 5000 PHP", value: "between 1000 and 5000" },
+  { label: "> 5000 PHP", value: "more than 5000" },
+];

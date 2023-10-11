@@ -1,4 +1,17 @@
-import { ProjectLocationState, RelatedImages } from "@/interfaces";
+import {
+  CounterResponse,
+  GeneratedIdeaResponse,
+  GuidePathMetadataResponse,
+  GuidePathResponse,
+  GuideResponse,
+  IdeaExplanationResponse,
+  ImageSearchResponse,
+  ProjectDetails,
+  ProjectImages,
+  ShareLinkDataMetadataResponse,
+  ShareLinkDataResponse,
+  ShareLinkResponse,
+} from "@/interfaces";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -39,9 +52,9 @@ export const generateProjectIdeas = async (
   tools: string[],
   timeValue: number,
   timeUnit: string | null,
-  budget: number,
+  budget: string | number,
   endPurpose: string,
-): Promise<any> => {
+): Promise<GeneratedIdeaResponse> => {
   const time = timeValue && timeUnit ? `${timeValue} ${timeUnit}` : "";
   return fetchApi("/v1/generate/idea", {
     method: "POST",
@@ -49,37 +62,45 @@ export const generateProjectIdeas = async (
   });
 };
 
-export const generateProjectExplanations = async (title: string, materials: string[], tools: string[], time: string, budget: string, description: string): Promise<any> => {
+export const generateProjectExplanations = async (title: string, materials: string[], tools: string[], time: string, budget: string, description: string): Promise<IdeaExplanationResponse> => {
   return fetchApi("/v1/generate/explain", {
     method: "POST",
     body: { title, materials, tools, time, budget, description },
   });
 };
 
-export const searchImages = async (query: string): Promise<any> => {
+export const searchImages = async (query: string): Promise<ImageSearchResponse> => {
   return fetchApi(`/v1/image/search?query=${encodeURIComponent(query)}`);
 };
 
-export const getGuideByPath = async (path: string): Promise<any> => {
+export const getGuideByPath = async (path: string): Promise<GuidePathResponse> => {
   return fetchApi(`/v1/guide/${path}`);
 };
 
-export const getAllGuides = async (): Promise<any> => {
+export const getGuideByPathMetadata = async (path: string): Promise<GuidePathMetadataResponse> => {
+  return fetchApi(`/v1/guide/${path}?onlyMetadata=true`);
+};
+
+export const getAllGuides = async (): Promise<GuideResponse> => {
   return fetchApi("/v1/guide");
 };
 
-export const saveShareLinkData = async (projectDetails: ProjectLocationState | null, projectImage: RelatedImages | null, explanation: string | null): Promise<any> => {
+export const saveShareLinkData = async (projectDetails: ProjectDetails | null, projectImage: ProjectImages | null, explanation: string | null): Promise<ShareLinkResponse> => {
   return fetchApi("/v1/share", {
     method: "POST",
     body: { projectDetails, projectImage, explanation },
   });
 };
 
-export const getShareLinkData = async (id: string): Promise<any> => {
+export const getShareLinkData = async (id: string): Promise<ShareLinkDataResponse> => {
   return fetchApi(`/v1/share/${id}`);
 };
 
-export const getTotalCountOfGeneratedIdea = async (): Promise<any> => {
+export const getShareLinkDataMetadata = async (id: string): Promise<ShareLinkDataMetadataResponse> => {
+  return fetchApi(`/v1/share/${id}?onlyMetadata=true`);
+};
+
+export const getTotalCountOfGeneratedIdea = async (): Promise<CounterResponse> => {
   return fetchApi("/v1/counter");
 };
 
@@ -87,7 +108,7 @@ export const incrementCounterOfGeneratedIdea = async (): Promise<any> => {
   return fetchApi("/v1/counter", { method: "POST" });
 };
 
-export const cleanMarkdown = (content: string) => {
+export const cleanMarkdown = (content: string): string => {
   return content
     .split("\n")
     .map((line) => line.trimStart())
