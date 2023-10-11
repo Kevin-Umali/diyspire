@@ -1,4 +1,4 @@
-import { ProjectLocationState } from "@/interfaces";
+import { ProjectDetails } from "@/interfaces";
 import { TimerIcon } from "lucide-react";
 
 import { Label } from "@/components/ui/label";
@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProjectInfoProps {
   isLoading: boolean;
-  project: ProjectLocationState;
+  project: ProjectDetails;
 }
 
 const ProjectInfo: React.FC<ProjectInfoProps> = ({ isLoading, project }) => {

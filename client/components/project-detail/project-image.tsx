@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { RelatedImages } from "@/interfaces";
+import { ProjectImages } from "@/interfaces";
 import { Info, Share } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface ProjectImageProps {
   isLoading: boolean;
   projectTitle: string;
-  relatedImages: RelatedImages | null;
+  relatedImages: ProjectImages | null;
   onOpen: () => void;
 }
 
