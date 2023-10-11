@@ -43,7 +43,7 @@ export default function ProjectDetailById({ params }: { params: { id: string } }
     }
 
     fetchData();
-  }, [params.id, project, toast]);
+  }, [params.id, toast]);
 
   return (
     <div className="container mx-auto py-5 sm:py-10">
