@@ -10,7 +10,7 @@ interface IdeaRequestBody {
   category: string;
   tools: string[];
   time: string;
-  budget: number;
+  budget: number | string;
   endPurpose: string;
 }
 
@@ -28,7 +28,7 @@ export const generateIdea = async (req: Request, res: Response, next: NextFuncti
 
     const timeDescription = time.length !== 0 ? "There's no strict time constraint." : `The available time to complete the project is approximately ${time}.`;
 
-    const budgetDescription = budget === 0 ? "The budget is flexible." : `The budget is set between ₱0 and ₱${budget}.`;
+    const budgetDescription = budget === "0" || budget === 0 ? "The budget is flexible." : `The budget is set ${budget}`;
 
     const purposeDescription = endPurpose.toLowerCase() !== "other" ? `The desired outcome of these projects is primarily for ${endPurpose}.` : "The end goal for these projects is versatile.";
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { HowToGuide } from "@/interfaces";
+import { GuidePathData } from "@/interfaces";
 
 import { getGuideByPath } from "@/lib/index";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,7 +13,7 @@ import CustomMarkdown from "@/components/custom-markdown";
 export default function HowToGuideDetail({ params }: { params: { guide_name: string } }) {
   const router = useRouter();
 
-  const [guideDetails, setGuideDetails] = useState<HowToGuide | null>(null);
+  const [guideDetails, setGuideDetails] = useState<GuidePathData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { toast } = useToast();

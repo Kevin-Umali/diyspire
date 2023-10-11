@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Github, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -14,6 +15,8 @@ const Navbar: React.FC = () => {
   return (
     <nav className="flex w-full items-center justify-between p-4 shadow-sm">
       <div className="flex items-center space-x-2">
+        {/* Add icon here */}
+        <Image src="/android-chrome-512x512.png" alt="Logo" width={32} height={32} className="mr-2" />
         <div>
           <h1 className="text-lg lg:text-xl">
             <Link href="/">MakeMeDIYspire</Link>

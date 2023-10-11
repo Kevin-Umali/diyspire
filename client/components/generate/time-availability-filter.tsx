@@ -12,18 +12,22 @@ interface TimeAvailabilityFilterProps {
 
 const TimeAvailabilityFilter: React.FC<TimeAvailabilityFilterProps> = ({ timeValue, timeUnit, onValueChange, onUnitChange, className }) => {
   return (
-    <div className={className}>
-      <Label className="text-md mb-2 block font-medium">
-        Available Time:
-        {timeValue > 0 && timeUnit ? ` ${timeValue} ${timeUnit}` : ""}
-      </Label>
-      <div className="flex space-x-4">
-        <Input type="number" value={timeValue} min="0" onChange={(e) => onValueChange(Number(e.target.value))} className="w-20" />
+    <div className={`space-y-4 border px-4 pb-10 pt-5 sm:px-20 ${className}`}>
+      <div className="mb-2 flex flex-col items-center text-center sm:flex-col sm:items-center sm:text-center">
+        <div className="mb-2 flex flex-col items-center space-x-0 sm:mb-0 sm:flex-row sm:space-x-2">
+          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">7</div>
+          <Label className="text-md block font-medium">What&apos;s your available time?</Label>
+        </div>
+        <Label className="text-xs">Choose a duration and unit for your available time</Label>
+      </div>
+
+      <div className="flex items-center justify-center space-x-4">
+        <Input type="number" value={timeValue} min="0" onChange={(e) => onValueChange(Number(e.target.value))} placeholder="Duration" />
         <Select onValueChange={(e) => onUnitChange(e)} defaultValue={timeUnit ?? undefined} aria-label="Select time unit">
-          <SelectTrigger className="w-40">
+          <SelectTrigger aria-label="Select a purpose for the end result">
             <SelectValue placeholder="Select unit" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent aria-label="Select a purpose for the end result">
             <SelectGroup>
               <SelectLabel>Time Units</SelectLabel>
               {["minutes", "hours", "days", "weeks", "months"].map((unit) => (
