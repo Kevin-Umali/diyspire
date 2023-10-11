@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { categories } from "@/constants";
+import { GeneratedIdea } from "@/interfaces";
 import { generateProjectIdeas, getTotalCountOfGeneratedIdea, incrementCounterOfGeneratedIdea } from "@/lib";
 import { Info, RefreshCcw } from "lucide-react";
 
@@ -39,7 +40,7 @@ export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isGenerated, setIsGenerated] = useState(false);
 
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<GeneratedIdea[] | never[]>([]);
 
   const [totalCount, setTotalCount] = useState<number>(0);
   const [isLoadingCount, setIsLoadingCount] = useState(false);
