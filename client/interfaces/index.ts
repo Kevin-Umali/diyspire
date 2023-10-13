@@ -219,3 +219,22 @@ export interface ShareLinkResponse {
 export interface ShareLinkResponseData {
   id: string;
 }
+
+export interface CommunityIdeaResponse {
+  success: boolean;
+  data: CommunityIdeaData[];
+}
+
+export interface CommunityIdeaData {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
+  projectImage: CommunityIdeaProjectImages;
+  createdAt: string;
+}
+
+export interface CommunityIdeaProjectImages {
+  urls: ProjectImageUrls;
+  alt_description?: string;
+}
