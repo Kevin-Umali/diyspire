@@ -1,4 +1,5 @@
 import {
+  CommunityIdeaResponse,
   CounterResponse,
   GeneratedIdeaResponse,
   GuidePathMetadataResponse,
@@ -106,6 +107,10 @@ export const getTotalCountOfGeneratedIdea = async (): Promise<CounterResponse> =
 
 export const incrementCounterOfGeneratedIdea = async (): Promise<any> => {
   return fetchApi("/v1/counter", { method: "POST" });
+};
+
+export const getCommunityGeneratedIdea = async (limit = 20, orderBy = "desc"): Promise<CommunityIdeaResponse> => {
+  return fetchApi(`/v1/community?limit=${limit}&orderBy=${orderBy}`);
 };
 
 export const cleanMarkdown = (content: string): string => {

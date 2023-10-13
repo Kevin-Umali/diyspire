@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { GuideData } from "@/interfaces";
 
 import { getAllGuides } from "@/lib/index";
 import { Label } from "@/components/ui/label";
@@ -9,15 +10,8 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 
-type Guide = {
-  path: string;
-  metadata: {
-    title: string;
-  };
-};
-
 export default function HowToGuidesList() {
-  const [guides, setGuides] = useState<Guide[]>([]);
+  const [guides, setGuides] = useState<GuideData[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 

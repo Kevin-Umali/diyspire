@@ -186,6 +186,7 @@ export const footerData: Footer[] = [
     links: [
       { label: "Generate DIY Project Idea", path: "/" },
       { label: "How-to Guides", path: "/guide" },
+      { label: "Community", path: "/community" },
     ],
   },
   {

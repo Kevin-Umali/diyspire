@@ -27,10 +27,11 @@ model Metadata {
 }
 
 model ProjectShareLink {
-  id             String  @id @default(uuid())
+  id             String   @id @default(uuid())
   projectDetails Json
   projectImage   Json
   explanation    String?
+  createdAt      DateTime @default(now())
 }
 
 model IdeaGenerationCounter {

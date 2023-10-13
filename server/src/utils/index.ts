@@ -35,3 +35,47 @@ export const parsePrisma = <T = any>(json: JsonValue): T => {
     throw new Error("Unsupported type");
   }
 };
+
+export const validateQueryParams = (
+  limit?: string | undefined,
+  orderBy?: string | undefined,
+  options: {
+    DEFAULT_LIMIT: number;
+    DEFAULT_ORDER_BY: string;
+    MAX_LIMIT: number;
+  } = { DEFAULT_LIMIT: 20, DEFAULT_ORDER_BY: "desc", MAX_LIMIT: 100 },
+) => {
+  const { DEFAULT_LIMIT, DEFAULT_ORDER_BY, MAX_LIMIT } = options;
+
+  const limitStr = typeof limit === "string" ? limit : String(DEFAULT_LIMIT);
+  const validLimit = parseInt(limitStr, 10);
+  if (isNaN(validLimit) || validLimit <= 0 || validLimit > (MAX_LIMIT ?? Number.POSITIVE_INFINITY)) {
+    throw new Error(`Invalid limit. It should be a number between 1 and ${MAX_LIMIT}`);
+  }
+
+  const orderByStr = typeof orderBy === "string" ? orderBy : DEFAULT_ORDER_BY;
+  const lowerCasedOrderBy = orderByStr.toLowerCase();
+  if (!["asc", "desc"].includes(lowerCasedOrderBy)) {
+    throw new Error(`Invalid orderBy. It should be '${DEFAULT_ORDER_BY}' or 'desc'`);
+  }
+
+  return { validLimit, validOrderBy: lowerCasedOrderBy as "asc" | "desc" };
+};
+
+const getNestedProperty = (obj: { [key: string]: any }, propPath: string): any => {
+  return propPath.split(".").reduce((acc, part) => acc?.[part], obj);
+};
+
+export const removeDuplicates = (data: { [key: string]: any }[], props: string[]): { [key: string]: any }[] => {
+  const seen = new Set<string>();
+
+  return data.filter((item) => {
+    const key = JSON.stringify(props.map((prop) => getNestedProperty(item, prop)));
+
+    if (!seen.has(key)) {
+      seen.add(key);
+      return true;
+    }
+    return false;
+  });
+};
