@@ -25,6 +25,7 @@ export default function ProjectDetail() {
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [project] = useState<ProjectDetails | null>(projectParams);
   const [isOpen, setIsOpen] = useState(false);
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function ProjectDetail() {
           <div className="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-2">
             <ProjectImage
               isLoading={isImageLoading}
+              isLoaded={isExplanationLoading}
               relatedImages={relatedImages}
               projectTitle={project.title}
               onOpen={() => {

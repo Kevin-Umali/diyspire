@@ -11,12 +11,13 @@ interface IdeaRequestBody {
   tools: string[];
   time: string;
   budget: number | string;
+  currency: string;
   endPurpose: string;
 }
 
 export const generateIdea = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { materials, onlySpecified, difficulty, category, tools, time, budget, endPurpose }: IdeaRequestBody = req.body;
+    const { materials, onlySpecified, difficulty, category, tools, time, budget, currency, endPurpose }: IdeaRequestBody = req.body;
 
     const openai: OpenAI = req.app.get("openai");
 
@@ -42,6 +43,7 @@ export const generateIdea = async (req: Request, res: Response, next: NextFuncti
     - Time: ${timeDescription}
     - Budget: ${budgetDescription}
     - Purpose: ${purposeDescription}
+    - Currency: ${currency}
 
     Please provide the ideas in the following JSON format:
 
@@ -52,7 +54,7 @@ export const generateIdea = async (req: Request, res: Response, next: NextFuncti
                 "materials": ["List of required materials"],
                 "tools": ["List of required tools"],
                 "time": "Estimated time to complete the project",
-                "budget": "Estimated budget for the project in ₱, including the materials and tools cost if needed",
+                "budget": "Estimated budget for the project, including the materials and tools cost if needed",
                 "tags": ["Tags/Hashtag about this project"],
                 "description": "A short descriptive text of the project"
             },
@@ -105,11 +107,13 @@ export const explainProjectByTitle = async (req: Request, res: Response, next: N
     - **Title**: ${title}
     - **Materials Required**: ${materials.join(", ")}
     - **Tools Needed**: ${tools.join(", ")}
-    - **Estimated Time for Completion**: ${time} hours (or specify units as required)
-    - **Budget Estimate**: ₱${budget} (or use the appropriate currency symbol)
+    - **Estimated Time for Completion**: ${time} hours
+    - **Budget Estimate**: ${budget}
     - **Project Overview**: ${description}
 
-    Please start with a brief overview of the process and then break down each step in detail, taking into consideration the provided materials and tools. Each step should be clear and actionable.
+    Please structure your guide as follows:
+    1. **Brief Overview**: A short summary of the entire process.
+    2. **Step-by-Step Guide**: Provide detailed, actionable steps, considering the provided materials and tools. Each step should be numbered and clear.
     `;
 
     const completion = await openai.chat.completions.create({
@@ -118,7 +122,7 @@ export const explainProjectByTitle = async (req: Request, res: Response, next: N
         {
           role: "system",
           content:
-            "You are an instructive assistant capable of generating clear, detailed, and step-by-step guides for DIY projects based on provided information such as title, materials, tools, time, budget, and a short description. Your guidance should be easy to follow, accurate, and considerate of safety and functionality in the execution of the project.",
+            "You are an instructive assistant capable of generating clear, detailed, and step-by-step guides for DIY projects based on provided information such as title, materials, tools, time, budget, and a short description. Your guidance should be easy to follow, accurate, and considerate of safety and functionality in the execution of the project. Responses should be structured with a brief overview followed by a detailed, numbered step-by-step guide in Raw Markdown format.",
         },
         {
           role: "user",

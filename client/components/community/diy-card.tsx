@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { BookMarked } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
+import { Label } from "@/components/ui/label";
 
 interface ProjectCardProps {
   id: string | number;
@@ -49,10 +48,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ id, title, createdAt, descrip
         </Label>
       </CardContent>
       <CardFooter className="mt-auto pt-2" role="contentinfo" aria-label="Footer section">
-        <Link className="w-full" href={{ pathname: `/project-detail/${id}` }} aria-label={`Read more about How to make ${title}`} passHref>
-          <Button className="w-full" aria-label={`Read more about ${title}`}>
-            <BookOpen className="mr-2 h-4 w-4" aria-label={`Read more about ${title}`} />
-            <span>Read More</span>
+        <Link className="w-full" href={{ pathname: `/project-detail/${id}` }} passHref>
+          <Button className="w-full text-sm" aria-label={`Learn more - ${title}`}>
+            <BookMarked className="mr-2 h-4 w-4" />
+            <span>
+              Learn more <span hidden>- {title}</span>
+            </span>
           </Button>
         </Link>
       </CardFooter>

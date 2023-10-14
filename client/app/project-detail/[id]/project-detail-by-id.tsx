@@ -52,6 +52,7 @@ export default function ProjectDetailById({ params }: { params: { id: string } }
           <div className="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-2">
             <ProjectImage
               isLoading={isLoading}
+              isLoaded={isLoading}
               relatedImages={relatedImages}
               projectTitle={project.title}
               onOpen={() => {

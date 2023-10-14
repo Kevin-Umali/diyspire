@@ -1,15 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { categories } from "@/constants";
+import { useCurrency } from "@/context/currencyContext";
 import { GeneratedIdea } from "@/interfaces";
-import { generateProjectIdeas, getTotalCountOfGeneratedIdea, incrementCounterOfGeneratedIdea } from "@/lib";
-import { Info, RefreshCcw } from "lucide-react";
+import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/lib";
+import { RefreshCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import CategoryFilter from "@/components/generate/category-filter";
 import DifficultyFilter from "@/components/generate/difficulty-filter";
@@ -42,8 +42,7 @@ export default function Home() {
 
   const [projects, setProjects] = useState<GeneratedIdea[] | never[]>([]);
 
-  const [totalCount, setTotalCount] = useState<number>(0);
-  const [isLoadingCount, setIsLoadingCount] = useState(false);
+  const { currency } = useCurrency();
 
   const { toast } = useToast();
 
@@ -51,40 +50,17 @@ export default function Home() {
     setShowAdvancedOptions(!showAdvancedOptions);
   };
 
-  useEffect(() => {
-    const fetchTotalCount = async () => {
-      setIsLoadingCount(true);
-      try {
-        const response = await getTotalCountOfGeneratedIdea();
-        if (response?.data?.totalCount) {
-          setTotalCount(response.data.totalCount);
-        }
-      } catch (error) {
-        console.error(error);
-        toast({
-          title: "Oops!",
-          description: "Failed to fetch the total count of generated ideas. Please try again later.",
-        });
-      } finally {
-        setIsLoadingCount(false);
-      }
-    };
-
-    fetchTotalCount();
-  }, [toast]);
-
   const handleGenerateProjects = useCallback(async () => {
     try {
       if (!isSafe) throw new Error("Please check the safety checkbox");
 
       setIsGenerating(true);
 
-      const response = await generateProjectIdeas(materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, purpose);
+      const response = await generateProjectIdeas(materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose);
 
       if (response.data?.ideas) {
         setProjects(response.data.ideas);
         await incrementCounterOfGeneratedIdea();
-        setTotalCount((count) => count + 1);
         setIsGenerated(true);
       }
     } catch (error: any) {
@@ -96,7 +72,7 @@ export default function Home() {
     } finally {
       setIsGenerating(false);
     }
-  }, [budget, isSafe, materials, onlySpecified, purpose, selectedCategory, selectedDifficulty, timeUnit, timeValue, tools, toast]);
+  }, [isSafe, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose, toast]);
 
   const advancedOptions = useMemo(
     () => (
@@ -170,19 +146,9 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between">
-        <h1 className="mb-6 text-2xl font-bold sm:text-3xl md:text-4xl">DIY Ideas Generator</h1>
-        <Separator orientation="vertical" className="mx-4 h-8 md:hidden" />
-        <div className="flex items-center">
-          <span className="mx-2 flex items-center">
-            <Info size={24} />
-          </span>
-          <Label className="text-md lg:text-lg">
-            <span role="img" aria-label="party popper">
-              Total generated ideas so far: {!isLoadingCount ? totalCount : "Loading..."}
-            </span>
-          </Label>
-        </div>
+      <div className="mb-12 text-center">
+        <h1 className="mb-3 text-3xl font-semibold lg:text-4xl">&ldquo;MakeMeDIYspire&rdquo; DIY Ideas Generator</h1>
+        <Label className="sm:text-md mt-2 inline-block text-sm">Explore our detailed guides and unleash your creativity with the MakeMeDIYspire DIY Ideas Generator.</Label>
       </div>
       {renderContent()}
     </div>

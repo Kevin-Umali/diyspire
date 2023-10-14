@@ -73,8 +73,8 @@ app.use("/api/v1/guide", oneDayCacheMiddleware, guideRoutes);
 app.use("/api/v1/image", oneDayCacheMiddleware, unsplashRoutes);
 app.use("/api/v1/community", oneDayCacheMiddleware, communityRoutes);
 
-const oneYearCacheMiddleware = getConditionalCache("12 months");
-app.use("/api/v1/share", oneYearCacheMiddleware, shareRoutes);
+const twentyFourCacheMiddleware = getConditionalCache("24 days");
+app.use("/api/v1/share", twentyFourCacheMiddleware, shareRoutes);
 
 const openaiCacheMiddleware = getConditionalCache("2 hours");
 app.use("/api/v1/generate", openaiCacheMiddleware, openaiRoutes);

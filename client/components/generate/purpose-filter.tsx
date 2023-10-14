@@ -21,7 +21,7 @@ const PurposeFilter: React.FC<PurposeFilterProps> = ({ purpose, onPurposeChange,
     <div className={`space-y-4 border px-4 pb-10 pt-5 sm:px-20 ${className}`}>
       <div className="mb-2 flex flex-col items-center text-center sm:flex-col sm:items-center sm:text-center">
         <div className="mb-2 flex flex-col items-center space-x-0 sm:mb-0 sm:flex-row sm:space-x-2">
-          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">3</div>
+          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">7</div>
           <Label htmlFor="purpose" className="text-md block font-medium">
             What&apos;s the purpose of the end result?
           </Label>

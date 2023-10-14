@@ -1,14 +1,14 @@
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import CustomMarkdown from "../custom-markdown";
+
 interface ProjectStepsProps {
   isLoading: boolean;
   projectExplanation: string | null;
 }
 
 const ProjectSteps: React.FC<ProjectStepsProps> = ({ isLoading, projectExplanation }) => {
-  const explanationLines = projectExplanation ? projectExplanation.split("\n") : [];
-
   return (
     <div className="mt-10">
       {isLoading ? (
@@ -25,16 +25,8 @@ const ProjectSteps: React.FC<ProjectStepsProps> = ({ isLoading, projectExplanati
       ) : (
         <>
           <Label className="mb-6 text-base font-medium uppercase lg:text-lg">Detailed Steps to Follow</Label>
-          <div className="text-md leading-relaxed sm:text-lg">
-            {explanationLines.length ? (
-              explanationLines.map((line, index) => (
-                <p key={index} className="text-md mb-2 last:mb-0">
-                  {line}
-                </p>
-              ))
-            ) : (
-              <p>No detailed steps provided.</p>
-            )}
+          <div className="text-md w-full leading-relaxed sm:text-lg">
+            <CustomMarkdown content={projectExplanation as string} />
           </div>
         </>
       )}

@@ -58,6 +58,12 @@ export const ideaValidationSchema = checkSchema({
     trim: true,
     escape: true,
   },
+  currency: {
+    in: ["body"],
+    isString: true,
+    trim: true,
+    escape: true,
+  },
   endPurpose: {
     in: ["body"],
     isString: true,

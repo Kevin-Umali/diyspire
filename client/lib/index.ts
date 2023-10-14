@@ -54,12 +54,13 @@ export const generateProjectIdeas = async (
   timeValue: number,
   timeUnit: string | null,
   budget: string | number,
+  currency: string,
   endPurpose: string,
 ): Promise<GeneratedIdeaResponse> => {
   const time = timeValue && timeUnit ? `${timeValue} ${timeUnit}` : "";
   return fetchApi("/v1/generate/idea", {
     method: "POST",
-    body: { materials, onlySpecified, difficulty, category, tools, time, budget, endPurpose },
+    body: { materials, onlySpecified, difficulty, category, tools, time, budget, currency, endPurpose },
   });
 };
 
