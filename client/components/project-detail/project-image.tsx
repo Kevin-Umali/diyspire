@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProjectImageProps {
   isLoading: boolean;
+  isLoaded: boolean;
   projectTitle: string;
   relatedImages: ProjectImages | null;
   onOpen: () => void;
@@ -15,7 +16,7 @@ interface ProjectImageProps {
 
 const UNSPLASH_PROJECT_NAME = process.env.NEXT_PUBLIC_UNSPLASH_PROJECT_NAME;
 
-const ProjectImage: React.FC<ProjectImageProps> = ({ isLoading, projectTitle, relatedImages, onOpen }) => {
+const ProjectImage: React.FC<ProjectImageProps> = ({ isLoading, isLoaded, projectTitle, relatedImages, onOpen }) => {
   const { urls, alt_description, user } = relatedImages ?? {};
   const { name: photographerName, link: photographerLink } = user ?? {};
 
@@ -83,7 +84,7 @@ const ProjectImage: React.FC<ProjectImageProps> = ({ isLoading, projectTitle, re
         </p>
       </div>
 
-      <Button className="mt-4 px-4 py-2" onClick={onOpen}>
+      <Button className="mt-4 px-4 py-2" onClick={onOpen} disabled={isLoaded}>
         <Share className="mr-2 h-5 w-5" />
         <span>Share</span>
       </Button>

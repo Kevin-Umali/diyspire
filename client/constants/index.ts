@@ -289,3 +289,5 @@ export const budgetOptions: Budget[] = [
   { label: "1000 - 5000 PHP", value: "between 1000 and 5000" },
   { label: "> 5000 PHP", value: "more than 5000" },
 ];
+
+export const currencyList: string[] = ["USD", "EUR", "JPY", "GBP", "CHF", "CAD", "AUD", "CNY", "INR", "BRL", "RUB", "KRW", "SGD", "HKD", "NZD", "ZAR", "MXN", "PHP"];

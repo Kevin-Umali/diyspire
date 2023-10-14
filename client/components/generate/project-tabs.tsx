@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GeneratedIdea } from "@/interfaces";
 import { BookOpen, FlaskConical } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -7,18 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface Project {
-  title: string;
-  materials: string[];
-  tools: string[];
-  time: string;
-  budget: string;
-  tags: string[];
-  description: string;
-}
-
 interface ProjectTabsProps {
-  projects: Project[];
+  projects: GeneratedIdea[];
   className?: string;
 }
 
