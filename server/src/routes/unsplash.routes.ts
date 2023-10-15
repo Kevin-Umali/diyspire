@@ -1,10 +1,10 @@
 import express from "express";
-import { searchValidationSchema } from "../validators/image-search";
+import zodValidateMiddleware from "../middleware/schema-validate";
 import { searchImages } from "../controllers/unsplash.controller";
-import validationMiddleware from "../middleware/schema-validation";
+import { UnsplashImageSearchSchema } from "../schema/unsplash.schema";
 
 const router = express.Router();
 
-router.get("/search", searchValidationSchema, validationMiddleware, searchImages);
+router.get("/search", zodValidateMiddleware({ query: UnsplashImageSearchSchema }), searchImages);
 
 export default router;

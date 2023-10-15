@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ProjectDetails, ProjectImages } from "@/interfaces";
+import { ApiError, ProjectDetails, ProjectImages } from "@/interfaces";
 import { getShareLinkData } from "@/lib";
 
 import { Separator } from "@/components/ui/separator";
@@ -32,11 +32,20 @@ export default function ProjectDetailById({ params }: { params: { id: string } }
         } else {
           return;
         }
-      } catch (error: any) {
-        toast({
-          title: "Data Fetch Error",
-          description: error.message,
-        });
+      } catch (error) {
+        const apiError = error as ApiError;
+
+        if (apiError.statusCode) {
+          toast({
+            title: "API Error!",
+            description: apiError.message || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
       } finally {
         setIsLoading(false);
       }

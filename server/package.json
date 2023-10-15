@@ -30,16 +30,19 @@
     "express-validator": "^7.0.1",
     "helmet": "^7.0.0",
     "openai": "^4.6.0",
-    "unsplash-js": "^7.0.18"
+    "unsplash-js": "^7.0.18",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/apicache": "^1.6.2",
     "@types/compression": "^1.7.3",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
+    "@types/express-serve-static-core": "^4.17.37",
     "@types/jest": "^29.5.4",
     "@types/memory-cache": "^0.2.3",
     "@types/node": "^20.6.1",
+    "@types/qs": "^6.9.8",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.4.1",

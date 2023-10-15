@@ -1,13 +1,15 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { sendSuccess } from "../utils/response-template";
 import { PrismaClient } from "@prisma/client";
-import { parsePrisma, removeDuplicates, validateQueryParams } from "../utils";
+import { parsePrisma, removeDuplicates, validateQueryFilter } from "../utils";
+import { QueryRequest } from "../middleware/schema-validate";
+import { CommunityGeneratedIdeaRequest } from "../schema/community.schema";
 
-export const getCommunityGeneratedIdea = async (req: Request, res: Response, next: NextFunction) => {
+export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGeneratedIdeaRequest>, res: Response, next: NextFunction) => {
   try {
     const { limit, orderBy } = req.query;
 
-    const { validLimit, validOrderBy } = validateQueryParams(limit as string | undefined, orderBy as string | undefined);
+    const { validLimit, validOrderBy } = validateQueryFilter(limit as string | undefined, orderBy as string | undefined);
 
     const prisma = req.app.get("prisma") as PrismaClient;
 

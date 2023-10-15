@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { GuidePathData } from "@/interfaces";
+import { ApiError, GuidePathData } from "@/interfaces";
 
 import { getGuideByPath } from "@/lib/index";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,12 +33,20 @@ export default function HowToGuideDetail({ params }: { params: { guide_name: str
       try {
         const fetchedGuide = await getGuideByPath(params.guide_name);
         setGuideDetails(fetchedGuide.data);
-      } catch (error: any) {
-        console.error(error);
-        toast({
-          title: "Oops!",
-          description: error.message,
-        });
+      } catch (error) {
+        const apiError = error as ApiError;
+
+        if (apiError.statusCode) {
+          toast({
+            title: "API Error!",
+            description: apiError.message || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
         router.push("/guide");
       } finally {
         setIsLoading(false);

@@ -1,12 +1,14 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { sendSuccess } from "../utils/response-template";
 import { PrismaClient } from "@prisma/client";
 import { parsePrisma } from "../utils";
+import { BodyRequest, QueryParamsRequest } from "../middleware/schema-validate";
+import { GetProjectByIdParamsRequest, GetProjectByIdQueryRequest, ShareProjectBodyRequest } from "../schema/share.schema";
 
-export const getProjectById = async (req: Request, res: Response, next: NextFunction) => {
+export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQueryRequest, GetProjectByIdParamsRequest>, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
-    const { onlyMetadata = "false" } = req.query;
+    const onlyMetadata = req.query.onlyMetadata;
 
     const prisma = req.app.get("prisma") as PrismaClient;
 
@@ -46,7 +48,7 @@ export const getProjectById = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const saveProject = async (req: Request, res: Response, next: NextFunction) => {
+export const saveProject = async (req: BodyRequest<ShareProjectBodyRequest>, res: Response, next: NextFunction) => {
   try {
     const prisma = req.app.get("prisma") as PrismaClient;
 

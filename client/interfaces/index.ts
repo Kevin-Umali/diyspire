@@ -238,3 +238,7 @@ export interface CommunityIdeaProjectImages {
   urls: ProjectImageUrls;
   alt_description?: string;
 }
+
+export interface ApiError extends Error {
+  statusCode?: number;
+}

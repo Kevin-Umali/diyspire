@@ -1,9 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 
 import { sendSuccess } from "../utils/response-template";
 import { randomInt } from "crypto";
+import { QueryRequest } from "../middleware/schema-validate";
+import { UnsplashImageSearchQueryRequest } from "../schema/unsplash.schema";
 
-export const searchImages = async (req: Request, res: Response, next: NextFunction) => {
+export const searchImages = async (req: QueryRequest<UnsplashImageSearchQueryRequest>, res: Response, next: NextFunction) => {
   try {
     const query: string = decodeURIComponent(req.query.query ? req.query.query.toString() : "");
 
