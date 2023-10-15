@@ -1,12 +1,11 @@
 import express from "express";
-import { ideaValidationSchema } from "../validators/idea";
 import { explainProjectByTitle, generateIdea } from "../controllers/openai.controller";
-import { explainValidationSchema } from "../validators/explain";
-import validationMiddleware from "../middleware/schema-validation";
+import zodValidateMiddleware from "../middleware/schema-validate";
+import { ExplainSchema, IdeaSchema } from "../schema/openai.schema";
 
 const router = express.Router();
 
-router.post("/idea", ideaValidationSchema, validationMiddleware, generateIdea);
-router.post("/explain", explainValidationSchema, validationMiddleware, explainProjectByTitle);
+router.post("/idea", zodValidateMiddleware({ body: IdeaSchema }), generateIdea);
+router.post("/explain", zodValidateMiddleware({ body: ExplainSchema }), explainProjectByTitle);
 
 export default router;

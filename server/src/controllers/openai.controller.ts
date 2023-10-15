@@ -1,7 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 
 import { sendSuccess } from "../utils/response-template";
 import OpenAI from "openai";
+import { BodyRequest } from "../middleware/schema-validate";
+import { ExplainRequest, IdeaRequest } from "../schema/openai.schema";
 
 interface IdeaRequestBody {
   materials: string[];
@@ -15,7 +17,7 @@ interface IdeaRequestBody {
   endPurpose: string;
 }
 
-export const generateIdea = async (req: Request, res: Response, next: NextFunction) => {
+export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response, next: NextFunction) => {
   try {
     const { materials, onlySpecified, difficulty, category, tools, time, budget, currency, endPurpose }: IdeaRequestBody = req.body;
 
@@ -29,7 +31,7 @@ export const generateIdea = async (req: Request, res: Response, next: NextFuncti
 
     const timeDescription = time.length !== 0 ? "There's no strict time constraint." : `The available time to complete the project is approximately ${time}.`;
 
-    const budgetDescription = budget === "0" || budget === 0 ? "The budget is flexible." : `The budget is set ${budget}`;
+    const budgetDescription = budget === "0" ? "The budget is flexible." : `The budget is set ${budget}`;
 
     const purposeDescription = endPurpose.toLowerCase() !== "other" ? `The desired outcome of these projects is primarily for ${endPurpose}.` : "The end goal for these projects is versatile.";
 
@@ -95,7 +97,7 @@ interface ExplainRequestBody {
   description: string;
 }
 
-export const explainProjectByTitle = async (req: Request, res: Response, next: NextFunction) => {
+export const explainProjectByTitle = async (req: BodyRequest<ExplainRequest>, res: Response, next: NextFunction) => {
   try {
     const { title, materials, tools, time, budget, description } = req.body as ExplainRequestBody;
 

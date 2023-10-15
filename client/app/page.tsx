@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { categories } from "@/constants";
 import { useCurrency } from "@/context/currencyContext";
-import { GeneratedIdea } from "@/interfaces";
+import { ApiError, GeneratedIdea } from "@/interfaces";
 import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/lib";
 import { RefreshCcw } from "lucide-react";
 
@@ -56,19 +56,38 @@ export default function Home() {
 
       setIsGenerating(true);
 
-      const response = await generateProjectIdeas(materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose);
+      const response = await generateProjectIdeas({
+        materials,
+        onlySpecified,
+        difficulty: selectedDifficulty,
+        category: selectedCategory,
+        tools,
+        timeValue,
+        timeUnit,
+        budget,
+        currency,
+        endPurpose: purpose,
+      });
 
       if (response.data?.ideas) {
         setProjects(response.data.ideas);
         await incrementCounterOfGeneratedIdea();
         setIsGenerated(true);
       }
-    } catch (error: any) {
-      console.error(error);
-      toast({
-        title: "Error",
-        description: error.message,
-      });
+    } catch (error) {
+      const apiError = error as ApiError;
+
+      if (apiError.statusCode) {
+        toast({
+          title: "API Error!",
+          description: apiError.message || "An error occurred while fetching data from the API.",
+        });
+      } else {
+        toast({
+          title: "Unexpected Error!",
+          description: "An unexpected error occurred. Please try again later.",
+        });
+      }
     } finally {
       setIsGenerating(false);
     }

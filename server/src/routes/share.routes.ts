@@ -1,11 +1,11 @@
 import express from "express";
+import zodValidateMiddleware from "../middleware/schema-validate";
 import { getProjectById, saveProject } from "../controllers/share.controller";
-import { shareProjectValidationSchema } from "../validators/share-link";
-import validationMiddleware from "../middleware/schema-validation";
+import { GetProjectByIdParamsSchema, GetProjectByIdQuerySchema, ShareProjectSchema } from "../schema/share.schema";
 
 const router = express.Router();
 
-router.get("/:id", getProjectById);
-router.post("", shareProjectValidationSchema, validationMiddleware, saveProject);
+router.get("/:id", zodValidateMiddleware({ params: GetProjectByIdParamsSchema, query: GetProjectByIdQuerySchema }), getProjectById);
+router.post("", zodValidateMiddleware({ body: ShareProjectSchema }), saveProject);
 
 export default router;

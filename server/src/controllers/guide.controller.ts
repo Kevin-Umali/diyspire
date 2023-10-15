@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { sendSuccess } from "../utils/response-template";
 import { PrismaClient } from "@prisma/client";
+import { QueryParamsRequest } from "../middleware/schema-validate";
+import { GetHowToGuideByPathParamsRequest, GetHowToGuideByPathQueryRequest } from "../schema/guide.schema";
 
-export async function getHowToGuideByPath(req: Request, res: Response, next: NextFunction) {
+export async function getHowToGuideByPath(req: QueryParamsRequest<GetHowToGuideByPathQueryRequest, GetHowToGuideByPathParamsRequest>, res: Response, next: NextFunction) {
   try {
     const path = req.params.path;
     const { onlyMetadata = "false" } = req.query;

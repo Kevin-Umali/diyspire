@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ProjectDetails, ProjectImages } from "@/interfaces";
+import { ApiError, ProjectDetails, ProjectImages } from "@/interfaces";
 import { generateProjectExplanations, saveShareLinkData, searchImages } from "@/lib";
 
 import { Separator } from "@/components/ui/separator";
@@ -39,11 +39,30 @@ export default function ProjectDetail() {
       setIsExplanationLoading(true);
       try {
         if (project) {
-          const explanationResult = await generateProjectExplanations(project.title, project.materials, project.tools, project.time, project.budget, project.description);
+          const explanationResult = await generateProjectExplanations({
+            title: project.title,
+            materials: project.materials,
+            tools: project.tools,
+            time: project.time,
+            budget: project.budget,
+            description: project.description,
+          });
           setProjectExplanation(explanationResult.data.explanation);
         }
       } catch (error) {
-        toast({ title: "Explanation Error", description: "Failed to generate project explanation." });
+        const apiError = error as ApiError;
+
+        if (apiError.statusCode) {
+          toast({
+            title: "API Error!",
+            description: apiError.message || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
       } finally {
         setIsExplanationLoading(false);
       }
@@ -60,7 +79,19 @@ export default function ProjectDetail() {
           setRelatedImages(imageResult.data);
         }
       } catch (error) {
-        toast({ title: "Image Search Error", description: "Failed to fetch related images." });
+        const apiError = error as ApiError;
+
+        if (apiError.statusCode) {
+          toast({
+            title: "API Error!",
+            description: apiError.message || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
       } finally {
         setIsImageLoading(false);
       }
@@ -72,12 +103,24 @@ export default function ProjectDetail() {
     try {
       setIsSaving(true);
       if (!shareLink) {
-        const response = await saveShareLinkData(project, relatedImages, projectExplanation);
+        const response = await saveShareLinkData({ projectDetails: project, projectImage: relatedImages, explanation: projectExplanation });
 
         setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${response.data.id}`);
       }
     } catch (error) {
-      toast({ title: "Saving Error", description: "An error occurred while saving the project details." });
+      const apiError = error as ApiError;
+
+      if (apiError.statusCode) {
+        toast({
+          title: "API Error!",
+          description: apiError.message || "An error occurred while fetching data from the API.",
+        });
+      } else {
+        toast({
+          title: "Unexpected Error!",
+          description: "An unexpected error occurred. Please try again later.",
+        });
+      }
     } finally {
       setIsSaving(false);
     }

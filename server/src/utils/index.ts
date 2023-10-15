@@ -1,4 +1,5 @@
 import { JsonValue } from "@prisma/client/runtime/library";
+import { z } from "zod";
 
 export const customEscape = (str: string): string => {
   return str
@@ -15,6 +16,38 @@ export const customEscape = (str: string): string => {
 export const escapeArrayStrings = (value: string[]): string[] => {
   return value.map((v) => (typeof v === "string" ? customEscape(v.trim()) : v));
 };
+
+export const createRequiredString = (message: string, { minLength = 1, maxLength, shouldEscape = true }: { minLength?: number; maxLength?: number; shouldEscape?: boolean } = {}) => {
+  let schema = z.string().trim();
+
+  schema = schema.min(minLength, message);
+
+  if (maxLength !== undefined) {
+    schema = schema.max(maxLength, `Maximum length is ${maxLength} characters.`);
+  }
+
+  if (shouldEscape) {
+    return schema.transform(customEscape).refine((str) => str.length > 0, "Cannot be an empty string after trimming/escaping.");
+  }
+
+  return schema.refine((str) => str.length > 0, "Cannot be an empty string after trimming/escaping.");
+};
+
+export const createRequiredUUIDString = (message: string) =>
+  z
+    .string()
+    .trim()
+    .uuid(message)
+    .transform(customEscape)
+    .refine((str) => str.length > 0, "Cannot be an empty string after trimming/escaping.");
+
+export const createNonRequiredString = () => z.string().trim().transform(customEscape);
+
+export const createRequiredArray = (message: string) =>
+  z.array(z.string().transform(customEscape)).refine((data) => data.length > 0, {
+    message,
+    path: [],
+  });
 
 export const getStartOfDay = (date: Date): Date => {
   const startOfDay = new Date(date);
@@ -36,7 +69,7 @@ export const parsePrisma = <T = any>(json: JsonValue): T => {
   }
 };
 
-export const validateQueryParams = (
+export const validateQueryFilter = (
   limit?: string | undefined,
   orderBy?: string | undefined,
   options: {

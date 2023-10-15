@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { GuideData } from "@/interfaces";
+import { ApiError, GuideData } from "@/interfaces";
 
 import { getAllGuides } from "@/lib/index";
 import { Label } from "@/components/ui/label";
@@ -21,11 +21,19 @@ export default function HowToGuidesList() {
         const fetchedGuides = await getAllGuides();
         setGuides(fetchedGuides.data);
       } catch (error) {
-        console.error(error);
-        toast({
-          title: "Oops!",
-          description: "Failed to fetch guides. Please try again later.",
-        });
+        const apiError = error as ApiError;
+
+        if (apiError.statusCode) {
+          toast({
+            title: "API Error!",
+            description: apiError.message || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
       } finally {
         setLoading(false);
       }

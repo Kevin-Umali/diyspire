@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CommunityIdeaData } from "@/interfaces";
+import { ApiError, CommunityIdeaData } from "@/interfaces";
 
 import { getCommunityGeneratedIdea } from "@/lib/index";
 import { Label } from "@/components/ui/label";
@@ -20,11 +20,19 @@ export default function CommunityGeneratedIdeaList() {
         const fetchedCommunityGeneratedIdea = await getCommunityGeneratedIdea();
         setCommunityData(fetchedCommunityGeneratedIdea.data);
       } catch (error) {
-        console.error(error);
-        toast({
-          title: "Oops!",
-          description: "Failed to fetch community generated ideas. Please try again later.",
-        });
+        const apiError = error as ApiError;
+
+        if (apiError.statusCode) {
+          toast({
+            title: "API Error!",
+            description: apiError.message || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
       } finally {
         setLoading(false);
       }

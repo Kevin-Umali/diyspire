@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
+import { sendError } from "../utils/response-template";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const keyGenerator = (request: Request, _response: Response): string => {
@@ -12,8 +13,10 @@ const keyGenerator = (request: Request, _response: Response): string => {
 
 const limiter = rateLimit({
   windowMs: 10000,
-  max: 5,
-  message: "You can't make any more requests at the moment. Try again later",
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (_req: Request, res: Response) => sendError(res, "You can't make any more requests at the moment. Try again later", 429),
   keyGenerator: keyGenerator,
 });
 
