@@ -11,8 +11,6 @@ node_modules/
 
 # Docker
 .dockerignore
-Dockerfile
-Dockerfile.dev
 
 # Environment Files
 .env
@@ -25,17 +23,11 @@ Dockerfile.dev
 # Configuration & Dev Files
 .eslintrc.json
 .lintstagedrc.json
-docker-compose.dev.yml
-docker-dev.sh
-nodemon.json
 jest.config.ts
 
 # Prisma
 prisma/migrations/
 prisma/migration_lock.toml
-
-# TypeScript config
-tsconfig.json
 
 # Misc
 README.md
