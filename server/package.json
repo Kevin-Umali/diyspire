@@ -6,11 +6,17 @@
   "scripts": {
     "start": "node dist/src/index.js",
     "start:dev": "ts-node src/index.ts",
-    "watch:dev": "nodemon",
-    "build": "npx prisma generate && npm install && tsc",
+    "watch:dev": "nodemon -L",
+    "build": "npx prisma generate && npm install && tsc -p .",
+    "docker:up": "docker-compose -f docker-compose.dev.yml up",
+    "docker-prod:up": "docker-compose -f docker-compose.yml up",
+    "docker:build": "docker-compose -f docker-compose.dev.yml build",
+    "docker-prod:build": "docker-compose -f docker-compose.yml build",
+    "docker:down": "docker-compose -f docker-compose.dev.yml down",
+    "docker-prod:down": "docker-compose -f docker-compose.yml down",
     "lint": "eslint \"src/**/*.ts\" --quiet --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "clean": "npm run lint && npm run format",
+    "clean": "npm run format && npm run lint",
     "test": "NODE_ENV=test jest --detectOpenHandles"
   },
   "prisma": {
@@ -34,6 +40,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.10",
     "@types/apicache": "^1.6.2",
     "@types/compression": "^1.7.3",
     "@types/cors": "^2.8.13",

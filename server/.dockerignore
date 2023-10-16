@@ -1,0 +1,41 @@
+# Logs
+npm-debug.log
+
+# Node modules
+node_modules/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+.dockerignore
+Dockerfile
+Dockerfile.dev
+
+# Environment Files
+.env
+.envrc
+
+# Editor/OS-specific files
+.vscode/
+.DS_Store
+
+# Configuration & Dev Files
+.eslintrc.json
+.lintstagedrc.json
+docker-compose.dev.yml
+docker-dev.sh
+nodemon.json
+jest.config.ts
+
+# Prisma
+prisma/migrations/
+prisma/migration_lock.toml
+
+# TypeScript config
+tsconfig.json
+
+# Misc
+README.md
