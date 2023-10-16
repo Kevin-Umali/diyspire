@@ -1,0 +1,59 @@
+client:
+  - client/**/*
+
+client-components:
+  - client/components/**/*
+
+client-hooks:
+  - client/hooks/**/*
+
+client-config:
+  - client/*.config.js
+  - client/*.config.ts
+
+client-pages:
+  - client/app/**/*
+
+client-constants:
+  - client/constants/**/*
+
+client-context:
+  - client/context/**/*
+
+client-interfaces:
+  - client/interfaces/**/*
+
+client-public:
+  - client/public/**/*
+
+server:
+  - server/**/*
+
+server-controllers:
+  - server/src/controllers/**/*
+
+server-routes:
+  - server/src/routes/**/*
+
+server-middleware:
+  - server/src/middleware/**/*
+
+docker:
+  - server/*.dockerignore
+  - server/docker-*.sh
+  - server/Dockerfile*
+  - server/docker-compose*.yml
+
+github:
+  - .github/**/*
+
+root:
+  - /*.*
+  - /.gitignore
+
+config-utilities:
+  - client/lib/**/*
+  - server/src/utils/**/*
+
+database:
+  - server/prisma/**/*
