@@ -13,8 +13,11 @@
     "build:client": "cd client && npm run build",
     "dev:server": "cd server && npm run watch:dev",
     "build:server": "cd server && npm run build",
+    "docker:up": "cd server && npm run docker:up",
+    "docker:build": "cd server && npm run docker:build",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "build": "npm install && concurrently \"npm run build:client\" \"npm run build:server\"",
+    "dev:docker": "concurrently \"npm run dev:client\" \"npm run docker:up\"",
+    "build:all": "npm install && concurrently \"npm run build:client\" \"npm run build:server\" \"npm run docker:build\"",
     "lint:all": "cd server && npm run lint && cd ../client && npm run lint:fix"
   },
   "husky": {

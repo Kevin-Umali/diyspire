@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  diyspire-app:
+    container_name: diyspire-app-local
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    env_file: ./.env
+    environment:
+      - PORT=$PORT
+      - NODE_ENV=$NODE_ENV
+      - OPENAI_API_KEY=$OPENAI_API_KEY
+      - WEBSITE_URL=$WEBSITE_URL
+      - UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+      - UNSPLASH_SECRET_KEY=$UNSPLASH_SECRET_KEY
+      - MIGRATE_FLAG=$MIGRATE_FLAG
+      - DATABASE_URL=$DATABASE_URL
+    volumes:
+      - ./src:/usr/src/app/src
+      - /usr/src/app/node_modules
+    depends_on:
+      - diyspire-db
+
+  diyspire-db:
+    container_name: diyspire-docker-db
+    image: postgres:16
+    restart: always
+    env_file: ./.env
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+    - "$POSTGRES_PORT:5432"
+
+volumes:
+  postgres_data:
