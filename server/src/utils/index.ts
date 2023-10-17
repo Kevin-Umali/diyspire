@@ -112,3 +112,12 @@ export const removeDuplicates = (data: { [key: string]: any }[], props: string[]
     return false;
   });
 };
+
+export const localhostRegex = /^https?:\/\/localhost:(\d{4,5})\/.*$/;
+
+export const allowedOrigins = process.env.WEBSITE_URL!.split(",").map((origin) => origin.trim());
+
+export const patterns = allowedOrigins.map((domain) => {
+  const escapedDomain = domain.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`^https://${escapedDomain}/.*$`);
+});
