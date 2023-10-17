@@ -1,59 +1,81 @@
+enhancement:
+  - head-branch: ["^feature/"]
+
+bug:
+  - any:
+      - head-branch: ["^bugfix/", "^hotfix/"]
+
+cleanup:
+  - head-branch: ["^chore/"]
+
 client:
-  - client/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/**/*"]
 
 client-components:
-  - client/components/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/components/**/*"]
 
 client-hooks:
-  - client/hooks/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/hooks/**/*"]
 
 client-config:
-  - client/*.config.js
-  - client/*.config.ts
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/*.config.js", "client/*.config.ts"]
 
 client-pages:
-  - client/app/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/app/**/*"]
 
 client-constants:
-  - client/constants/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/constants/**/*"]
 
 client-context:
-  - client/context/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/context/**/*"]
 
 client-interfaces:
-  - client/interfaces/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/interfaces/**/*"]
 
 client-public:
-  - client/public/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/public/**/*"]
 
 server:
-  - server/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["server/**/*"]
 
 server-controllers:
-  - server/src/controllers/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["server/src/controllers/**/*"]
 
 server-routes:
-  - server/src/routes/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["server/src/routes/**/*"]
 
 server-middleware:
-  - server/src/middleware/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["server/src/middleware/**/*"]
 
 docker:
-  - server/*.dockerignore
-  - server/docker-*.sh
-  - server/Dockerfile*
-  - server/docker-compose*.yml
+  - changed-files:
+      - AnyGlobToAnyFile: ["server/*.dockerignore", "server/docker-*.sh", "server/Dockerfile*", "server/docker-compose*.yml"]
 
 github:
-  - .github/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: [".github/**/*"]
 
 root:
-  - /*.*
-  - /.gitignore
+  - changed-files:
+      - AnyGlobToAnyFile: ["/*.*", "/.gitignore"]
 
 config-utilities:
-  - client/lib/**/*
-  - server/src/utils/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["client/lib/**/*", "server/src/utils/**/*"]
 
 database:
-  - server/prisma/**/*
+  - changed-files:
+      - AnyGlobToAnyFile: ["server/prisma/**/*"]
