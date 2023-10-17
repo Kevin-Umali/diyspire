@@ -5,21 +5,9 @@ import OpenAI from "openai";
 import { BodyRequest } from "../middleware/schema-validate";
 import { ExplainRequest, IdeaRequest } from "../schema/openai.schema";
 
-interface IdeaRequestBody {
-  materials: string[];
-  onlySpecified: boolean;
-  difficulty: string;
-  category: string;
-  tools: string[];
-  time: string;
-  budget: number | string;
-  currency: string;
-  endPurpose: string;
-}
-
 export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response, next: NextFunction) => {
   try {
-    const { materials, onlySpecified, difficulty, category, tools, time, budget, currency, endPurpose }: IdeaRequestBody = req.body;
+    const { materials, onlySpecified, difficulty, category, tools, time, budget, currency, endPurpose } = req.body;
 
     const openai: OpenAI = req.app.get("openai");
 

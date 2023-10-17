@@ -1,5 +1,5 @@
 import { JsonValue } from "@prisma/client/runtime/library";
-import { z } from "zod";
+import { ZodType, z } from "zod";
 
 export const customEscape = (str: string): string => {
   return str
@@ -48,6 +48,12 @@ export const createRequiredArray = (message: string) =>
     message,
     path: [],
   });
+
+export const defaultSchema = z.object({}).strict();
+
+export const parseOrDefault = async <T>(value: any, schema?: ZodType<T, any, any>): Promise<T> => {
+  return (schema ?? defaultSchema).parseAsync(value) as Promise<T>;
+};
 
 export const getStartOfDay = (date: Date): Date => {
   const startOfDay = new Date(date);
