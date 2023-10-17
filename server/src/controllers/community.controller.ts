@@ -9,7 +9,7 @@ export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGener
   try {
     const { limit, orderBy } = req.query;
 
-    const { validLimit, validOrderBy } = validateQueryFilter(limit as string | undefined, orderBy as string | undefined);
+    const { validLimit, validOrderBy } = validateQueryFilter(limit, orderBy);
 
     const prisma = req.app.get("prisma") as PrismaClient;
 
