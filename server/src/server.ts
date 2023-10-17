@@ -13,6 +13,8 @@ import { sendError, sendSuccess } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
 import getConditionalCache from "./middleware/cache-response";
+import referrerAndHostCheck from "./middleware/host-validation";
+import { allowedOrigins, localhostRegex, patterns } from "./utils";
 
 dotenv.config();
 
@@ -33,9 +35,14 @@ app.set("openai", openai);
 app.set("unsplash", unsplash);
 app.set("prisma", prisma);
 
-app.use(helmet());
+app.use(
+  referrerAndHostCheck({
+    referers: process.env.NODE_ENV !== "production" ? [localhostRegex] : patterns,
+    mode: "either",
+  }),
+);
 
-const allowedOrigins = process.env.WEBSITE_URL!.split(",").map((origin) => origin.trim());
+app.use(helmet());
 
 app.use(
   cors({

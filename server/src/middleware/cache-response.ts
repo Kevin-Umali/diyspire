@@ -1,7 +1,7 @@
 import apicache from "apicache";
 import { Request, Response, NextFunction } from "express";
 
-function getConditionalCache(duration: string) {
+const getConditionalCache = (duration: string) => {
   if (process.env.NODE_ENV === "test") {
     return (req: Request, res: Response, next: NextFunction) => next();
   }
@@ -14,6 +14,6 @@ function getConditionalCache(duration: string) {
   };
 
   return apicache.options(cacheOptions).middleware(duration);
-}
+};
 
 export default getConditionalCache;
