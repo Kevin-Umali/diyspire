@@ -119,5 +119,5 @@ export const allowedOrigins = process.env.WEBSITE_URL!.split(",").map((origin) =
 
 export const patterns = allowedOrigins.map((domain) => {
   const escapedDomain = domain.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`^https://${escapedDomain}/.*$`);
+  return new RegExp(`^${escapedDomain}/.*$`);
 });
