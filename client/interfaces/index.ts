@@ -86,7 +86,7 @@ export interface ProjectDetails {
   tags: string[];
   time: string;
   title: string;
-  tools: any[];
+  tools: string[];
   budget: string;
   materials: string[];
   description: string;

@@ -1,14 +1,21 @@
 {
   "compilerOptions": {
     "types": ["node"],
-    "target": "es6",
-    "module": "commonjs",
-    "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"
+    "target": "ES2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "lib": ["ES2022"],
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*", "src/__tests__/**/*.ts", "prisma/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

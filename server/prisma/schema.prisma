@@ -26,17 +26,75 @@ model Metadata {
   howToGuide  HowToGuide?
 }
 
-model ProjectShareLink {
-  id             String   @id @default(uuid())
-  projectDetails Json
-  projectImage   Json
-  explanation    String?
-  createdAt      DateTime @default(now())
-}
-
 model IdeaGenerationCounter {
   id        Int      @id @default(autoincrement())
   count     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ProjectShareLink {
+  id               String         @id @default(uuid())
+  projectDetails   ProjectDetails @relation(fields: [projectDetailsId], references: [id])
+  projectDetailsId Int            @unique
+  projectImage     ProjectImage   @relation(fields: [projectImageId], references: [internalId])
+  projectImageId   Int
+  explanation      String?
+  createdAt        DateTime       @default(now())
+}
+
+model ProjectDetails {
+  id          Int               @id @default(autoincrement())
+  title       String
+  materials   String[]
+  tools       String[]
+  time        String
+  budget      String
+  tags        String[]
+  description String
+  project     ProjectShareLink?
+}
+
+model ProjectImage {
+  internalId      Int                @id @default(autoincrement())
+  id              String             @unique
+  width           Int
+  height          Int
+  color           String
+  alt_description String
+  urls            ImageURLs          @relation(fields: [urlsId], references: [id])
+  urlsId          Int                @unique
+  links           ImageLinks         @relation(fields: [linksId], references: [id])
+  linksId         Int                @unique
+  user            User               @relation(fields: [userId], references: [id])
+  userId          Int                @unique
+  projects        ProjectShareLink[]
+}
+
+model ImageURLs {
+  id       Int           @id @default(autoincrement())
+  raw      String
+  full     String
+  regular  String
+  small    String
+  thumb    String
+  small_s3 String
+  image    ProjectImage?
+}
+
+model ImageLinks {
+  id                Int           @id @default(autoincrement())
+  self              String
+  html              String
+  download          String
+  download_location String
+  image             ProjectImage?
+}
+
+model User {
+  id       Int           @id @default(autoincrement())
+  username String
+  name     String
+  link     String
+  images   ProjectImage?
 }

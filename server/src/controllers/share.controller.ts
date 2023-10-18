@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { sendSuccess } from "../utils/response-template";
-import { PrismaClient } from "@prisma/client";
-import { parsePrisma } from "../utils";
+import { Prisma, PrismaClient } from "@prisma/client";
+
 import { BodyRequest, QueryParamsRequest } from "../middleware/schema-validate";
 import { GetProjectByIdParamsRequest, GetProjectByIdQueryRequest, ShareProjectBodyRequest } from "../schema/share.schema";
 
@@ -18,7 +18,13 @@ export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQuery
           id: id,
         },
         select: {
-          projectDetails: true,
+          projectDetails: {
+            select: {
+              title: true,
+              description: true,
+              tags: true,
+            },
+          },
         },
       });
 
@@ -26,14 +32,24 @@ export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQuery
         sendSuccess(res, { message: "Metadata not found." }, 404);
         return;
       }
+      const { title, description, tags } = projectDetail.projectDetails;
 
-      const { title, description, tags } = parsePrisma<{ title: string; description: string; tags: string[] }>(projectDetail.projectDetails);
       return sendSuccess(res, { title, description, tags });
     }
 
     const project = await prisma.projectShareLink.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        projectDetails: true,
+        projectImage: {
+          include: {
+            urls: true,
+            links: true,
+            user: true,
+          },
+        },
       },
     });
 
@@ -50,24 +66,75 @@ export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQuery
 
 export const saveProject = async (req: BodyRequest<ShareProjectBodyRequest>, res: Response, next: NextFunction) => {
   try {
-    const prisma = req.app.get("prisma") as PrismaClient;
-
     const { projectDetails, projectImage, explanation } = req.body;
 
-    const savedProject = await prisma.projectShareLink.create({
-      data: {
-        projectDetails,
-        projectImage,
-        explanation,
-      },
-    });
+    const prisma = req.app.get("prisma") as PrismaClient;
 
-    if (!savedProject) {
+    const result = await prisma.$transaction(
+      async (tx) => {
+        const existingProject = await tx.projectDetails.findFirst({
+          where: { project: { projectDetails: { title: projectDetails.title } } },
+          include: {
+            project: true,
+          },
+        });
+
+        if (existingProject?.project) {
+          return existingProject.project.id;
+        }
+
+        const existingImage = await tx.projectImage.findUnique({
+          where: { id: projectImage.id },
+        });
+        const imageToUse =
+          existingImage ??
+          (await tx.projectImage.create({
+            data: {
+              ...projectImage,
+              urls: {
+                create: projectImage.urls,
+              },
+              links: {
+                create: projectImage.links,
+              },
+              user: {
+                create: projectImage.user,
+              },
+            },
+          }));
+
+        const createdProject = await tx.projectShareLink.create({
+          data: {
+            explanation,
+            projectDetails: {
+              create: projectDetails,
+            },
+            projectImage: {
+              connect: {
+                id: imageToUse.id,
+              },
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        return createdProject.id;
+      },
+      {
+        maxWait: 5000,
+        timeout: 10000,
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
+
+    if (!result) {
       sendSuccess(res, { message: "Failed to save the project." }, 500);
       return;
     }
 
-    return sendSuccess(res, { id: savedProject.id }, 201);
+    return sendSuccess(res, { id: result }, 201);
   } catch (error) {
     next(error);
   }
