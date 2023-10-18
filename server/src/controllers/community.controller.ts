@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { sendSuccess } from "../utils/response-template";
 import { PrismaClient } from "@prisma/client";
-import { parsePrisma, removeDuplicates, validateQueryFilter } from "../utils";
+import { validateQueryFilter } from "../utils";
 import { QueryRequest } from "../middleware/schema-validate";
 import { CommunityGeneratedIdeaRequest } from "../schema/community.schema";
 
@@ -17,7 +17,12 @@ export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGener
       select: {
         id: true,
         projectDetails: true,
-        projectImage: true,
+        projectImage: {
+          select: {
+            alt_description: true,
+            urls: true,
+          },
+        },
         createdAt: true,
       },
       orderBy: {
@@ -31,38 +36,19 @@ export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGener
       return;
     }
 
-    const formattedProject = projects.map(({ id, projectDetails, projectImage, createdAt }) => {
-      const { urls, alt_description } = parsePrisma<{
-        urls: {
-          raw: string;
-          full: string;
-          small: string;
-          thumb: string;
-          regular: string;
-          small_s3: string;
-        };
-        alt_description: string;
-      }>(projectImage);
-      const { title, description, tags } = parsePrisma<{
-        title: string;
-        description: string;
-        tags: string[];
-      }>(projectDetails);
+    const transformedProjects = projects.map((project) => ({
+      id: project.id,
+      title: project.projectDetails.title,
+      description: project.projectDetails.description,
+      tags: project.projectDetails.tags,
+      projectImage: {
+        alt_description: project.projectImage.alt_description,
+        urls: project.projectImage.urls,
+      },
+      createdAt: project.createdAt,
+    }));
 
-      return {
-        id,
-        title,
-        description,
-        tags,
-        projectImage: {
-          urls,
-          alt_description,
-        },
-        createdAt,
-      };
-    });
-
-    return sendSuccess(res, removeDuplicates(formattedProject, ["title"]));
+    return sendSuccess(res, transformedProjects);
   } catch (error) {
     next(error);
   }
