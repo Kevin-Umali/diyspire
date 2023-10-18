@@ -13,8 +13,7 @@ import { sendError, sendSuccess } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
 import getConditionalCache from "./middleware/cache-response";
-import referrerAndHostCheck from "./middleware/host-validation";
-import { allowedOrigins, localhostRegex, patterns } from "./utils";
+import { allowedOrigins } from "./utils";
 
 dotenv.config();
 
@@ -34,13 +33,6 @@ const app: Express = express();
 app.set("openai", openai);
 app.set("unsplash", unsplash);
 app.set("prisma", prisma);
-
-app.use(
-  referrerAndHostCheck({
-    referers: process.env.NODE_ENV !== "production" ? [localhostRegex] : patterns,
-    mode: "either",
-  }),
-);
 
 app.use(helmet());
 

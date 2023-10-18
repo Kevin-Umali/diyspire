@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ApiError, ProjectDetails, ProjectImages } from "@/interfaces";
 import { generateProjectExplanations, saveShareLinkData, searchImages } from "@/lib";
@@ -15,7 +15,6 @@ import ShareDialog from "@/components/project-detail/share-dialog";
 export default function ProjectDetail() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const projectParams: ProjectDetails = JSON.parse(searchParams.get("project") as string);
 
   const [isExplanationLoading, setIsExplanationLoading] = useState(true);
   const [isImageLoading, setIsImageLoading] = useState(true);
@@ -23,81 +22,108 @@ export default function ProjectDetail() {
   const [relatedImages, setRelatedImages] = useState<ProjectImages | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
-  const [project] = useState<ProjectDetails | null>(projectParams);
+  const [project, setProject] = useState<ProjectDetails | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const isMountedRef = useRef(true); // to track if component is still mounted
 
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!project) {
+    return () => {
+      isMountedRef.current = false; // mark as unmounted
+    };
+  }, []);
+
+  useEffect(() => {
+    const title = searchParams.get("title") ?? "";
+    const time = searchParams.get("time") ?? "";
+    const budget = searchParams.get("budget") ?? "";
+    const description = searchParams.get("description") ?? "";
+
+    const materials = searchParams.getAll("materials") ?? [];
+    const tools = searchParams.getAll("tools") ?? [];
+    const tags = searchParams.getAll("tags") ?? [];
+
+    if (!title || !time || !budget) {
       router.push("/");
+      return;
     }
-  }, [project, router]);
 
-  useEffect(() => {
-    async function fetchExplanation() {
-      setIsExplanationLoading(true);
-      try {
-        if (project) {
-          const explanationResult = await generateProjectExplanations({
-            title: project.title,
-            materials: project.materials,
-            tools: project.tools,
-            time: project.time,
-            budget: project.budget,
-            description: project.description,
-          });
-          setProjectExplanation(explanationResult.data.explanation);
-        }
-      } catch (error) {
-        const apiError = error as ApiError;
+    setProject({
+      title,
+      time,
+      budget,
+      description,
+      materials,
+      tools,
+      tags,
+    });
+  }, [router, searchParams]);
 
-        if (apiError.statusCode) {
-          toast({
-            title: "API Error!",
-            description: apiError.message || "An error occurred while fetching data from the API.",
-          });
-        } else {
-          toast({
-            title: "Unexpected Error!",
-            description: "An unexpected error occurred. Please try again later.",
-          });
-        }
-      } finally {
-        setIsExplanationLoading(false);
+  const fetchProjectExplanation = useCallback(async () => {
+    if (!project) return;
+
+    setIsExplanationLoading(true);
+    try {
+      const explanationResult = await generateProjectExplanations({
+        title: project.title,
+        materials: project.materials,
+        tools: project.tools,
+        time: project.time,
+        budget: project.budget,
+        description: project.description,
+      });
+      setProjectExplanation(explanationResult.data.explanation);
+    } catch (error) {
+      const apiError = error as ApiError;
+
+      if (apiError.statusCode) {
+        toast({
+          title: "API Error!",
+          description: apiError.message || "An error occurred while fetching data from the API.",
+        });
+      } else {
+        toast({
+          title: "Unexpected Error!",
+          description: "An unexpected error occurred. Please try again later.",
+        });
       }
+    } finally {
+      setIsExplanationLoading(false);
     }
-    fetchExplanation();
+  }, [project, toast]);
+
+  const fetchProjectImages = useCallback(async () => {
+    if (!project) return;
+
+    setIsImageLoading(true);
+    try {
+      const imageResult = await searchImages(project.title);
+      setRelatedImages(imageResult.data);
+    } catch (error) {
+      const apiError = error as ApiError;
+
+      if (apiError.statusCode) {
+        toast({
+          title: "API Error!",
+          description: apiError.message || "An error occurred while fetching data from the API.",
+        });
+      } else {
+        toast({
+          title: "Unexpected Error!",
+          description: "An unexpected error occurred. Please try again later.",
+        });
+      }
+    } finally {
+      setIsImageLoading(false);
+    }
   }, [project, toast]);
 
   useEffect(() => {
-    async function fetchImages() {
-      setIsImageLoading(true);
-      try {
-        if (project) {
-          const imageResult = await searchImages(project.title);
-          setRelatedImages(imageResult.data);
-        }
-      } catch (error) {
-        const apiError = error as ApiError;
-
-        if (apiError.statusCode) {
-          toast({
-            title: "API Error!",
-            description: apiError.message || "An error occurred while fetching data from the API.",
-          });
-        } else {
-          toast({
-            title: "Unexpected Error!",
-            description: "An unexpected error occurred. Please try again later.",
-          });
-        }
-      } finally {
-        setIsImageLoading(false);
-      }
-    }
-    fetchImages();
-  }, [project, toast]);
+    fetchProjectExplanation();
+    fetchProjectImages();
+  }, [fetchProjectExplanation, fetchProjectImages]);
 
   const handleSaveProject = useCallback(async () => {
     try {

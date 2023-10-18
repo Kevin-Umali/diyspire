@@ -40,6 +40,7 @@ const ProjectDetailsSchema = z.object({
   tools: createRequiredArray("Tools array cannot be empty"),
   time: createRequiredString("Time is required"),
   budget: createRequiredString("Budget is required"),
+  tags: createRequiredArray("Tags array cannot be empty"),
   description: createRequiredString("Description is required"),
 });
 
