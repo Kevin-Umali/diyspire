@@ -4,8 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import withAuth from "@/hocs/withAuth";
-import { ApiError, ProjectDetails, ProjectImages } from "@/interfaces";
+import { ProjectDetails, ProjectImages } from "@/interfaces";
 import { generateProjectExplanations, saveShareLinkData, searchImages } from "@/lib";
+import { AxiosError } from "axios";
 
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
@@ -27,14 +28,14 @@ function ProjectDetail() {
   const [project, setProject] = useState<ProjectDetails | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const isMountedRef = useRef(true); // to track if component is still mounted
+  const isMountedRef = useRef(true);
 
   const { toast } = useToast();
   const { accessToken } = useAuth();
 
   useEffect(() => {
     return () => {
-      isMountedRef.current = false; // mark as unmounted
+      isMountedRef.current = false;
     };
   }, []);
 
@@ -82,12 +83,10 @@ function ProjectDetail() {
       );
       setProjectExplanation(explanationResult.data.explanation);
     } catch (error) {
-      const apiError = error as ApiError;
-
-      if (apiError.statusCode) {
+      if (error instanceof AxiosError) {
         toast({
-          title: "API Error!",
-          description: apiError.message || "An error occurred while fetching data from the API.",
+          title: `API ERROR - ${error.code}`,
+          description: error.response?.data.error || "An error occurred while fetching data from the API.",
         });
       } else {
         toast({
@@ -108,12 +107,10 @@ function ProjectDetail() {
       const imageResult = await searchImages(project.title, accessToken!);
       setRelatedImages(imageResult.data);
     } catch (error) {
-      const apiError = error as ApiError;
-
-      if (apiError.statusCode) {
+      if (error instanceof AxiosError) {
         toast({
-          title: "API Error!",
-          description: apiError.message || "An error occurred while fetching data from the API.",
+          title: `API ERROR - ${error.code}`,
+          description: error.response?.data.error || "An error occurred while fetching data from the API.",
         });
       } else {
         toast({
@@ -140,12 +137,10 @@ function ProjectDetail() {
         setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${response.data.id}`);
       }
     } catch (error) {
-      const apiError = error as ApiError;
-
-      if (apiError.statusCode) {
+      if (error instanceof AxiosError) {
         toast({
-          title: "API Error!",
-          description: apiError.message || "An error occurred while fetching data from the API.",
+          title: `API ERROR - ${error.code}`,
+          description: error.response?.data.error || "An error occurred while fetching data from the API.",
         });
       } else {
         toast({

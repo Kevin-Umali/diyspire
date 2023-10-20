@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { sendSuccess } from "../utils/response-template";
+import { sendError, sendSuccess } from "../utils/response-template";
 import { PrismaClient } from "@prisma/client";
 import { validateQueryFilter } from "../utils";
 import { QueryRequest } from "../middleware/schema-validate";
@@ -32,7 +32,7 @@ export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGener
     });
 
     if (projects.length <= 0) {
-      sendSuccess(res, { message: "No community project exist" }, 404);
+      sendError(res, "No community project exist", 404);
       return;
     }
 

@@ -117,13 +117,14 @@ model RefreshToken {
 }
 
 model DeviceInfo {
-  id           Int          @id @default(autoincrement())
-  isMobile     Boolean
-  isDesktop    Boolean
-  isBot        Boolean
-  browser      String
-  version      String
-  os           String
-  platform     String
-  refreshToken RefreshToken @relation(fields: [id], references: [id])
+  id             Int          @id @default(autoincrement())
+  isMobile       Boolean
+  isDesktop      Boolean
+  isBot          Boolean
+  browser        String
+  version        String
+  os             String
+  platform       String
+  refreshTokenId Int          @unique
+  refreshToken   RefreshToken @relation(fields: [refreshTokenId], references: [id], onDelete: Cascade)
 }

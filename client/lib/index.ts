@@ -1,6 +1,5 @@
 import { FetchApiOptions, HttpMethod } from "@/constants";
 import {
-  ApiError,
   CommunityIdeaResponse,
   CounterResponse,
   GeneratedIdeaResponse,
@@ -15,88 +14,91 @@ import {
   ShareLinkDataResponse,
   ShareLinkResponse,
 } from "@/interfaces";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const fetchApi = async <T>(endpoint: string, { method = HttpMethod.GET, body, queryParams, accessToken }: FetchApiOptions = {}): Promise<T> => {
-  try {
-    if (!API_URL) {
-      throw new Error("API_URL is not configured");
+const api: AxiosInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
+
+interface ErrorResponse {
+  message?: string;
+  error?: string;
+  errors?: {
+    [key: string]: any;
+  };
+}
+
+api.interceptors.response.use(
+  async (response) => {
+    return response;
+  },
+  async (error: AxiosError) => {
+    if (!error.config) {
+      return Promise.reject(error);
     }
 
-    if (method === HttpMethod.GET && body) {
-      throw new Error("GET request should not contain a body.");
-    }
+    const originalRequest: AxiosRequestConfig & { _retry?: boolean } = error.config;
+    const errorMessage = (error.response?.data as ErrorResponse)?.error;
 
-    const headers: { [key: string]: string } = {
-      "Content-Type": "application/json",
-    };
+    if (error.response?.status === 403 && errorMessage === "Access Token Expired" && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-    if (accessToken) {
-      headers["Authorization"] = `Bearer ${accessToken}`;
-    }
-
-    let queryString = "";
-    if (queryParams) {
-      const params = new URLSearchParams();
-      for (const key in queryParams) {
-        params.append(key, String(queryParams[key]));
-      }
-      queryString = `?${params.toString()}`;
-    }
-
-    const options = {
-      method,
-      headers,
-      credentials: "include" as RequestCredentials,
-      body: body ? JSON.stringify(body) : undefined,
-    };
-
-    const response = await fetch(`${API_URL}${endpoint}${queryString}`, options);
-
-    if (response.status === 403) {
-      const errorResponse = await response.json();
-      if (errorResponse.message === "Access Token Expired") {
-        const refreshTokenResponse = await fetch(`${API_URL}/v1/auth/refresh`, {
-          method: "POST",
-          credentials: "include",
+      const refreshTokenResponse = await api.post(
+        "/v1/auth/refresh",
+        {},
+        {
           headers: {
             "Content-Type": "application/json",
           },
-        });
+        },
+      );
 
-        if (refreshTokenResponse.ok) {
-          const data = await refreshTokenResponse.json();
-          const newAccessToken = data.accessToken;
+      if (refreshTokenResponse.status === 200 && refreshTokenResponse.data?.data?.accessToken) {
+        originalRequest.headers = originalRequest.headers ?? { "Content-Type": "application/json" };
 
-          const retryResponse = await fetch(`${API_URL}${endpoint}${queryString}`, {
-            ...options,
-            headers: {
-              ...options.headers,
-              Authorization: `Bearer ${newAccessToken}`,
-            },
-          });
+        const newAccessToken = refreshTokenResponse.data.data.accessToken;
 
-          if (!retryResponse.ok) {
-            const retryErrorResponse = await retryResponse.json();
-            throw new Error(retryErrorResponse.error);
-          }
+        api.defaults.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
 
-          return await retryResponse.json();
-        } else {
-          throw new Error("Session expired. Please login again.");
-        }
+        return api.request(originalRequest);
       }
+
+      return Promise.reject(new Error("Session expired. Please login again."));
     }
 
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      const error: ApiError = new Error(errorResponse.error || errorResponse.data.message || "An unexpected error occurred. Please try again later.");
-      error.statusCode = response.status;
-      throw error;
-    }
+    return Promise.reject(error);
+  },
+);
 
-    return await response.json();
+const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {}): Promise<T> => {
+  const { method = HttpMethod.GET, body, queryParams, accessToken } = options;
+
+  if (method === HttpMethod.GET && body) {
+    throw new Error("GET request should not contain a body.");
+  }
+
+  const headers: { [key: string]: string } = {};
+  if (accessToken) {
+    headers["Authorization"] = `Bearer ${accessToken}`;
+  }
+
+  try {
+    const response = await api({
+      url: endpoint,
+      method: method,
+      params: queryParams,
+      data: body,
+      headers: headers,
+    });
+
+    return response.data;
   } catch (error: any) {
     console.error("API Error: ", error.message);
     throw error;
@@ -216,6 +218,12 @@ export const logoutUser = (accessToken: string): Promise<void> => {
   return fetchApi("/v1/auth/logout", {
     method: HttpMethod.POST,
     accessToken,
+  });
+};
+
+export const refreshToken = (): Promise<any> => {
+  return fetchApi("/v1/auth/refresh", {
+    method: HttpMethod.POST,
   });
 };
 

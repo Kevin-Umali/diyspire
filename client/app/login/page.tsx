@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
-import { ApiError } from "@/interfaces";
 import { loginUser, registerUser } from "@/lib";
+import { AxiosError } from "axios";
 import { Loader } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -49,13 +49,16 @@ export default function Login() {
             },
             token: response.data.accessToken,
           });
+
+          router.push("/");
         }
       } catch (error) {
-        const apiError = error as ApiError;
-
-        setLoginErrorMessage(apiError.message);
+        if (error instanceof AxiosError) {
+          setLoginErrorMessage(error.response?.data.error);
+        } else {
+          setLoginErrorMessage("An unknown error occurred.");
+        }
       } finally {
-        router.push("/");
         setIsLoading(false);
       }
     },
@@ -76,9 +79,11 @@ export default function Login() {
           setSuccessMessage(response.data.message);
         }
       } catch (error) {
-        const apiError = error as ApiError;
-
-        setSignUpErrorMessage(apiError.message);
+        if (error instanceof AxiosError) {
+          setSignUpErrorMessage(error.response?.data.error);
+        } else {
+          setSignUpErrorMessage("An unknown error occurred.");
+        }
       } finally {
         setIsLoading(false);
       }

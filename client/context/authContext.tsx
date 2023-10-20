@@ -1,7 +1,10 @@
 "use client";
 
-import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
-import { logoutUser } from "@/lib";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { logoutUser, refreshToken } from "@/lib";
+import { AxiosError } from "axios";
+
+import { useToast } from "@/components/ui/use-toast";
 
 interface User {
   id: string;
@@ -26,6 +29,42 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const checkAuthenticationStatus = async () => {
+      try {
+        // Check if refreshToken cookie exists
+        if (!document.cookie.includes("refreshToken")) {
+          return;
+        }
+
+        const response = await refreshToken();
+        if (response.data?.accessToken) {
+          setAccessToken(response.data.accessToken);
+          setUser({
+            id: response.data.id,
+            username: response.data.username,
+          });
+        }
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          toast({
+            title: `API ERROR - ${error.code}`,
+            description: error.response?.data.error || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
+      }
+    };
+
+    checkAuthenticationStatus();
+  }, []);
+
   const login = (data: { user: User; token: string }) => {
     setUser(data.user);
     setAccessToken(data.token);
@@ -39,10 +78,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(null);
         setAccessToken(null);
       } catch (error) {
-        console.error("Failed to log out:", error);
+        if (error instanceof AxiosError) {
+          toast({
+            title: `API ERROR - ${error.code}`,
+            description: error.response?.data.error || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
       }
     }
-  }, [accessToken]);
+  }, [accessToken, toast]);
 
   const contextValue = useMemo(() => {
     return {

@@ -1,8 +1,8 @@
 import { sign } from "jsonwebtoken";
 
 export const generateTokens = (userId: string, username: string) => {
-  const accessToken = sign({ id: userId, username }, process.env.JWT_SECRET_KEY!, { expiresIn: "2m" });
-  const refreshToken = sign({ id: userId, username }, process.env.JWT_REFRESH_SECRET_KEY!, { expiresIn: "7d" });
+  const accessToken = sign({ id: userId, username }, process.env.JWT_SECRET_KEY!, { expiresIn: "1h" });
+  const refreshToken = sign({ id: userId, username }, process.env.JWT_REFRESH_SECRET_KEY!, { expiresIn: "2d" });
   return { accessToken, refreshToken };
 };
 

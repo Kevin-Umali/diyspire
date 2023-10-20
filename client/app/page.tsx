@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import { categories } from "@/constants";
 import { useAuth } from "@/context/authContext";
 import { useCurrency } from "@/context/currencyContext";
-import { ApiError, GeneratedIdea } from "@/interfaces";
+import { GeneratedIdea } from "@/interfaces";
 import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/lib";
+import { AxiosError } from "axios";
 import { RefreshCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -88,13 +89,10 @@ export default function Home() {
         setIsGenerated(true);
       }
     } catch (error) {
-      console.error(error);
-      const apiError = error as ApiError;
-
-      if (apiError.statusCode) {
+      if (error instanceof AxiosError) {
         toast({
-          title: "API Error!",
-          description: apiError.message || "An error occurred while fetching data from the API.",
+          title: `API ERROR - ${error.code}`,
+          description: error.response?.data.error || "An error occurred while fetching data from the API.",
         });
       } else {
         toast({
@@ -105,7 +103,7 @@ export default function Home() {
     } finally {
       setIsGenerating(false);
     }
-  }, [isSafe, isAuthenticated, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose, accessToken, toast]);
+  }, [isAuthenticated, isSafe, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose, accessToken, router, toast]);
 
   const advancedOptions = useMemo(
     () => (

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ApiError, CommunityIdeaData } from "@/interfaces";
+import { CommunityIdeaData } from "@/interfaces";
+import { AxiosError } from "axios";
 
 import { getCommunityGeneratedIdea } from "@/lib/index";
 import { Button } from "@/components/ui/button";
@@ -22,12 +23,10 @@ export default function CommunityGeneratedIdeaList() {
         const fetchedCommunityGeneratedIdea = await getCommunityGeneratedIdea();
         setCommunityData(fetchedCommunityGeneratedIdea.data ?? []);
       } catch (error) {
-        const apiError = error as ApiError;
-
-        if (apiError.statusCode) {
+        if (error instanceof AxiosError) {
           toast({
-            title: "API Error!",
-            description: apiError.message || "An error occurred while fetching data from the API.",
+            title: `API ERROR - ${error.code}`,
+            description: error.response?.data.error || "An error occurred while fetching data from the API.",
           });
         } else {
           toast({

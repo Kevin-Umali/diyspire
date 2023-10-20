@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import { sendError, sendSuccess } from "../utils/response-template";
 import { compare, hash } from "bcrypt";
@@ -6,7 +6,7 @@ import { generateTokens, refreshTokenExpiry } from "../utils/generate-tokens";
 import { BodyRequest } from "../middleware/schema-validate";
 import { UserRequest } from "../schema/authentication.schema";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { JwtPayload, TokenExpiredError, verify } from "jsonwebtoken";
 
 export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response, next: NextFunction) => {
   try {
@@ -95,47 +95,35 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     });
 
     if (!refreshTokenInDb || refreshTokenInDb.userId !== decoded.id || refreshTokenInDb.user.username !== decoded.username) {
+      res.clearCookie("refreshToken");
+
       sendError(res, "Invalid refresh token.", 401);
       return;
     }
 
-    if (new Date(refreshTokenInDb.expiresAt) < new Date()) {
-      return sendError(res, "Refresh token has expired.", 401);
+    if (new Date(refreshTokenInDb.expiresAt) < new Date() || refreshTokenInDb.user.banned) {
+      await prisma.refreshToken.delete({
+        where: { token: refreshToken },
+      });
+
+      res.clearCookie("refreshToken");
+
+      const errorMessage = refreshTokenInDb.user.banned ? "User is banned." : "Refresh token has expired.";
+      sendError(res, errorMessage, 401);
+      return;
     }
 
-    if (refreshTokenInDb.user.banned) {
-      return sendError(res, "User is banned.", 401);
-    }
+    const { accessToken } = generateTokens(decoded.id, decoded.username);
 
-    const { accessToken, refreshToken: newRefreshToken } = generateTokens(decoded.id, decoded.username);
+    res.cookie("refreshToken", refreshTokenInDb.token, { httpOnly: true, expires: refreshTokenInDb.expiresAt });
 
-    await prisma.refreshToken.delete({
-      where: { token: refreshToken },
-    });
-
-    await prisma.refreshToken.create({
-      data: {
-        token: newRefreshToken,
-        userId: decoded.id,
-        deviceInfo: {
-          create: {
-            isMobile: req.useragent?.isMobile ?? false,
-            isDesktop: req.useragent?.isDesktop ?? false,
-            isBot: typeof req.useragent?.isBot === "string" ? false : req.useragent?.isBot ?? false,
-            browser: req.useragent?.browser ?? "Unknown",
-            version: req.useragent?.version ?? "Unknown",
-            os: req.useragent?.os ?? "Unknown",
-            platform: req.useragent?.platform ?? "Unknown",
-          },
-        },
-        expiresAt: refreshTokenExpiry,
-      },
-    });
-
-    res.cookie("refreshToken", newRefreshToken, { httpOnly: true, expires: refreshTokenExpiry });
-
-    return sendSuccess(res, { accessToken });
+    return sendSuccess(res, { id: refreshTokenInDb.user.id, username: refreshTokenInDb.user.username, accessToken });
   } catch (error) {
+    if (error instanceof TokenExpiredError) {
+      res.clearCookie("refreshToken");
+      return sendError(res, "Refresh token has expired. Please re-login.", 401);
+    }
+
     if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
       return sendError(res, "Token issue. Please re-login.", 401);
     }
@@ -149,26 +137,9 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
 
     const prisma = req.app.get("prisma") as PrismaClient;
 
-    await prisma.$transaction(
-      async (tx) => {
-        await tx.deviceInfo.deleteMany({
-          where: {
-            refreshToken: {
-              token: refreshToken,
-            },
-          },
-        });
-
-        await tx.refreshToken.delete({
-          where: { token: refreshToken },
-        });
-      },
-      {
-        maxWait: 5000,
-        timeout: 10000,
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-      },
-    );
+    await prisma.refreshToken.delete({
+      where: { token: refreshToken },
+    });
 
     res.clearCookie("refreshToken");
 

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { JsonWebTokenError, TokenExpiredError, NotBeforeError, verify } from "jsonwebtoken";
-import { sendError, sendSuccess } from "../utils/response-template";
+import { sendError } from "../utils/response-template";
 
 interface UserPayload {
   id: string;
@@ -17,7 +17,7 @@ export const authenticateToken = (req: AugmentedRequest, res: Response, next: Ne
     const token = authHeader?.split(" ")[1];
 
     if (!token) {
-      sendSuccess(res, { message: "Access Token Required" }, 401);
+      sendError(res, "Access Token Required", 401);
       return;
     }
 
