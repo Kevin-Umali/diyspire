@@ -35,7 +35,7 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
           create: {
             isMobile: req.useragent?.isMobile ?? false,
             isDesktop: req.useragent?.isDesktop ?? false,
-            isBot: typeof req.useragent?.isBot === "string" ? false : req.useragent?.isBot ?? false,
+            isBot: req.useragent?.isBot ?? false,
             browser: req.useragent?.browser ?? "Unknown",
             version: req.useragent?.version ?? "Unknown",
             os: req.useragent?.os ?? "Unknown",

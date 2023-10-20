@@ -5,7 +5,6 @@ import compression from "compression";
 import dotenv from "dotenv";
 import OpenAI from "openai";
 import * as nodeFetch from "node-fetch";
-import useragent from "express-useragent";
 import cookieParser from "cookie-parser";
 import { createApi } from "unsplash-js";
 import { PrismaClient } from "@prisma/client";
@@ -15,6 +14,7 @@ import { sendError, sendSuccess } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
 import getConditionalCache from "./middleware/cache-response";
+import userAgentMiddleware from "./middleware/useragent-parser";
 import { allowedOrigins } from "./utils";
 
 dotenv.config();
@@ -56,8 +56,9 @@ app.use(
 );
 
 app.use(express.json());
-app.use(useragent.express());
 app.use(compression());
+
+app.use(userAgentMiddleware);
 
 app.use(limiter);
 
