@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { sendSuccess } from "../utils/response-template";
+import { sendError, sendSuccess } from "../utils/response-template";
 import { PrismaClient } from "@prisma/client";
 import { QueryParamsRequest } from "../middleware/schema-validate";
 import { GetHowToGuideByPathParamsRequest, GetHowToGuideByPathQueryRequest } from "../schema/guide.schema";
@@ -23,7 +23,7 @@ export async function getHowToGuideByPath(req: QueryParamsRequest<GetHowToGuideB
       });
 
       if (!guideMetadata?.metadata) {
-        sendSuccess(res, { message: "Metadata not found." }, 404);
+        sendError(res, "Metadata not found.", 404);
         return;
       }
 
@@ -40,7 +40,7 @@ export async function getHowToGuideByPath(req: QueryParamsRequest<GetHowToGuideB
     });
 
     if (!guide) {
-      sendSuccess(res, { message: "How To Guide not found." }, 404);
+      sendError(res, "How To Guide not found.", 404);
       return;
     }
 
@@ -66,7 +66,7 @@ export async function getAllGuidePaths(req: Request, res: Response, next: NextFu
     });
 
     if (!paths || paths.length === 0) {
-      sendSuccess(res, { message: "No How To Guides found." }, 404);
+      sendError(res, "No How To Guides found.", 404);
       return;
     }
 

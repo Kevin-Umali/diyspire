@@ -1,0 +1,179 @@
+import { Prisma, PrismaClient } from "@prisma/client";
+import { Request, Response, NextFunction } from "express";
+import { sendError, sendSuccess } from "../utils/response-template";
+import { compare, hash } from "bcrypt";
+import { generateTokens, refreshTokenExpiry } from "../utils/generate-tokens";
+import { BodyRequest } from "../middleware/schema-validate";
+import { UserRequest } from "../schema/authentication.schema";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { JwtPayload, verify } from "jsonwebtoken";
+
+export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response, next: NextFunction) => {
+  try {
+    const { username, password } = req.body;
+
+    const prisma = req.app.get("prisma") as PrismaClient;
+
+    const user = await prisma.users.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!user || !(await compare(password, user.password))) {
+      sendError(res, "Invalid credentials", 400);
+      return;
+    }
+
+    const { accessToken, refreshToken } = generateTokens(user.id, user.username);
+
+    await prisma.refreshToken.create({
+      data: {
+        token: refreshToken,
+        user: { connect: { id: user.id } },
+        deviceInfo: {
+          create: {
+            isMobile: req.useragent?.isMobile ?? false,
+            isDesktop: req.useragent?.isDesktop ?? false,
+            isBot: typeof req.useragent?.isBot === "string" ? false : req.useragent?.isBot ?? false,
+            browser: req.useragent?.browser ?? "Unknown",
+            version: req.useragent?.version ?? "Unknown",
+            os: req.useragent?.os ?? "Unknown",
+            platform: req.useragent?.platform ?? "Unknown",
+          },
+        },
+        expiresAt: refreshTokenExpiry,
+      },
+    });
+
+    res.cookie("refreshToken", refreshToken, { httpOnly: process.env.NODE_ENV === "production", expires: refreshTokenExpiry });
+
+    return sendSuccess(res, { id: user.id, username: user.username, accessToken });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const registerUser = async (req: BodyRequest<UserRequest>, res: Response, next: NextFunction) => {
+  try {
+    const { username, password } = req.body;
+
+    const prisma = req.app.get("prisma") as PrismaClient;
+
+    const hashedPassword = await hash(password, 10);
+
+    await prisma.users.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
+
+    return sendSuccess(res, { message: "User registered successfully! Please log in." }, 201);
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
+      return sendError(res, "Username already exists.", 400);
+    } else {
+      next(error);
+    }
+  }
+};
+
+export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    const prisma = req.app.get("prisma") as PrismaClient;
+
+    const decoded = verify(refreshToken, process.env.JWT_REFRESH_SECRET_KEY!) as JwtPayload;
+
+    const refreshTokenInDb = await prisma.refreshToken.findUnique({
+      where: { token: refreshToken },
+      include: {
+        user: true,
+      },
+    });
+
+    if (!refreshTokenInDb || refreshTokenInDb.userId !== decoded.id || refreshTokenInDb.user.username !== decoded.username) {
+      sendError(res, "Invalid refresh token.", 401);
+      return;
+    }
+
+    if (new Date(refreshTokenInDb.expiresAt) < new Date()) {
+      return sendError(res, "Refresh token has expired.", 401);
+    }
+
+    if (refreshTokenInDb.user.banned) {
+      return sendError(res, "User is banned.", 401);
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens(decoded.id, decoded.username);
+
+    await prisma.refreshToken.delete({
+      where: { token: refreshToken },
+    });
+
+    await prisma.refreshToken.create({
+      data: {
+        token: newRefreshToken,
+        userId: decoded.id,
+        deviceInfo: {
+          create: {
+            isMobile: req.useragent?.isMobile ?? false,
+            isDesktop: req.useragent?.isDesktop ?? false,
+            isBot: typeof req.useragent?.isBot === "string" ? false : req.useragent?.isBot ?? false,
+            browser: req.useragent?.browser ?? "Unknown",
+            version: req.useragent?.version ?? "Unknown",
+            os: req.useragent?.os ?? "Unknown",
+            platform: req.useragent?.platform ?? "Unknown",
+          },
+        },
+        expiresAt: refreshTokenExpiry,
+      },
+    });
+
+    res.cookie("refreshToken", newRefreshToken, { httpOnly: true, expires: refreshTokenExpiry });
+
+    return sendSuccess(res, { accessToken });
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
+      return sendError(res, "Token issue. Please re-login.", 401);
+    }
+    next(error);
+  }
+};
+
+export const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    const prisma = req.app.get("prisma") as PrismaClient;
+
+    await prisma.$transaction(
+      async (tx) => {
+        await tx.deviceInfo.deleteMany({
+          where: {
+            refreshToken: {
+              token: refreshToken,
+            },
+          },
+        });
+
+        await tx.refreshToken.delete({
+          where: { token: refreshToken },
+        });
+      },
+      {
+        maxWait: 5000,
+        timeout: 10000,
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
+
+    res.clearCookie("refreshToken");
+
+    return sendSuccess(res, { message: "Logged out successfully." });
+  } catch (error) {
+    next(error);
+  }
+};

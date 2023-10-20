@@ -2,7 +2,9 @@
 
 import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { categories } from "@/constants";
+import { useAuth } from "@/context/authContext";
 import { useCurrency } from "@/context/currencyContext";
 import { ApiError, GeneratedIdea } from "@/interfaces";
 import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/lib";
@@ -42,9 +44,12 @@ export default function Home() {
 
   const [projects, setProjects] = useState<GeneratedIdea[] | never[]>([]);
 
-  const { currency } = useCurrency();
+  const router = useRouter();
 
   const { toast } = useToast();
+
+  const { isAuthenticated, accessToken } = useAuth();
+  const { currency } = useCurrency();
 
   const toggleAdvancedOptions = () => {
     setShowAdvancedOptions(!showAdvancedOptions);
@@ -52,29 +57,38 @@ export default function Home() {
 
   const handleGenerateProjects = useCallback(async () => {
     try {
+      if (!isAuthenticated) {
+        router.push("/login");
+        return;
+      }
+
       if (!isSafe) throw new Error("Please check the safety checkbox");
 
       setIsGenerating(true);
 
-      const response = await generateProjectIdeas({
-        materials,
-        onlySpecified,
-        difficulty: selectedDifficulty,
-        category: selectedCategory,
-        tools,
-        timeValue,
-        timeUnit,
-        budget,
-        currency,
-        endPurpose: purpose,
-      });
+      const response = await generateProjectIdeas(
+        {
+          materials,
+          onlySpecified,
+          difficulty: selectedDifficulty,
+          category: selectedCategory,
+          tools,
+          timeValue,
+          timeUnit,
+          budget,
+          currency,
+          endPurpose: purpose,
+        },
+        accessToken!,
+      );
 
       if (response.data?.ideas) {
         setProjects(response.data.ideas);
-        await incrementCounterOfGeneratedIdea();
+        await incrementCounterOfGeneratedIdea(accessToken!);
         setIsGenerated(true);
       }
     } catch (error) {
+      console.error(error);
       const apiError = error as ApiError;
 
       if (apiError.statusCode) {
@@ -91,7 +105,7 @@ export default function Home() {
     } finally {
       setIsGenerating(false);
     }
-  }, [isSafe, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose, toast]);
+  }, [isSafe, isAuthenticated, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose, accessToken, toast]);
 
   const advancedOptions = useMemo(
     () => (

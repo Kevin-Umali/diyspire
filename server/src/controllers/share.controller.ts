@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { sendSuccess } from "../utils/response-template";
+import { sendError, sendSuccess } from "../utils/response-template";
 import { Prisma, PrismaClient } from "@prisma/client";
 
 import { BodyRequest, QueryParamsRequest } from "../middleware/schema-validate";
@@ -29,7 +29,7 @@ export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQuery
       });
 
       if (!projectDetail?.projectDetails) {
-        sendSuccess(res, { message: "Metadata not found." }, 404);
+        sendError(res, "Metadata not found.", 404);
         return;
       }
       const { title, description, tags } = projectDetail.projectDetails;
@@ -54,7 +54,7 @@ export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQuery
     });
 
     if (!project) {
-      sendSuccess(res, { message: "Project not found." }, 404);
+      sendError(res, "Project not found.", 404);
       return;
     }
 
@@ -130,7 +130,7 @@ export const saveProject = async (req: BodyRequest<ShareProjectBodyRequest>, res
     );
 
     if (!result) {
-      sendSuccess(res, { message: "Failed to save the project." }, 500);
+      sendError(res, "Failed to save the project.", 500);
       return;
     }
 

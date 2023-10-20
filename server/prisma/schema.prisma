@@ -93,8 +93,37 @@ model ImageLinks {
 
 model User {
   id       Int           @id @default(autoincrement())
-  username String
+  username String        @unique
   name     String
   link     String
   images   ProjectImage?
+}
+
+model Users {
+  id            String         @id @default(uuid())
+  username      String         @unique
+  password      String
+  banned        Boolean        @default(false)
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id         Int         @id @default(autoincrement())
+  token      String      @unique
+  userId     String
+  user       Users       @relation(fields: [userId], references: [id], map: "Custom_FK_Name")
+  deviceInfo DeviceInfo?
+  expiresAt  DateTime
+}
+
+model DeviceInfo {
+  id           Int          @id @default(autoincrement())
+  isMobile     Boolean
+  isDesktop    Boolean
+  isBot        Boolean
+  browser      String
+  version      String
+  os           String
+  platform     String
+  refreshToken RefreshToken @relation(fields: [id], references: [id])
 }

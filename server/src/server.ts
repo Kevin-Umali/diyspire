@@ -4,11 +4,13 @@ import helmet from "helmet";
 import compression from "compression";
 import dotenv from "dotenv";
 import OpenAI from "openai";
-import { createApi } from "unsplash-js";
 import * as nodeFetch from "node-fetch";
+import useragent from "express-useragent";
+import cookieParser from "cookie-parser";
+import { createApi } from "unsplash-js";
 import { PrismaClient } from "@prisma/client";
 
-import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes, counterRoutes, communityRoutes } from "./routes/index.routes";
+import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes, counterRoutes, communityRoutes, authenticationRoutes } from "./routes/index.routes";
 import { sendError, sendSuccess } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
@@ -34,6 +36,7 @@ app.set("openai", openai);
 app.set("unsplash", unsplash);
 app.set("prisma", prisma);
 
+app.use(cookieParser());
 app.use(helmet());
 
 app.use(
@@ -47,11 +50,13 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
+    credentials: true,
     optionsSuccessStatus: 200,
   }),
 );
 
 app.use(express.json());
+app.use(useragent.express());
 app.use(compression());
 
 app.use(limiter);
@@ -66,6 +71,8 @@ app.get(
     sendSuccess(res, { status: "Server is active" });
   },
 );
+
+app.use("/api/v1/auth", authenticationRoutes);
 
 const oneDayCacheMiddleware = getConditionalCache("24 hours");
 app.use("/api/v1/guide", oneDayCacheMiddleware, guideRoutes);

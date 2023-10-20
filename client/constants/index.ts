@@ -303,4 +303,5 @@ export type FetchApiOptions = {
   method?: HttpMethod;
   body?: object;
   queryParams?: Record<string, string | number | boolean>;
+  accessToken?: string;
 };
