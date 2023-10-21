@@ -65,4 +65,10 @@ This project uses Prisma as an ORM to interact with the database. Follow these s
    npx prisma migrate reset
    ```
 
+4. Deploy in the production
+   ```bash
+   npx prisma migrate dev --create-only
+   npx prisma migrate deploy
+   ```
+
 This sets up the database schema and populates it with initial data, allowing your server to interact with the database using Prisma.
