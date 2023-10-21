@@ -55,7 +55,7 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       signed: true,
-      sameSite: "lax",
+      sameSite: "none",
       expires: refreshTokenExpiry,
     });
 
