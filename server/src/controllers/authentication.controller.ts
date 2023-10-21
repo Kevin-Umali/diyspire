@@ -25,6 +25,11 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
       return;
     }
 
+    if (user.banned) {
+      sendError(res, "User is banned.", 401);
+      return;
+    }
+
     const { accessToken, refreshToken } = generateTokens(user.id, user.username);
 
     await prisma.refreshToken.create({
@@ -131,7 +136,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     res.cookie("refreshToken", refreshTokenInDb.token, {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       path: "/",
       expires: refreshTokenInDb.expiresAt,
     });
@@ -156,9 +161,11 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
 
     const prisma = req.app.get("prisma") as PrismaClient;
 
-    await prisma.refreshToken.delete({
-      where: { token: refreshToken },
-    });
+    if (refreshToken) {
+      await prisma.refreshToken.delete({
+        where: { token: refreshToken },
+      });
+    }
 
     res.clearCookie("refreshToken");
 
