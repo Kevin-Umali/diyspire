@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node"],
+    "typeRoots": ["@types", "node_modules/@types"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "ES2022",
@@ -16,6 +16,6 @@
     "lib": ["ES2022"],
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "src/__tests__/**/*.ts", "prisma/*"],
+  "include": ["src/**/*", "src/__tests__/**/*.ts", "prisma/*", "@types"],
   "exclude": ["node_modules", "dist"]
 }

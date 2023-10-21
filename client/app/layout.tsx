@@ -4,6 +4,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { AuthProvider } from "@/context/authContext";
 import { CurrencyProvider } from "@/context/currencyContext";
 
 import { Toaster } from "@/components/ui/toaster";
@@ -51,14 +52,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <CurrencyProvider>
-            <div className="flex min-h-screen flex-col">
-              <Navbar />
-              <main className="grow">{children}</main>
-              <Footer />
-              <Toaster />
-            </div>
-          </CurrencyProvider>
+          <AuthProvider>
+            <CurrencyProvider>
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="grow">{children}</main>
+                <Footer />
+                <Toaster />
+              </div>
+            </CurrencyProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

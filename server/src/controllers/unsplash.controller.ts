@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 
-import { sendSuccess } from "../utils/response-template";
+import { sendError, sendSuccess } from "../utils/response-template";
 import { randomInt } from "crypto";
 import { QueryRequest } from "../middleware/schema-validate";
 import { UnsplashImageSearchQueryRequest } from "../schema/unsplash.schema";
@@ -44,7 +44,7 @@ export const searchImages = async (req: QueryRequest<UnsplashImageSearchQueryReq
           },
         });
       } else {
-        sendSuccess(res, { errors: "No photos found for the given query." }, 400);
+        sendError(res, "No photos found for the given query.", 400);
       }
     }
   } catch (error) {

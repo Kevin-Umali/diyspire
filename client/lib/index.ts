@@ -1,6 +1,5 @@
 import { FetchApiOptions, HttpMethod } from "@/constants";
 import {
-  ApiError,
   CommunityIdeaResponse,
   CounterResponse,
   GeneratedIdeaResponse,
@@ -15,81 +14,135 @@ import {
   ShareLinkDataResponse,
   ShareLinkResponse,
 } from "@/interfaces";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const fetchApi = async <T>(endpoint: string, { method = HttpMethod.GET, body, queryParams }: FetchApiOptions = {}): Promise<T> => {
-  try {
-    if (!API_URL) {
-      throw new Error("API_URL is not configured");
+const api: AxiosInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
+
+interface ErrorResponse {
+  message?: string;
+  error?: string;
+  errors?: {
+    [key: string]: any;
+  };
+}
+
+api.interceptors.response.use(
+  async (response) => {
+    return response;
+  },
+  async (error: AxiosError) => {
+    if (!error.config) {
+      return Promise.reject(error);
     }
 
-    if (method === HttpMethod.GET && body) {
-      throw new Error("GET request should not contain a body.");
-    }
+    const originalRequest: AxiosRequestConfig & { _retry?: boolean } = error.config;
+    const errorMessage = (error.response?.data as ErrorResponse)?.error;
 
-    let queryString = "";
-    if (queryParams) {
-      const params = new URLSearchParams();
-      for (const key in queryParams) {
-        params.append(key, String(queryParams[key]));
+    if (error.response?.status === 403 && errorMessage === "Access Token Expired" && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const refreshTokenResponse = await api.post(
+        "/v1/auth/refresh",
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (refreshTokenResponse.status === 200 && refreshTokenResponse.data?.data?.accessToken) {
+        originalRequest.headers = originalRequest.headers ?? { "Content-Type": "application/json" };
+
+        const newAccessToken = refreshTokenResponse.data.data.accessToken;
+
+        api.defaults.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+
+        return api.request(originalRequest);
       }
-      queryString = `?${params.toString()}`;
+
+      return Promise.reject(new Error("Session expired. Please login again."));
     }
 
-    const options = {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    };
+    return Promise.reject(error);
+  },
+);
 
-    const response = await fetch(`${API_URL}${endpoint}${queryString}`, options);
+const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {}): Promise<T> => {
+  const { method = HttpMethod.GET, body, queryParams, accessToken } = options;
 
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      const error: ApiError = new Error(errorResponse.error || "An unexpected error occurred. Please try again later.");
-      error.statusCode = response.status;
-      throw error;
-    }
+  if (method === HttpMethod.GET && body) {
+    throw new Error("GET request should not contain a body.");
+  }
 
-    return await response.json();
+  const headers: { [key: string]: string } = {};
+  if (accessToken) {
+    headers["Authorization"] = `Bearer ${accessToken}`;
+  }
+
+  try {
+    const response = await api({
+      url: endpoint,
+      method: method,
+      params: queryParams,
+      data: body,
+      headers: headers,
+    });
+
+    return response.data;
   } catch (error: any) {
     console.error("API Error: ", error.message);
     throw error;
   }
 };
 
-export const generateProjectIdeas = (params: {
-  materials: string[];
-  onlySpecified: boolean;
-  difficulty: string;
-  category: string;
-  tools: string[];
-  timeValue: number;
-  timeUnit: string | null;
-  budget: string | number;
-  currency: string;
-  endPurpose: string;
-}): Promise<GeneratedIdeaResponse> => {
+export const generateProjectIdeas = (
+  params: {
+    materials: string[];
+    onlySpecified: boolean;
+    difficulty: string;
+    category: string;
+    tools: string[];
+    timeValue: number;
+    timeUnit: string | null;
+    budget: string | number;
+    currency: string;
+    endPurpose: string;
+  },
+  accessToken: string,
+): Promise<GeneratedIdeaResponse> => {
   const time = params.timeValue && params.timeUnit ? `${params.timeValue} ${params.timeUnit}` : "";
   return fetchApi<GeneratedIdeaResponse>("/v1/generate/idea", {
     method: HttpMethod.POST,
     body: { ...params, time },
+    accessToken,
   });
 };
 
-export const generateProjectExplanations = (params: { title: string; materials: string[]; tools: string[]; time: string; budget: string; description: string }): Promise<IdeaExplanationResponse> => {
+export const generateProjectExplanations = (
+  params: { title: string; materials: string[]; tools: string[]; time: string; budget: string; description: string },
+  accessToken: string,
+): Promise<IdeaExplanationResponse> => {
   return fetchApi<IdeaExplanationResponse>("/v1/generate/explain", {
     method: HttpMethod.POST,
     body: params,
+    accessToken,
   });
 };
 
-export const searchImages = (query: string): Promise<ImageSearchResponse> => {
+export const searchImages = (query: string, accessToken: string): Promise<ImageSearchResponse> => {
   return fetchApi<ImageSearchResponse>("/v1/image/search", {
     queryParams: { query },
+    accessToken,
   });
 };
 
@@ -107,10 +160,14 @@ export const getAllGuides = (): Promise<GuideResponse> => {
   return fetchApi<GuideResponse>("/v1/guide");
 };
 
-export const saveShareLinkData = (params: { projectDetails: ProjectDetails | null; projectImage: ProjectImages | null; explanation: string | null }): Promise<ShareLinkResponse> => {
+export const saveShareLinkData = (
+  params: { projectDetails: ProjectDetails | null; projectImage: ProjectImages | null; explanation: string | null },
+  accessToken: string,
+): Promise<ShareLinkResponse> => {
   return fetchApi<ShareLinkResponse>("/v1/share", {
     method: HttpMethod.POST,
     body: params,
+    accessToken,
   });
 };
 
@@ -128,8 +185,8 @@ export const getTotalCountOfGeneratedIdea = (): Promise<CounterResponse> => {
   return fetchApi<CounterResponse>("/v1/counter");
 };
 
-export const incrementCounterOfGeneratedIdea = (): Promise<void> => {
-  return fetchApi("/v1/counter", { method: HttpMethod.POST });
+export const incrementCounterOfGeneratedIdea = (accessToken: string): Promise<void> => {
+  return fetchApi("/v1/counter", { method: HttpMethod.POST, accessToken });
 };
 
 export const getCommunityGeneratedIdea = (
@@ -140,6 +197,33 @@ export const getCommunityGeneratedIdea = (
 ): Promise<CommunityIdeaResponse> => {
   return fetchApi<CommunityIdeaResponse>("/v1/community", {
     queryParams: params,
+  });
+};
+
+export const registerUser = (userData: { username: string; password: string }): Promise<any> => {
+  return fetchApi("/v1/auth/register", {
+    method: HttpMethod.POST,
+    body: userData,
+  });
+};
+
+export const loginUser = (credentials: { username: string; password: string }): Promise<any> => {
+  return fetchApi("/v1/auth/login", {
+    method: HttpMethod.POST,
+    body: credentials,
+  });
+};
+
+export const logoutUser = (accessToken: string): Promise<void> => {
+  return fetchApi("/v1/auth/logout", {
+    method: HttpMethod.POST,
+    accessToken,
+  });
+};
+
+export const refreshToken = (): Promise<any> => {
+  return fetchApi("/v1/auth/refresh", {
+    method: HttpMethod.POST,
   });
 };
 

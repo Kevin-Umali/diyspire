@@ -6,6 +6,6 @@ import { GetHowToGuideByPathParamsSchema, GetHowToGuideByPathQuerySchema } from 
 const router = express.Router();
 
 router.get("/:path", zodValidateMiddleware({ params: GetHowToGuideByPathParamsSchema, query: GetHowToGuideByPathQuerySchema }), getHowToGuideByPath);
-router.get("", getAllGuidePaths);
+router.get("", zodValidateMiddleware({}), getAllGuidePaths);
 
 export default router;

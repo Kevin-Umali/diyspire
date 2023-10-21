@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { ApiError, GuidePathData } from "@/interfaces";
+import { GuidePathData } from "@/interfaces";
+import { AxiosError } from "axios";
 
 import { getGuideByPath } from "@/lib/index";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -34,12 +35,10 @@ export default function HowToGuideDetail({ params }: { params: { guide_name: str
         const fetchedGuide = await getGuideByPath(params.guide_name);
         setGuideDetails(fetchedGuide.data);
       } catch (error) {
-        const apiError = error as ApiError;
-
-        if (apiError.statusCode) {
+        if (error instanceof AxiosError) {
           toast({
-            title: "API Error!",
-            description: apiError.message || "An error occurred while fetching data from the API.",
+            title: `API ERROR - ${error.code}`,
+            description: error.response?.data.error || "An error occurred while fetching data from the API.",
           });
         } else {
           toast({

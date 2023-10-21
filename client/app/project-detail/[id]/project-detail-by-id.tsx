@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ApiError, ProjectDetails, ProjectImages } from "@/interfaces";
+import { ProjectDetails, ProjectImages } from "@/interfaces";
 import { getShareLinkData } from "@/lib";
+import { AxiosError } from "axios";
 
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
@@ -33,12 +34,10 @@ export default function ProjectDetailById({ params }: { params: { id: string } }
           return;
         }
       } catch (error) {
-        const apiError = error as ApiError;
-
-        if (apiError.statusCode) {
+        if (error instanceof AxiosError) {
           toast({
-            title: "API Error!",
-            description: apiError.message || "An error occurred while fetching data from the API.",
+            title: `API ERROR - ${error.code}`,
+            description: error.response?.data.error || "An error occurred while fetching data from the API.",
           });
         } else {
           toast({

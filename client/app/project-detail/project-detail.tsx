@@ -2,8 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ApiError, ProjectDetails, ProjectImages } from "@/interfaces";
+import { useAuth } from "@/context/authContext";
+import withAuth from "@/hocs/withAuth";
+import { ProjectDetails, ProjectImages } from "@/interfaces";
 import { generateProjectExplanations, saveShareLinkData, searchImages } from "@/lib";
+import { AxiosError } from "axios";
 
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
@@ -12,7 +15,7 @@ import ProjectInfo from "@/components/project-detail/project-info";
 import ProjectSteps from "@/components/project-detail/project-step";
 import ShareDialog from "@/components/project-detail/share-dialog";
 
-export default function ProjectDetail() {
+function ProjectDetail() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -25,13 +28,14 @@ export default function ProjectDetail() {
   const [project, setProject] = useState<ProjectDetails | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const isMountedRef = useRef(true); // to track if component is still mounted
+  const isMountedRef = useRef(true);
 
   const { toast } = useToast();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     return () => {
-      isMountedRef.current = false; // mark as unmounted
+      isMountedRef.current = false;
     };
   }, []);
 
@@ -66,22 +70,23 @@ export default function ProjectDetail() {
 
     setIsExplanationLoading(true);
     try {
-      const explanationResult = await generateProjectExplanations({
-        title: project.title,
-        materials: project.materials,
-        tools: project.tools,
-        time: project.time,
-        budget: project.budget,
-        description: project.description,
-      });
+      const explanationResult = await generateProjectExplanations(
+        {
+          title: project.title,
+          materials: project.materials,
+          tools: project.tools,
+          time: project.time,
+          budget: project.budget,
+          description: project.description,
+        },
+        accessToken!,
+      );
       setProjectExplanation(explanationResult.data.explanation);
     } catch (error) {
-      const apiError = error as ApiError;
-
-      if (apiError.statusCode) {
+      if (error instanceof AxiosError) {
         toast({
-          title: "API Error!",
-          description: apiError.message || "An error occurred while fetching data from the API.",
+          title: `API ERROR - ${error.code}`,
+          description: error.response?.data.error || "An error occurred while fetching data from the API.",
         });
       } else {
         toast({
@@ -92,22 +97,20 @@ export default function ProjectDetail() {
     } finally {
       setIsExplanationLoading(false);
     }
-  }, [project, toast]);
+  }, [accessToken, project, toast]);
 
   const fetchProjectImages = useCallback(async () => {
     if (!project) return;
 
     setIsImageLoading(true);
     try {
-      const imageResult = await searchImages(project.title);
+      const imageResult = await searchImages(project.title, accessToken!);
       setRelatedImages(imageResult.data);
     } catch (error) {
-      const apiError = error as ApiError;
-
-      if (apiError.statusCode) {
+      if (error instanceof AxiosError) {
         toast({
-          title: "API Error!",
-          description: apiError.message || "An error occurred while fetching data from the API.",
+          title: `API ERROR - ${error.code}`,
+          description: error.response?.data.error || "An error occurred while fetching data from the API.",
         });
       } else {
         toast({
@@ -118,7 +121,7 @@ export default function ProjectDetail() {
     } finally {
       setIsImageLoading(false);
     }
-  }, [project, toast]);
+  }, [accessToken, project, toast]);
 
   useEffect(() => {
     fetchProjectExplanation();
@@ -128,18 +131,16 @@ export default function ProjectDetail() {
   const handleSaveProject = useCallback(async () => {
     try {
       setIsSaving(true);
-      if (!shareLink) {
-        const response = await saveShareLinkData({ projectDetails: project, projectImage: relatedImages, explanation: projectExplanation });
+      if (!shareLink && accessToken) {
+        const response = await saveShareLinkData({ projectDetails: project, projectImage: relatedImages, explanation: projectExplanation }, accessToken!);
 
         setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${response.data.id}`);
       }
     } catch (error) {
-      const apiError = error as ApiError;
-
-      if (apiError.statusCode) {
+      if (error instanceof AxiosError) {
         toast({
-          title: "API Error!",
-          description: apiError.message || "An error occurred while fetching data from the API.",
+          title: `API ERROR - ${error.code}`,
+          description: error.response?.data.error || "An error occurred while fetching data from the API.",
         });
       } else {
         toast({
@@ -150,7 +151,7 @@ export default function ProjectDetail() {
     } finally {
       setIsSaving(false);
     }
-  }, [project, projectExplanation, relatedImages, shareLink, toast]);
+  }, [accessToken, project, projectExplanation, relatedImages, shareLink, toast]);
 
   return (
     <div className="container mx-auto py-5 sm:py-10">
@@ -177,3 +178,5 @@ export default function ProjectDetail() {
     </div>
   );
 }
+
+export default withAuth(ProjectDetail);
