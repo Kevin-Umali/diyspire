@@ -34,7 +34,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuthenticationStatus = async () => {
       try {
-        // Check if refreshToken cookie exists
         if (!document.cookie.includes("refreshToken")) {
           return;
         }

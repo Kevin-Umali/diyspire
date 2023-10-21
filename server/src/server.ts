@@ -36,7 +36,7 @@ app.set("openai", openai);
 app.set("unsplash", unsplash);
 app.set("prisma", prisma);
 
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 app.use(helmet());
 
 app.use(

@@ -46,7 +46,13 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
       },
     });
 
-    res.cookie("refreshToken", refreshToken, { httpOnly: process.env.NODE_ENV === "production", expires: refreshTokenExpiry });
+    res.cookie("refreshToken", refreshToken, {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      signed: true,
+      sameSite: "lax",
+      expires: refreshTokenExpiry,
+    });
 
     return sendSuccess(res, { id: user.id, username: user.username, accessToken });
   } catch (error) {
@@ -81,7 +87,7 @@ export const registerUser = async (req: BodyRequest<UserRequest>, res: Response,
 
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req.signedCookies.refreshToken;
 
     const prisma = req.app.get("prisma") as PrismaClient;
 
@@ -115,7 +121,13 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 
     const { accessToken } = generateTokens(decoded.id, decoded.username);
 
-    res.cookie("refreshToken", refreshTokenInDb.token, { httpOnly: true, expires: refreshTokenInDb.expiresAt });
+    res.cookie("refreshToken", refreshTokenInDb.token, {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      expires: refreshTokenInDb.expiresAt,
+    });
 
     return sendSuccess(res, { id: refreshTokenInDb.user.id, username: refreshTokenInDb.user.username, accessToken });
   } catch (error) {
@@ -133,7 +145,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 
 export const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req.signedCookies.refreshToken;
 
     const prisma = req.app.get("prisma") as PrismaClient;
 
