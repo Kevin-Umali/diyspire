@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 8080",
-    "prebuild": "npm audit fix",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
