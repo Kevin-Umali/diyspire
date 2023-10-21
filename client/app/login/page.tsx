@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import { loginUser, registerUser } from "@/lib";
 import { AxiosError } from "axios";
-import { Loader } from "lucide-react";
+import { Eye, EyeOff, Loader } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +21,7 @@ export default function Login() {
   const [successMessage, setSuccessMessage] = useState<string | null>("");
   const [signupErrorMessage, setSignUpErrorMessage] = useState<string | null>("");
   const [tab, setTab] = useState<string>("login");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -69,6 +70,12 @@ export default function Login() {
     async (e: React.SyntheticEvent) => {
       try {
         e.preventDefault();
+
+        if (signupData.username.length < 6 || signupData.password.length < 6) {
+          setSignUpErrorMessage("Username and password should be at least 6 characters long.");
+          return;
+        }
+
         setIsLoading(true);
         setSignUpErrorMessage("");
 
@@ -133,16 +140,21 @@ export default function Login() {
                   />
 
                   <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    value={loginData.password}
-                    onChange={(e) => setLoginData((prev) => ({ ...prev, password: e.target.value }))}
-                    placeholder="Your password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    disabled={isLoading}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      value={loginData.password}
+                      onChange={(e) => setLoginData((prev) => ({ ...prev, password: e.target.value }))}
+                      placeholder="Your password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      required
+                      disabled={isLoading}
+                    />
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 transform cursor-pointer" onClick={() => setShowPassword((prev) => !prev)}>
+                      {showPassword ? <EyeOff className="mr-2" /> : <Eye className="mr-2" />}
+                    </span>
+                  </div>
                 </div>
               </CardContent>
               <CardFooter>
@@ -180,16 +192,21 @@ export default function Login() {
                   />
 
                   <Label htmlFor="signupPassword">Password</Label>
-                  <Input
-                    id="signupPassword"
-                    value={signupData.password}
-                    onChange={(e) => setSignupData((prev) => ({ ...prev, password: e.target.value }))}
-                    placeholder="Choose a password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    disabled={isLoading}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="signupPassword"
+                      value={signupData.password}
+                      onChange={(e) => setSignupData((prev) => ({ ...prev, password: e.target.value }))}
+                      placeholder="Choose a password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      required
+                      disabled={isLoading}
+                    />
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 transform cursor-pointer" onClick={() => setShowPassword((prev) => !prev)}>
+                      {showPassword ? <EyeOff className="mr-2" /> : <Eye className="mr-2" />}
+                    </span>
+                  </div>
                 </div>
               </CardContent>
               <CardFooter>

@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ const AvatarControl: React.FC<AvatarControlProps> = ({ isAuthenticated, logout }
         <DropdownMenuContent className="w-50">
           <DropdownMenuItem onClick={logout}>
             <span className="flex items-center space-x-2">
+              <LogOut size={20} />
               <span>Logout</span>
             </span>
           </DropdownMenuItem>

@@ -34,10 +34,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuthenticationStatus = async () => {
       try {
-        if (!document.cookie.includes("refreshToken")) {
-          return;
-        }
-
         const response = await refreshToken();
         if (response.data?.accessToken) {
           setAccessToken(response.data.accessToken);
@@ -46,19 +42,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             username: response.data.username,
           });
         }
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: `API ERROR - ${error.code}`,
-            description: error.response?.data.error || "An error occurred while fetching data from the API.",
-          });
-        } else {
-          toast({
-            title: "Unexpected Error!",
-            description: "An unexpected error occurred. Please try again later.",
-          });
-        }
-      }
+      } catch (error) {}
     };
 
     checkAuthenticationStatus();

@@ -87,7 +87,14 @@ export const registerUser = async (req: BodyRequest<UserRequest>, res: Response,
 
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const refreshToken = req.signedCookies.refreshToken;
+    const refreshToken = req.signedCookies.refreshToken || req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      res.clearCookie("refreshToken");
+
+      sendError(res, "Refresh token is required", 400);
+      return;
+    }
 
     const prisma = req.app.get("prisma") as PrismaClient;
 
@@ -145,7 +152,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 
 export const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const refreshToken = req.signedCookies.refreshToken;
+    const refreshToken = req.signedCookies.refreshToken || req.cookies.refreshToken;
 
     const prisma = req.app.get("prisma") as PrismaClient;
 

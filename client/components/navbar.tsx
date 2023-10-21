@@ -48,10 +48,10 @@ const Navbar: React.FC = () => {
       <div className="flex items-center space-x-2">
         <div className="hidden space-x-2 lg:flex">
           <Select onValueChange={setCurrency} defaultValue={currency} aria-label="Select currency">
-            <SelectTrigger className="w-[80px]" aria-label="Select a currency to use">
+            <SelectTrigger className="w-[130px]" aria-label="Select a currency to use">
               <SelectValue placeholder="Select currency" />
             </SelectTrigger>
-            <SelectContent className="max-h-[150px]" aria-label="Select a currency to use">
+            <SelectContent className="max-h-[250px]" aria-label="Select a currency to use">
               <SelectGroup>
                 <SelectLabel>Currency</SelectLabel>
                 {currencyItems}
@@ -67,16 +67,16 @@ const Navbar: React.FC = () => {
         </div>
         <div className="space-x-2 lg:hidden">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger className="w-[120px]" asChild>
               <Button variant="outline">Menu</Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-50">
+            <DropdownMenuContent>
               <DropdownMenuItem>
                 <Select onValueChange={setCurrency} defaultValue={currency} aria-label="Select currency">
                   <SelectTrigger className="w-full" aria-label="Select a currency to use">
                     <SelectValue placeholder="Select currency" />
                   </SelectTrigger>
-                  <SelectContent aria-label="Select a currency to use">
+                  <SelectContent className="max-h-[250px]" aria-label="Select a currency to use">
                     <SelectGroup>
                       <SelectLabel>Currency</SelectLabel>
                       {currencyItems}
