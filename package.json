@@ -4,7 +4,7 @@
   "description": "A platform that provides unique DIY (Do It Yourself) project suggestions using OpenAI. Explore a variety of projects, their materials, and steps to create them.",
   "main": "index.js",
   "devDependencies": {
-    "concurrently": "^8.2.1",
+    "concurrently": "^8.2.2",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1"
   },
