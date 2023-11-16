@@ -285,9 +285,9 @@ export const commits: Record<string, Commit[]> = {
 
 export const budgetOptions: Budget[] = [
   { label: "Flexible", value: "0" },
-  { label: "< 1000 PHP", value: "less than 1000" },
-  { label: "1000 - 5000 PHP", value: "between 1000 and 5000" },
-  { label: "> 5000 PHP", value: "more than 5000" },
+  { label: "< 1000", value: "less than 1000" },
+  { label: "1000 - 5000", value: "between 1000 and 5000" },
+  { label: "> 5000", value: "more than 5000" },
 ];
 
 export const currencyList: string[] = ["USD", "EUR", "JPY", "GBP", "CHF", "CAD", "AUD", "CNY", "INR", "BRL", "RUB", "KRW", "SGD", "HKD", "NZD", "ZAR", "MXN", "PHP"];

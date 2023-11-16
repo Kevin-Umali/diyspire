@@ -56,7 +56,7 @@ const MaterialInput: React.FC<MaterialInputProps> = ({ materials, setMaterials, 
       ))}
       {materials.some((mat) => mat.trim() !== "") && (
         <div className="inline-flex cursor-pointer items-center justify-center space-x-2">
-          <Checkbox id="onlySpecifiedMaterials" checked={onlySpecified} onChange={() => setOnlySpecified(!onlySpecified)} />
+          <Checkbox id="onlySpecifiedMaterials" checked={onlySpecified} onCheckedChange={() => setOnlySpecified(!onlySpecified)} />
           <Label htmlFor="onlySpecifiedMaterials">Use only these materials</Label>
         </div>
       )}

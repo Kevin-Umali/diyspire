@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 interface BudgetFilterProps {
+  currency: string;
+  budget: string;
   onBudgetChange: (budget: string) => void;
   className?: string;
 }
 
-const BudgetFilter: React.FC<BudgetFilterProps> = ({ onBudgetChange, className }) => {
-  const [selectedBudget, setSelectedBudget] = useState<string | null>("0");
+const BudgetFilter: React.FC<BudgetFilterProps> = ({ currency, budget, onBudgetChange, className }) => {
+  const [selectedBudget, setSelectedBudget] = useState<string | null>(budget ?? "0");
 
   const handleBudgetClick = (budget: string) => {
     setSelectedBudget(budget);
@@ -36,9 +38,9 @@ const BudgetFilter: React.FC<BudgetFilterProps> = ({ onBudgetChange, className }
             className={`cursor-pointer border p-2 ${
               selectedBudget === value ? "border-primary" : ""
             } flex items-center justify-center space-x-2 transition duration-300 ease-in-out focus:bg-transparent active:bg-transparent`}
-            aria-label={`Filter by ${label} budget`}
+            aria-label={`Filter by ${label} ${currency} budget`}
           >
-            <span className="text-sm capitalize">{label}</span>
+            <span className="text-sm capitalize">{`${label} ${currency}`}</span>
           </Button>
         ))}
       </div>

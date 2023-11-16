@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { categories } from "@/constants";
 import { useAuth } from "@/context/authContext";
 import { useCurrency } from "@/context/currencyContext";
@@ -11,6 +11,7 @@ import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/lib";
 import { AxiosError } from "axios";
 import { RefreshCcw } from "lucide-react";
 
+import useURLState from "@/hooks/useUrlState";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
@@ -28,23 +29,24 @@ const GenerateLoading = dynamic(() => import("@/components/generate/generate-loa
 const ProjectTabs = dynamic(() => import("@/components/generate/project-tabs"));
 
 export default function Home() {
-  const [materials, setMaterials] = useState([""]);
-  const [onlySpecified, setOnlySpecified] = useState(false);
-  const [selectedDifficulty, setSelectedDifficulty] = useState("any difficulty");
-  const [selectedCategory, setSelectedCategory] = useState("Anything");
-  const [timeValue, setTimeValue] = useState<number>(0);
-  const [timeUnit, setTimeUnit] = useState<string | null>(null);
-  const [budget, setBudget] = useState("0");
-  const [tools, setTools] = useState([""]);
-  const [purpose, setPurpose] = useState("Personal Use");
-  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
-  const [isSafe, setIsSafe] = useState(false);
+  const [materials, setMaterials] = useURLState<string[]>("materials", [""]);
+  const [onlySpecified, setOnlySpecified] = useURLState<boolean>("only_specified", false);
+  const [selectedDifficulty, setSelectedDifficulty] = useURLState<string>("selected_difficulty", "any difficulty");
+  const [selectedCategory, setSelectedCategory] = useURLState<string>("selected_category", "Anything");
+  const [timeValue, setTimeValue] = useURLState<number>("time_value", 0);
+  const [timeUnit, setTimeUnit] = useURLState<string | null>("time_unit", null);
+  const [budget, setBudget] = useURLState<string>("budget", "0");
+  const [tools, setTools] = useURLState<string[]>("tools", [""]);
+  const [purpose, setPurpose] = useURLState<string>("purpose", "Personal Use");
+  const [showAdvancedOptions, setShowAdvancedOptions] = useURLState<boolean>("show_advanced_options", false);
+  const [isSafe, setIsSafe] = useURLState<boolean>("is_safe", false);
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [isGenerated, setIsGenerated] = useState(false);
 
   const [projects, setProjects] = useState<GeneratedIdea[] | never[]>([]);
 
+  const searchParams = useSearchParams();
   const router = useRouter();
 
   const { toast } = useToast();
@@ -59,7 +61,9 @@ export default function Home() {
   const handleGenerateProjects = useCallback(async () => {
     try {
       if (!isAuthenticated) {
-        router.push("/login");
+        const queryString: string = new URLSearchParams(searchParams).toString();
+        const redirectPath = queryString ? `/login?${queryString}` : "/login";
+        router.push(redirectPath);
         return;
       }
 
@@ -103,13 +107,13 @@ export default function Home() {
     } finally {
       setIsGenerating(false);
     }
-  }, [isAuthenticated, isSafe, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose, accessToken, router, toast]);
+  }, [isAuthenticated, isSafe, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose, accessToken, searchParams, router, toast]);
 
   const advancedOptions = useMemo(
     () => (
       <>
         <div className="mb-4">
-          <BudgetFilter onBudgetChange={setBudget} />
+          <BudgetFilter currency={currency} budget={budget} onBudgetChange={setBudget} />
         </div>
 
         <div className="mb-4">
@@ -125,7 +129,7 @@ export default function Home() {
         </div>
       </>
     ),
-    [purpose, timeUnit, timeValue, tools],
+    [budget, currency, purpose, setBudget, setPurpose, setTimeUnit, setTimeValue, setTools, timeUnit, timeValue, tools],
   );
 
   const renderContent = () => {
@@ -160,7 +164,7 @@ export default function Home() {
         </div>
         {showAdvancedOptions && advancedOptions}
         <div className="mb-4">
-          <SafetyCheck onSafetyConfirmation={setIsSafe} />
+          <SafetyCheck isSafe={isSafe} onSafetyConfirmation={setIsSafe} />
         </div>
         <div className="mb-4 flex flex-col space-y-4 lg:flex-row lg:space-x-4 lg:space-y-0">
           <Button className="w-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-opacity-50 lg:w-1/2" onClick={toggleAdvancedOptions}>

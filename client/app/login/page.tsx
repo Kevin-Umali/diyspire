@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import { loginUser, registerUser } from "@/lib";
 import { AxiosError } from "axios";
@@ -24,8 +24,15 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [redirectParams, setRedirectParams] = useState("");
 
   const { login, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    const queryString = new URLSearchParams(searchParams).toString();
+    setRedirectParams(queryString);
+  }, [searchParams]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -51,7 +58,7 @@ export default function Login() {
             token: response.data.accessToken,
           });
 
-          router.push("/");
+          router.push(`/?${redirectParams}`);
         }
       } catch (error) {
         if (error instanceof AxiosError) {
@@ -63,7 +70,7 @@ export default function Login() {
         setIsLoading(false);
       }
     },
-    [loginData, login, router],
+    [loginData, login, router, redirectParams],
   );
 
   const handleSignupSubmit = useCallback(
