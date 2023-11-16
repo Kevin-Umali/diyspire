@@ -238,3 +238,17 @@ export interface CommunityIdeaProjectImages {
   urls: ProjectImageUrls;
   alt_description?: string;
 }
+
+export type DIYUrlState = {
+  materials: string[];
+  onlySpecified: boolean;
+  selectedDifficulty: string;
+  selectedCategory: string;
+  timeValue: number;
+  timeUnit: string | null;
+  budget: string;
+  tools: string[];
+  purpose: string;
+  showAdvancedOptions: boolean;
+  isSafe: boolean;
+};
