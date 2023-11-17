@@ -1,28 +1,33 @@
 import { useState } from "react";
 import { Categories } from "@/interfaces";
+import { getMainAndSubCategory } from "@/lib";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 interface CategoryFilterProps {
   categories: Categories;
+  initialCategory: string; // Renamed for clarity
   onCategoryChange: (selectedCategory: string) => void;
   className?: string;
 }
 
-const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, onCategoryChange, className }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>("General");
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>("Anything");
-  const [subCategories, setSubCategories] = useState<string[]>(Object.keys(categories["General"].subcategories));
+const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, initialCategory, onCategoryChange, className }) => {
+  const { mainCategory, subCategory } = getMainAndSubCategory(initialCategory, categories);
+
+  const [currentCategory, setCurrentCategory] = useState<string | null>(mainCategory);
+  const [currentSubCategory, setCurrentSubCategory] = useState<string | null>(subCategory);
+  const [subCategoryOptions, setSubCategoryOptions] = useState<string[]>(Object.keys(categories[mainCategory].subcategories));
 
   const handleCategoryClick = (category: string, subcategories: any) => {
-    setSelectedCategory(category);
-    setSubCategories(Object.keys(subcategories));
+    setCurrentCategory(category);
+    setCurrentSubCategory(null);
+    setSubCategoryOptions(Object.keys(subcategories));
   };
 
   const handleSubCategoryClick = (subCategory: string) => {
     onCategoryChange(subCategory);
-    setSelectedSubCategory(subCategory);
+    setCurrentSubCategory(subCategory);
   };
 
   return (
@@ -37,7 +42,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, onCategoryC
       <div className="flex justify-center">
         <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {Object.keys(categories).map((category) => {
-            const isSelected = selectedCategory === category;
+            const isSelected = currentCategory === category;
             const { icon: IconComponent, subcategories } = categories[category];
             return (
               <div
@@ -58,17 +63,17 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, onCategoryC
           })}
         </div>
       </div>
-      {subCategories.length > 0 && (
+      {subCategoryOptions.length > 0 && (
         <div className="mt-4 text-center">
           <Label className="text-md block font-medium">Select Subcategory</Label>
           <div className="mt-2 grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {subCategories.map((subCategory) => (
+            {subCategoryOptions.map((subCategory) => (
               <Button
                 key={subCategory}
                 onClick={() => handleSubCategoryClick(subCategory)}
                 variant="outline"
                 className={`cursor-pointer border p-2 ${
-                  selectedSubCategory === subCategory ? "border-primary" : ""
+                  currentSubCategory === subCategory ? "border-primary" : ""
                 } flex items-center justify-center space-x-2 transition duration-300 ease-in-out focus:bg-transparent active:bg-transparent`}
                 aria-label={`Filter by ${subCategory} subcategory`}
               >

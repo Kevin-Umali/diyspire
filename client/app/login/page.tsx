@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/authContext";
-import { loginUser, registerUser } from "@/lib";
 import { AxiosError } from "axios";
 import { Eye, EyeOff, Loader } from "lucide-react";
 
+import { loginUser, registerUser } from "@/lib/api-helper";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

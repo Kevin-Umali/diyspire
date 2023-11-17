@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 interface DifficultyFilterProps {
+  initialDifficulty: string;
   onDifficultyChange: (difficulty: string) => void;
   className?: string;
 }
 
-const DifficultyFilter: React.FC<DifficultyFilterProps> = ({ onDifficultyChange, className }) => {
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("any difficulty");
+const DifficultyFilter: React.FC<DifficultyFilterProps> = ({ initialDifficulty, onDifficultyChange, className }) => {
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>(initialDifficulty ?? "any difficulty");
 
   const handleDifficultyClick = (difficulty: string) => {
     setSelectedDifficulty(difficulty);
