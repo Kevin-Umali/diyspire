@@ -7,10 +7,10 @@ import { categories } from "@/constants";
 import { useAuth } from "@/context/authContext";
 import { useCurrency } from "@/context/currencyContext";
 import { GeneratedIdea } from "@/interfaces";
-import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/lib";
 import { AxiosError } from "axios";
 import { RefreshCcw } from "lucide-react";
 
+import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/lib/api-helper";
 import useURLState from "@/hooks/useUrlState";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -154,10 +154,10 @@ export default function Home() {
     return (
       <>
         <div className="mb-4">
-          <CategoryFilter categories={categories} onCategoryChange={setSelectedCategory} />
+          <CategoryFilter categories={categories} initialCategory={selectedCategory} onCategoryChange={setSelectedCategory} />
         </div>
         <div className="mb-4">
-          <DifficultyFilter onDifficultyChange={setSelectedDifficulty} />
+          <DifficultyFilter initialDifficulty={selectedDifficulty} onDifficultyChange={setSelectedDifficulty} />
         </div>
         <div className="mb-4">
           <MaterialInput materials={materials} setMaterials={setMaterials} onlySpecified={onlySpecified} setOnlySpecified={setOnlySpecified} />

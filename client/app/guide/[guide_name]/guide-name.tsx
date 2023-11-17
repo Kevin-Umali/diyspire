@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { GuidePathData } from "@/interfaces";
 import { AxiosError } from "axios";
 
-import { getGuideByPath } from "@/lib/index";
+import { getGuideByPath } from "@/lib/api-helper";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import CustomMarkdown from "@/components/custom-markdown";

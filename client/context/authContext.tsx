@@ -1,9 +1,9 @@
 "use client";
 
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { logoutUser, refreshToken } from "@/lib";
 import { AxiosError } from "axios";
 
+import { logoutUser, refreshToken } from "@/lib/api-helper";
 import { useToast } from "@/components/ui/use-toast";
 
 interface User {

@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { ProjectDetails, ProjectImages } from "@/interfaces";
-import { getShareLinkData } from "@/lib";
 import { AxiosError } from "axios";
 
+import { getShareLinkData } from "@/lib/api-helper";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import ProjectImage from "@/components/project-detail/project-image";
