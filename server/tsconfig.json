@@ -14,7 +14,8 @@
     "outDir": "./dist",
     "sourceMap": true,
     "lib": ["ES2022"],
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*", "src/__tests__/**/*.ts", "prisma/*", "@types"],
   "exclude": ["node_modules", "dist"]

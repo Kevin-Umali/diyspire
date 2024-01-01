@@ -12,7 +12,7 @@ const userAgentMiddleware = (req: Request, res: Response, next: NextFunction) =>
   req.useragent = {
     isMobile: deviceType === "mobile",
     isDesktop: deviceType === undefined || !["wearable", "mobile"].includes(deviceType),
-    isBot: isBot(userAgentString),
+    isBot: isBot.isbot(userAgentString),
     browser: result.browser.name ?? "Unknown",
     version: result.browser.version ?? "Unknown",
     os: result.os.name ?? "Unknown",
