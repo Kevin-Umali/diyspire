@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import UAParser from "ua-parser-js";
-import isBot from "isbot";
+import { isbot } from "isbot";
 
 const userAgentMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const userAgentString = req.headers["user-agent"] ?? "";
@@ -12,7 +12,7 @@ const userAgentMiddleware = (req: Request, res: Response, next: NextFunction) =>
   req.useragent = {
     isMobile: deviceType === "mobile",
     isDesktop: deviceType === undefined || !["wearable", "mobile"].includes(deviceType),
-    isBot: isBot.isbot(userAgentString),
+    isBot: isbot(userAgentString),
     browser: result.browser.name ?? "Unknown",
     version: result.browser.version ?? "Unknown",
     os: result.os.name ?? "Unknown",
