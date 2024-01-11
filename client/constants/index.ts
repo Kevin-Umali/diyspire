@@ -219,8 +219,7 @@ export const faqs: FAQ[] = [
   {
     id: "getting-started",
     question: "Getting Started",
-    answer:
-      "It's straightforward! Visit the {homeLink}, input your preferences, such as materials and other options, and we'll generate a unique DIY project suggestion tailored for you. No sign-up required!",
+    answer: "It's straightforward! Visit the {homeLink}, input your preferences, such as materials and other options, and we'll generate a unique DIY project suggestion tailored for you.",
     links: {
       homeLink: { href: "/", text: "MakeMeDIYspire homepage" },
     },
