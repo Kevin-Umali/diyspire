@@ -36,21 +36,19 @@ export default function FAQPage() {
   }, []);
 
   return (
-    <>
-      <div className="container mx-auto px-4 py-5 sm:py-10">
-        <div className="mb-10 text-center">
-          <h1 className="mb-3 text-lg sm:text-xl lg:text-2xl">Frequently Asked Questions</h1>
-        </div>
-
-        <Accordion value={accordionDefaultValue} onValueChange={setAccordionDefaultValue} type="single" collapsible className="w-full">
-          {faqs.map((faq, index) => (
-            <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger>{faq.question}</AccordionTrigger>
-              <AccordionContent>{faq.links ? parseAnswer(faq.answer, faq.links) : faq.answer}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+    <div className="container mx-auto px-4 py-5 sm:py-10">
+      <div className="mb-10 text-center">
+        <h1 className="mb-3 text-lg sm:text-xl lg:text-2xl">Frequently Asked Questions</h1>
       </div>
-    </>
+
+      <Accordion value={accordionDefaultValue} onValueChange={setAccordionDefaultValue} type="single" collapsible className="w-full">
+        {faqs.map((faq, index) => (
+          <AccordionItem key={index} value={`item-${index}`}>
+            <AccordionTrigger>{faq.question}</AccordionTrigger>
+            <AccordionContent>{faq.links ? parseAnswer(faq.answer, faq.links) : faq.answer}</AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </div>
   );
 }

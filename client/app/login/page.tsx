@@ -1,32 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import { AxiosError } from "axios";
-import { Eye, EyeOff, Loader } from "lucide-react";
 
 import { loginUser, registerUser } from "@/lib/api-helper";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/components/ui/use-toast";
+import SignIn from "@/components/login/signin";
+import SignUp from "@/components/login/signup";
 
 export default function Login() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [loginData, setLoginData] = useState({ username: "", password: "" });
-  const [signupData, setSignupData] = useState({ username: "", password: "" });
-  const [loginErrorMessage, setLoginErrorMessage] = useState<string | null>("");
-  const [successMessage, setSuccessMessage] = useState<string | null>("");
-  const [signupErrorMessage, setSignUpErrorMessage] = useState<string | null>("");
-  const [tab, setTab] = useState<string>("login");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [tab, setTab] = useState("login");
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const [redirectParams, setRedirectParams] = useState("");
 
+  const { toast } = useToast();
   const { login, isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -36,82 +31,68 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/");
+      router.push(`/?${redirectParams}`);
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, redirectParams, router]);
 
-  const handleLoginSubmit = useCallback(
-    async (e: React.SyntheticEvent) => {
-      try {
-        e.preventDefault();
-        setIsLoading(true);
-        setLoginErrorMessage("");
-
-        const response = await loginUser(loginData);
-
-        if (response?.data && login) {
-          login({
-            user: {
-              id: response.data.id,
-              username: response.data.username,
-            },
-            token: response.data.accessToken,
-          });
-
-          router.push(`/?${redirectParams}`);
-        }
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          setLoginErrorMessage(error.response?.data.error);
-        } else {
-          setLoginErrorMessage("An unknown error occurred.");
-        }
-      } finally {
-        setIsLoading(false);
+  const handleLoginSubmit = async (data: { username: string; password: string }) => {
+    setIsLoading(true);
+    try {
+      const response = await loginUser(data);
+      if (response?.data && login) {
+        login({
+          user: {
+            id: response.data.id,
+            username: response.data.username,
+          },
+          token: response.data.accessToken,
+        });
+        router.push(`/?${redirectParams}`);
       }
-    },
-    [loginData, login, router, redirectParams],
-  );
-
-  const handleSignupSubmit = useCallback(
-    async (e: React.SyntheticEvent) => {
-      try {
-        e.preventDefault();
-
-        if (signupData.username.length < 6 || signupData.password.length < 6) {
-          setSignUpErrorMessage("Username and password should be at least 6 characters long.");
-          return;
-        }
-
-        setIsLoading(true);
-        setSignUpErrorMessage("");
-
-        const response = await registerUser(signupData);
-        if (response?.data) {
-          handleTabChange("login");
-          setSignupData({ username: "", password: "" });
-          setSuccessMessage(response.data.message);
-        }
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          setSignUpErrorMessage(error.response?.data.error);
-        } else {
-          setSignUpErrorMessage("An unknown error occurred.");
-        }
-      } finally {
-        setIsLoading(false);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: `API ERROR - ${error.code}`,
+          description: error.response?.data.error || "An error occurred while fetching data from the API.",
+        });
+      } else {
+        toast({
+          title: "Unexpected Error!",
+          description: "An unexpected error occurred. Please try again later.",
+        });
       }
-    },
-    [signupData],
-  );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const handleTabChange = (value: string) => {
-    setTab(value);
+  const handleSignupSubmit = async (data: { signupUsername: string; signupPassword: string }) => {
+    setIsLoading(true);
+    try {
+      const response = await registerUser(data);
+      if (response?.data) {
+        setSuccessMessage(response.data.message);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: `API ERROR - ${error.code}`,
+          description: error.response?.data.error || "An error occurred while fetching data from the API.",
+        });
+      } else {
+        toast({
+          title: "Unexpected Error!",
+          description: "An unexpected error occurred. Please try again later.",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Tabs value={tab} onValueChange={handleTabChange}>
+      <Tabs value={tab} onValueChange={setTab}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login" disabled={isLoading}>
             Login
@@ -122,108 +103,11 @@ export default function Login() {
         </TabsList>
 
         <TabsContent value="login">
-          <form onSubmit={handleLoginSubmit}>
-            <Card className="bg-background">
-              <CardHeader>
-                <CardTitle>Login</CardTitle>
-                <CardDescription>Login to your account and enjoy our services.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {loginErrorMessage && <Label className="text-md mb-4 text-red-500">{loginErrorMessage}</Label>}
-                {successMessage && <Label className="text-md mb-4 text-green-500">{successMessage}</Label>}
-                <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    value={loginData.username}
-                    onChange={(e) => setLoginData((prev) => ({ ...prev, username: e.target.value }))}
-                    placeholder="Your username"
-                    type="text"
-                    autoCapitalize="none"
-                    autoComplete="username"
-                    autoCorrect="off"
-                    required
-                    disabled={isLoading}
-                  />
-
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      value={loginData.password}
-                      onChange={(e) => setLoginData((prev) => ({ ...prev, password: e.target.value }))}
-                      placeholder="Your password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="current-password"
-                      required
-                      disabled={isLoading}
-                    />
-                    <span className="absolute right-2 top-1/2 -translate-y-1/2 transform cursor-pointer" onClick={() => setShowPassword((prev) => !prev)}>
-                      {showPassword ? <EyeOff className="mr-2" /> : <Eye className="mr-2" />}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full" type="submit" disabled={isLoading}>
-                  {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
-                  Sign In
-                </Button>
-              </CardFooter>
-            </Card>
-          </form>
+          <SignIn isLoading={isLoading} handleLoginSubmit={handleLoginSubmit} />
         </TabsContent>
 
         <TabsContent value="signup">
-          <form onSubmit={handleSignupSubmit}>
-            <Card className="bg-background">
-              <CardHeader>
-                <CardTitle>Signup</CardTitle>
-                <CardDescription>Create a new account and be part of our community.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {signupErrorMessage && <Label className="text-md mb-4 text-red-500">{signupErrorMessage}</Label>}
-                <div className="space-y-2">
-                  <Label htmlFor="signupUsername">Username</Label>
-                  <Input
-                    id="signupUsername"
-                    value={signupData.username}
-                    onChange={(e) => setSignupData((prev) => ({ ...prev, username: e.target.value }))}
-                    placeholder="Choose a username"
-                    type="text"
-                    autoCapitalize="none"
-                    autoComplete="username"
-                    autoCorrect="off"
-                    required
-                    disabled={isLoading}
-                  />
-
-                  <Label htmlFor="signupPassword">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="signupPassword"
-                      value={signupData.password}
-                      onChange={(e) => setSignupData((prev) => ({ ...prev, password: e.target.value }))}
-                      placeholder="Choose a password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      required
-                      disabled={isLoading}
-                    />
-                    <span className="absolute right-2 top-1/2 -translate-y-1/2 transform cursor-pointer" onClick={() => setShowPassword((prev) => !prev)}>
-                      {showPassword ? <EyeOff className="mr-2" /> : <Eye className="mr-2" />}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full" type="submit" disabled={isLoading}>
-                  {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
-                  Sign Up
-                </Button>
-              </CardFooter>
-            </Card>
-          </form>
+          <SignUp isLoading={isLoading} successMessage={successMessage} handleSignupSubmit={handleSignupSubmit} />
         </TabsContent>
       </Tabs>
 
@@ -236,7 +120,7 @@ export default function Login() {
         </div>
       </div>
 
-      <Label className="text-md mt-4 flex justify-center">No Credit Card Required</Label>
+      <Label className="text-md mt-4 flex justify-center">Free Until It Has Credits</Label>
     </div>
   );
 }

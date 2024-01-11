@@ -200,10 +200,10 @@ export const getCommunityGeneratedIdea = (
   });
 };
 
-export const registerUser = (userData: { username: string; password: string }): Promise<any> => {
+export const registerUser = (userData: { signupUsername: string; signupPassword: string }): Promise<any> => {
   return fetchApi("/v1/auth/register", {
     method: HttpMethod.POST,
-    body: userData,
+    body: { username: userData.signupUsername, password: userData.signupPassword },
   });
 };
 
