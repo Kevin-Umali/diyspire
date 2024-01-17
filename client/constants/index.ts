@@ -1,4 +1,4 @@
-import { Budget, Categories, Commit, FAQ, Footer, Steps } from "@/interfaces";
+import { Budget, Categories, Commit, FAQ, Footer, HealthCheckResponse, ServiceStatusType, Steps } from "@/interfaces";
 import {
   Activity,
   Asterisk,
@@ -8,6 +8,7 @@ import {
   CakeSlice,
   Camera,
   Car,
+  CheckCircle,
   ChefHat,
   Cpu,
   Dumbbell,
@@ -45,9 +46,11 @@ import {
   Sofa,
   Star,
   TentTree,
+  Timer,
   Torus,
   ToyBrick,
   User,
+  XCircle,
 } from "lucide-react";
 
 export const categories: Categories = {
@@ -187,6 +190,7 @@ export const footerData: Footer[] = [
       { label: "Generate DIY Project Idea", path: "/" },
       { label: "How-to Guides", path: "/guide" },
       { label: "Community", path: "/community" },
+      { label: "Status", path: "/status" },
     ],
   },
   {
@@ -303,4 +307,23 @@ export type FetchApiOptions = {
   body?: object;
   queryParams?: Record<string, string | number | boolean>;
   accessToken?: string;
+};
+
+export const statusIcons: Record<ServiceStatusType, React.ElementType> = {
+  Normal: CheckCircle,
+  Maintenance: Timer,
+  Outage: XCircle,
+};
+
+export const statusDown: HealthCheckResponse = {
+  success: true,
+  data: {
+    uptime: 0,
+    responseTime: [0, 0],
+    message: "One Or More Services Are down",
+    timeStamp: 0,
+    apiStatus: { name: "API", status: "Outage", message: "API is down" },
+    prismaStatus: { name: "Prisma", status: "Outage", message: "Prisma is down" },
+    openaiStatus: { name: "Openai", status: "Outage", message: "Openai is down" },
+  },
 };

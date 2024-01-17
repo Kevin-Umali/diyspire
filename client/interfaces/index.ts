@@ -238,3 +238,55 @@ export interface CommunityIdeaProjectImages {
   urls: ProjectImageUrls;
   alt_description?: string;
 }
+
+type StatusType = "Normal" | "Maintenance" | "Outage";
+
+export interface ServiceStatusProps {
+  serviceName: string;
+  status: StatusType;
+}
+
+export interface StatusDataResponse {
+  success: boolean;
+  data: {
+    uptime: number;
+    responseTime: number[];
+    message: string;
+    timeStamp: number;
+    apiStatus: {
+      available: boolean;
+      message: string;
+    };
+    prismaStatus: {
+      available: boolean;
+      message: string;
+    };
+    openaiStatus: {
+      available: boolean;
+      message: string;
+    };
+  };
+}
+
+export interface HealthCheckResponse {
+  success: boolean;
+  data: HealthCheckData;
+}
+
+export interface HealthCheckData {
+  uptime: number;
+  responseTime: number[];
+  message: string;
+  timeStamp: number;
+  openaiStatus: HealthCheckStatus;
+  prismaStatus: HealthCheckStatus;
+  apiStatus: HealthCheckStatus;
+}
+
+export interface HealthCheckStatus {
+  name: string;
+  status: ServiceStatusType;
+  message: string;
+}
+
+export type ServiceStatusType = "Normal" | "Maintenance" | "Outage";

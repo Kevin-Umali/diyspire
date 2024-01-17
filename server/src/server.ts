@@ -9,8 +9,8 @@ import cookieParser from "cookie-parser";
 import { createApi } from "unsplash-js";
 import { PrismaClient } from "@prisma/client";
 
-import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes, counterRoutes, communityRoutes, authenticationRoutes } from "./routes/index.routes";
-import { sendError, sendSuccess } from "./utils/response-template";
+import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes, counterRoutes, communityRoutes, authenticationRoutes, healthcheckRoutes } from "./routes/index.routes";
+import { sendError } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
 import getConditionalCache from "./middleware/cache-response";
@@ -62,16 +62,7 @@ app.use(userAgentMiddleware);
 
 app.use(limiter);
 
-app.get(
-  "/api/v1/ping",
-  cors({
-    origin: "https://console.cron-job.org",
-    optionsSuccessStatus: 200,
-  }),
-  (req, res) => {
-    sendSuccess(res, { status: "Server is active" });
-  },
-);
+app.use("/api/v1/healthcheck", healthcheckRoutes);
 
 app.use("/api/v1/auth", authenticationRoutes);
 
