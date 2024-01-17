@@ -6,6 +6,7 @@ import {
   GuidePathMetadataResponse,
   GuidePathResponse,
   GuideResponse,
+  HealthCheckResponse,
   IdeaExplanationResponse,
   ImageSearchResponse,
   ProjectDetails,
@@ -224,5 +225,11 @@ export const logoutUser = (accessToken: string): Promise<void> => {
 export const refreshToken = (): Promise<any> => {
   return fetchApi("/v1/auth/refresh", {
     method: HttpMethod.POST,
+  });
+};
+
+export const checkBackEndHealthStatus = (): Promise<HealthCheckResponse> => {
+  return fetchApi("/v1/healthcheck", {
+    method: HttpMethod.GET,
   });
 };
