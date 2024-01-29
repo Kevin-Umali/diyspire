@@ -5,7 +5,7 @@
   "main": "index.js",
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "husky": "^8.0.3",
+    "husky": "^9.0.6",
     "lint-staged": "^15.0.2"
   },
   "scripts": {
