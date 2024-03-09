@@ -233,3 +233,10 @@ export const checkBackEndHealthStatus = (): Promise<HealthCheckResponse> => {
     method: HttpMethod.GET,
   });
 };
+
+export const subscribeToNewsletter = (email: string): Promise<any> => {
+  return fetchApi("/v1/email/subscribe", {
+    method: HttpMethod.POST,
+    body: { email },
+  });
+};

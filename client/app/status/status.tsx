@@ -60,7 +60,7 @@ const StatusPage: React.FC = () => {
   return (
     <div className="container mx-auto px-5 py-12 sm:px-10">
       <div className="mb-12 text-center">
-        {message === "All Systems Are Operational" ? <CheckCircle className="mx-auto h-20 w-20 text-green-500" /> : <XCircle className="mx-auto h-20 w-20 text-red-500" />}
+        {message === "All Systems Are Operational" ? <CheckCircle className="mx-auto size-20 text-green-500" /> : <XCircle className="mx-auto size-20 text-red-500" />}
         <h1 className="my-3 text-3xl font-semibold lg:text-4xl">{message}</h1>
         <Label className="sm:text-md mt-2 inline-block text-sm">Uptime: {Math.floor(uptime)}s</Label>
         <br />

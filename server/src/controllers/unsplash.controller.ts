@@ -4,12 +4,13 @@ import { sendError, sendSuccess } from "../utils/response-template";
 import { randomInt } from "crypto";
 import { QueryRequest } from "../middleware/schema-validate";
 import { UnsplashImageSearchQueryRequest } from "../schema/unsplash.schema";
+import { createApi } from "unsplash-js";
 
 export const searchImages = async (req: QueryRequest<UnsplashImageSearchQueryRequest>, res: Response, next: NextFunction) => {
   try {
     const query: string = decodeURIComponent(req.query.query ? req.query.query.toString() : "");
 
-    const unsplash = req.app.get("unsplash");
+    const unsplash: ReturnType<typeof createApi> = req.app.get("unsplash");
 
     const result = await unsplash.search.getPhotos({
       query,

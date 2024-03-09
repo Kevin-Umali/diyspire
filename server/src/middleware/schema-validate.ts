@@ -6,6 +6,7 @@ import { sendSuccess } from "../utils/response-template";
 import { parseOrDefault } from "../utils";
 
 interface ZodRequest<B = any, Q extends ParsedQs = ParsedQs, P extends ParamsDictionary = ParamsDictionary> extends Request {
+  [x: string]: any;
   body: B;
   query: Q;
   params: P;

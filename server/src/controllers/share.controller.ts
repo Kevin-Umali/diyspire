@@ -10,7 +10,7 @@ export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQuery
     const id = req.params.id;
     const onlyMetadata = req.query.onlyMetadata;
 
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     if (onlyMetadata === "true") {
       const projectDetail = await prisma.projectShareLink.findUnique({
@@ -68,7 +68,7 @@ export const saveProject = async (req: BodyRequest<ShareProjectBodyRequest>, res
   try {
     const { projectDetails, projectImage, explanation } = req.body;
 
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     const result = await prisma.$transaction(
       async (tx) => {

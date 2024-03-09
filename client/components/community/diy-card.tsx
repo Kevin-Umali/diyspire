@@ -20,7 +20,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ id, title, createdAt, descrip
   return (
     <Card className="mx-auto flex h-full max-w-md flex-col" role="article" aria-labelledby={`projectTitle-${id}`} aria-describedby={`projectDescription-${id}`}>
       <div className="relative h-64">
-        <Image src={imgUrl} alt={title} layout="fill" objectFit="cover" className="absolute left-0 top-0 h-full w-full" loading="eager" />
+        <Image src={imgUrl} alt={title} layout="fill" objectFit="cover" className="absolute left-0 top-0 size-full" loading="eager" />
       </div>
       <CardHeader className="flex flex-grow flex-col">
         <h2 className="line-clamp-2 text-xl" role="heading" id={`projectTitle-${id}`}>
@@ -50,7 +50,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ id, title, createdAt, descrip
       <CardFooter className="mt-auto pt-2" role="contentinfo" aria-label="Footer section">
         <Link className="w-full" href={{ pathname: `/project-detail/${id}` }} passHref>
           <Button className="w-full text-sm" aria-label={`Learn more - ${title}`}>
-            <BookMarked className="mr-2 h-4 w-4" />
+            <BookMarked className="mr-2 size-4" />
             <span>
               Learn more <span hidden>- {title}</span>
             </span>

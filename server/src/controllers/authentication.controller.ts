@@ -12,7 +12,7 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
   try {
     const { username, password } = req.body;
 
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     const user = await prisma.users.findUnique({
       where: {
@@ -30,11 +30,11 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
       return;
     }
 
-    const { accessToken, refreshToken } = generateTokens(user.id, user.username);
+    const { accessToken, refreshToken } = await generateTokens({ options: { id: user.id, username: user.username } });
 
     await prisma.refreshToken.create({
       data: {
-        token: refreshToken,
+        token: refreshToken!,
         user: { connect: { id: user.id } },
         deviceInfo: {
           create: {
@@ -47,7 +47,7 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
             platform: req.useragent?.platform ?? "Unknown",
           },
         },
-        expiresAt: refreshTokenExpiry,
+        expiresAt: refreshTokenExpiry(),
       },
     });
 
@@ -56,7 +56,7 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
       httpOnly: true,
       signed: true,
       sameSite: "none",
-      expires: refreshTokenExpiry,
+      expires: refreshTokenExpiry(),
     });
 
     return sendSuccess(res, { id: user.id, username: user.username, accessToken });
@@ -69,7 +69,7 @@ export const registerUser = async (req: BodyRequest<UserRequest>, res: Response,
   try {
     const { username, password } = req.body;
 
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     const hashedPassword = await hash(password, 10);
 
@@ -101,7 +101,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       return;
     }
 
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     const decoded = verify(refreshToken, process.env.JWT_REFRESH_SECRET_KEY!) as JwtPayload;
 
@@ -131,7 +131,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       return;
     }
 
-    const { accessToken } = generateTokens(decoded.id, decoded.username);
+    const { accessToken } = await generateTokens({ options: { id: decoded.id, username: decoded.username } });
 
     res.cookie("refreshToken", refreshTokenInDb.token, {
       secure: process.env.NODE_ENV === "production",
@@ -159,7 +159,7 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
   try {
     const refreshToken = req.signedCookies.refreshToken || req.cookies.refreshToken;
 
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     if (refreshToken) {
       await prisma.refreshToken.delete({

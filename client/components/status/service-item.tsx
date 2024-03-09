@@ -21,7 +21,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ name, status, message }) => {
   return (
     <div className="rounded border border-green-500 p-2">
       <div className="flex items-center">
-        <StatusIcon className={`h-4 w-4 ${iconColorClass}`} alt={status} />
+        <StatusIcon className={`size-4 ${iconColorClass}`} alt={status} />
         <span className="ml-2 text-sm font-medium">{name}</span>
       </div>
       <p className="mt-1 text-xs">{message}</p>

@@ -143,7 +143,7 @@ export default function Home() {
           <ProjectTabs projects={projects} />
           <div className="flex justify-center space-x-2">
             <Button className="mt-4 w-full px-4 py-2" onClick={() => setIsGenerated(false)}>
-              <RefreshCcw className="mr-2 h-5 w-5" />
+              <RefreshCcw className="mr-2 size-5" />
               <span>Generate Again</span>
             </Button>
           </div>
@@ -171,7 +171,7 @@ export default function Home() {
             {showAdvancedOptions ? "Hide" : "Show"} Advanced Options
           </Button>
           <Button className="flex w-full items-center justify-center space-x-2 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-opacity-50 lg:w-1/2" onClick={handleGenerateProjects}>
-            <RefreshCcw className="h-5 w-5" />
+            <RefreshCcw className="size-5" />
             <span>Generate Projects</span>
           </Button>
         </div>

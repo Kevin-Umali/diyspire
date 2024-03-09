@@ -16,7 +16,7 @@ interface ProjectTabsProps {
 const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects, className }) => {
   return (
     <Tabs defaultValue={projects[0]?.title} className={`${className}`}>
-      <TabsList className="grid h-full w-full grid-cols-1 sm:grid-cols-3">
+      <TabsList className="grid size-full grid-cols-1 sm:grid-cols-3">
         {projects.map((project) => (
           <TabsTrigger key={project.title} value={project.title} aria-label={`Switch to ${project.title} project`} className="text-sm md:text-base">
             {project.title}
@@ -58,13 +58,13 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects, className }) => {
             <Label className="sm:text-md mb-2 text-lg md:mb-0">Like this idea?</Label>
             <Link href={{ pathname: "/project-detail", query: { ...project } }} passHref>
               <Button className="flex w-full items-center justify-center space-x-1 text-xs md:w-auto md:text-sm">
-                <BookOpen className="h-4 w-4" aria-label="Book icon" />
+                <BookOpen className="size-4" aria-label="Book icon" />
                 <span>Provide Detailed Steps</span>
               </Button>
             </Link>
             <Link href={{ hash: "#" }} passHref>
               <Button disabled className="mt-2 flex w-full items-center justify-center space-x-1 text-xs md:mt-0 md:w-auto md:text-sm">
-                <FlaskConical className="h-4 w-4" aria-label="Flask icon" />
+                <FlaskConical className="size-4" aria-label="Flask icon" />
                 <span>Generate Ideas Using this Tools/Materials</span>
               </Button>
             </Link>

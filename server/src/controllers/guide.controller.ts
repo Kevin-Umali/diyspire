@@ -9,7 +9,7 @@ export async function getHowToGuideByPath(req: QueryParamsRequest<GetHowToGuideB
     const path = req.params.path;
     const { onlyMetadata = "false" } = req.query;
 
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     if (onlyMetadata === "true") {
       const guideMetadata = await prisma.howToGuide.findUnique({
@@ -52,7 +52,7 @@ export async function getHowToGuideByPath(req: QueryParamsRequest<GetHowToGuideB
 
 export async function getAllGuidePaths(req: Request, res: Response, next: NextFunction) {
   try {
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     const paths = await prisma.howToGuide.findMany({
       select: {

@@ -34,7 +34,7 @@ const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setToo
     <div className={`space-y-4 border px-4 pb-10 pt-5 sm:px-20 ${className}`}>
       <div className="mb-2 flex flex-col items-center text-center sm:flex-col sm:items-center sm:text-center">
         <div className="mb-2 flex flex-col items-center space-x-0 sm:mb-0 sm:flex-row sm:space-x-2">
-          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">{6}</div>
+          <div className="mb-2 flex size-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">{6}</div>
           <Label className="text-md block font-medium">What tools are available?</Label>
         </div>
         <Label className="text-xs">List down all the tools you have for the DIY project</Label>
@@ -51,7 +51,7 @@ const ToolsAvailableInput: React.FC<ToolsAvailableInputProps> = ({ tools, setToo
         ))}
       </div>
       <Button className="mt-4 w-full focus:outline-none focus:ring-2 focus:ring-opacity-50" onClick={() => setTools([...tools, ""])} aria-label="Add another tool">
-        <PlusCircle className="mr-2 h-5 w-5" />
+        <PlusCircle className="mr-2 size-5" />
         <span>Add another tool</span>
       </Button>
     </div>

@@ -7,7 +7,7 @@ export const healthCheck = async (req: Request, res: Response, _next: NextFuncti
   const prismaStatus = { name: "Prisma", status: "Outage", message: "Prisma is down" };
   const openaiStatus = { name: "Openai", status: "Outage", message: "Openai is down" };
 
-  const prisma = req.app.get("prisma") as PrismaClient;
+  const prisma: PrismaClient = req.app.get("prisma");
   const openai: OpenAI = req.app.get("openai");
 
   const [prismaResult, openaiResult] = await Promise.allSettled([prisma.$queryRaw`SELECT 1`, openai.get("https://status.openai.com/api/v2/status.json")]);
