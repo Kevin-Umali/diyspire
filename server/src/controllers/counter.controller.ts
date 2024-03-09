@@ -5,7 +5,7 @@ import { getStartOfDay } from "../utils";
 
 export const getTotalCountOfGeneratedIdea = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     const totalCount = await prisma.ideaGenerationCounter.aggregate({
       _sum: {
@@ -21,7 +21,7 @@ export const getTotalCountOfGeneratedIdea = async (req: Request, res: Response, 
 
 export const incrementCounterOfGeneratedIdea = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const prisma = req.app.get("prisma") as PrismaClient;
+    const prisma: PrismaClient = req.app.get("prisma");
 
     const today = getStartOfDay(new Date());
 

@@ -128,3 +128,14 @@ model DeviceInfo {
   refreshTokenId Int          @unique
   refreshToken   RefreshToken @relation(fields: [refreshTokenId], references: [id], onDelete: Cascade)
 }
+
+model EmailSubscription {
+  id          Int     @id @default(autoincrement())
+  address     String  @unique
+  unsubscribe Boolean @default(false)
+}
+
+model GeneratedMonthlyDIY {
+  name      String   @unique
+  createdAt DateTime @default(now())
+}

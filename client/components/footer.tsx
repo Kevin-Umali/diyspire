@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { footerData } from "@/constants";
 
+import Newsletter from "./newsletter";
+
 const Footer: React.FC = () => {
   return (
     <footer className="divide-y">
       <div className="container mx-auto space-y-5 p-5 md:py-10">
+        <Newsletter />
         <div className="flex flex-wrap justify-between space-y-3 md:space-y-0">
           {footerData.map((data, index) => (
             <div key={index} className="mb-3 flex flex-col md:w-1/4">

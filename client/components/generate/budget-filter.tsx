@@ -23,7 +23,7 @@ const BudgetFilter: React.FC<BudgetFilterProps> = ({ currency, budget, onBudgetC
     <div className={`space-y-4 border px-4 pb-10 pt-5 sm:px-20 ${className}`}>
       <div className="mb-2 flex flex-col items-center text-center sm:flex-col sm:items-center sm:text-center">
         <div className="mb-2 flex flex-col items-center space-x-0 sm:mb-0 sm:flex-row sm:space-x-2">
-          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">4</div>
+          <div className="mb-2 flex size-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">4</div>
           <Label className="text-md block font-medium">What&apos;s your budget?</Label>
         </div>
         <Label className="text-xs">Choose a budget range for your project</Label>

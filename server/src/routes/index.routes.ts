@@ -7,6 +7,7 @@ import counterRoutes from "./counter.routes";
 import communityRoutes from "./community.routes";
 import authenticationRoutes from "./authentication.routes";
 import healthcheckRoutes from "./healthcheck.routes";
+import emailRoutes from "./email.routes";
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.use("/counter", counterRoutes);
 router.use("/community", communityRoutes);
 router.use("/auth", authenticationRoutes);
 router.use("/healthcheck", healthcheckRoutes);
+router.use("/email", emailRoutes);
 
-export { openaiRoutes, unsplashRoutes, guideRoutes, shareRoutes, counterRoutes, communityRoutes, authenticationRoutes, healthcheckRoutes };
+export { openaiRoutes, unsplashRoutes, guideRoutes, shareRoutes, counterRoutes, communityRoutes, authenticationRoutes, healthcheckRoutes, emailRoutes };

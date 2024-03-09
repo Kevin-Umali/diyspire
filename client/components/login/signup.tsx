@@ -101,7 +101,7 @@ const SignUp: React.FC<SignUpProps> = ({ isLoading, successMessage, handleSignup
         </CardContent>
         <CardFooter>
           <Button className="w-full" type="submit" disabled={isLoading}>
-            {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading && <Loader className="mr-2 size-4 animate-spin" />}
             Sign Up
           </Button>
         </CardFooter>

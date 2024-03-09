@@ -22,7 +22,7 @@ const DifficultyFilter: React.FC<DifficultyFilterProps> = ({ initialDifficulty, 
     <div className={`space-y-4 border px-4 pb-10 pt-5 sm:px-20 ${className}`}>
       <div className="mb-2 flex flex-col items-center text-center sm:flex-col sm:items-center sm:text-center">
         <div className="mb-2 flex flex-col items-center space-x-0 sm:mb-0 sm:flex-row sm:space-x-2">
-          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">2</div>
+          <div className="mb-2 flex size-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">2</div>
           <Label className="text-md block font-medium">What level of crafting difficulty suits you today?</Label>
         </div>
         <Label className="text-xs">Choose a difficulty level for your DIY project</Label>

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monthly DIY Newsletter</title>
+    <style>
+      body {
+        font-family: "Helvetica", sans-serif; /* Using a more readable font for body text */
+        background-color: #333; /* Dark background for the body */
+        color: #f9f9f9; /* Light text color for readability */
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #444; /* Slightly lighter than body for contrast */
+        padding: 20px;
+        border: 2px dashed #555;
+      }
+
+      .header,
+      .footer,
+      .cta-section,
+      .suggested-project-section {
+        column-span: all;
+      }
+
+      .cta-section,
+      .suggested-project-section {
+        border-top: 2px dashed #555; /* Border color for sections */
+        background-color: #505050; /* Darker background for sections */
+        color: #f9f9f9; /* Ensure text is light */
+      }
+
+      .header {
+        font-size: 28px;
+        font-weight: lighter;
+        text-align: center;
+        padding: 10px;
+        border-bottom: 4px double #666; /* Darker border for the header */
+        border-top: 4px double #666;
+      }
+
+      .section,
+      .steps-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px dashed #ccc;
+      }
+
+      .title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+        font-weight: normal;
+        margin-top: 10px;
+      }
+
+      .content {
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .unsubscribe {
+        font-size: 14px;
+      }
+
+      li {
+        font-size: 16px; /* Same font size as content for consistency */
+        margin-bottom: 5px; /* Space between list items */
+      }
+
+      .footer {
+        font-size: 14px;
+        text-align: center;
+        padding-top: 20px;
+        margin-top: 20px;
+        border-top: 2px solid #555;
+      }
+
+      .cta-button {
+        display: block;
+        width: max-content;
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 2px;
+        margin: 10px auto;
+        text-align: center;
+      }
+
+      .cta-section {
+        text-align: center;
+        padding: 20px;
+        background-color: #e7e7e7;
+        margin-top: 20px;
+      }
+
+      .cta-button,
+      .suggested-project-content a {
+        background-color: #f9f9f9; /* Light background for buttons */
+        color: #333; /* Dark text for buttons */
+        border: 1px solid #f9f9f9; /* Light border for buttons */
+        /* ... other styles remain unchanged ... */
+      }
+
+      .suggested-project-section {
+        text-align: center;
+        padding: 20px;
+        background-color: #ececec;
+        margin-top: 20px;
+      }
+
+      .suggested-project {
+        display: inline-block;
+        width: calc(100% - 40px);
+        margin: 10px 20px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background: #444;
+      }
+
+      .suggested-project img {
+        width: 100%;
+        height: auto;
+      }
+
+      .suggested-project-content {
+        padding: 15px;
+        background: #444; /* Dark background for content */
+        color: #f9f9f9;
+      }
+
+      .suggested-project-content h3 {
+        margin-top: 0;
+      }
+
+      .suggested-project-content p {
+        font-size: 14px;
+      }
+
+      .suggested-project-content a {
+        text-decoration: none;
+        background-color: #333;
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+
+      .project-feature {
+        display: flex;
+        margin-top: 20px;
+        flex-direction: column; /* stacks the children vertically */
+        align-items: center; /* centers the items horizontally */
+        text-align: center;
+      }
+
+      .project-image {
+        flex: 1;
+        margin-right: 20px;
+      }
+
+      .project-image img {
+        width: 100%; /* ensures the image is as wide as its container */
+        height: auto; /* maintains the aspect ratio */
+        max-height: 450px; /* limits the height of the image, adjust as needed */
+        object-fit: contain; /* ensures the entire image fits within the given dimensions, adjusting the actual width if necessary */
+        margin-bottom: 10px; /* this will cover the area of the container without stretching the image */
+        border: 1px solid #555;
+      }
+
+      .project-details {
+        flex: 2;
+        text-align: left;
+        order: 2;
+      }
+
+      .project-title {
+        width: 100%; /* ensures the title fills the width of the container */
+        font-size: 22px; /* adjust the size as necessary */
+        margin: 10px 0;
+      }
+
+      .project-info {
+        margin-bottom: 5px;
+        font-size: 16px;
+      }
+
+      .project-purpose {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header Section -->
+      <div class="header">Monthly DIY Challenge - Issue #{{issue_number}} - {{month}} {{year}}</div>
+
+      <!-- Welcome Section -->
+      <div class="section">
+        <div class="title">Welcome to Our Monthly DIY Newsletter</div>
+        <p class="content">We're so glad you're here to explore new creative projects and ideas with us.</p>
+      </div>
+
+      <!-- Main Feature -->
+      <!-- Purpose and Benefits Section -->
+      <div class="section project-feature">
+        <div class="project-image">
+          <img
+            src="https://images.unsplash.com/photo-1613463455809-28608760827d?q=80&w=1288&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Create your own Glowing Galaxy Mason Jar Lanterns!"
+            style="max-width: 100%; height: auto; object-fit: cover"
+          />
+        </div>
+        <div class="project-details">
+          <div class="project-title">Glowing Galaxy Mason Jar Lanterns</div>
+          <div class="project-info"><strong>Difficulty:</strong> Intermediate</div>
+          <div class="project-info"><strong>Category:</strong> Crafts & Decor</div>
+          <div class="project-purpose">
+            <strong>Purpose of the Project</strong>
+            <p>Illuminate your space with enchanting DIY lanterns that mimic the captivating beauty of a starry galaxy.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Materials and Tools Section -->
+      <div class="section no-column">
+        <div class="title">What You'll Need:</div>
+        <p class="content"><strong>Materials:</strong></p>
+        <ul>
+          <li class="list-item">Mason jars (various sizes)</li>
+          <li class="list-item">Acrylic paint (various colors including black)</li>
+          <li class="list-item">Paintbrushes</li>
+        </ul>
+        <p class="content"><strong>Tools:</strong></p>
+        <ul>
+          <li class="list-item">Scissors</li>
+          <li class="list-item">Hot glue gun (optional)</li>
+          <li class="list-item">Q-tips or small paintbrushes for fine details</li>
+        </ul>
+        <p class="content"><strong>Estimated Time:</strong> 4-6 hours</p>
+        <p class="content"><strong>Budget:</strong> 30 USD</p>
+      </div>
+
+      <!-- Project Details Section -->
+      <div class="section steps-section">
+        <div class="title">Steps to Create the Project</div>
+        <div class="subtitle"><strong>1. Prepare the Mason Jars</strong></div>
+        <p class="content">Clean the Mason jars thoroughly with water and soap. Ensure they are completely dry before starting.</p>
+        <div class="subtitle"><strong>2. Paint the Base Coat</strong></div>
+        <p class="content">Using a sponge, apply a base coat of black acrylic paint to the exterior of the Mason jars. Let them dry completely.</p>
+        <p class="content"><strong>Tips:</strong> For a smoother finish, apply multiple thin coats rather than one thick coat.</p>
+      </div>
+
+      <!-- Suggested Project Section -->
+      <div class="suggested-project-section">
+        <div class="suggested-project">
+          <img src="{{suggested_diy_image}}" alt="Suggested Project" />
+          <div class="suggested-project-content">
+            <h3>{{suggested_diy.title}}</h3>
+            <p>{{suggested_diy.summary}}</p>
+            <a href="{{suggested_diy.link}}">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Call to Action Section -->
+      <div class="cta-section">
+        <p class="content">Want to generate your own customized DIY project ideas?</p>
+        <a href="{{call_to_action_url}}" class="cta-button">Start Your Project</a>
+      </div>
+
+      <!-- Footer Section -->
+      <div class="footer">
+        <div class="subtitle">Connect with us</div>
+        <p class="content">
+          <a href="mailto:hello@example.com">hello@example.com</a> |
+          <a href="http://www.example.com">www.example.com</a>
+        </p>
+        <p class="unsubscribe">
+          © Copyright, 2024, diyspire.online • We only deliver things people are happy to receive, and you received this email as a subscriber of diyspire.online. Although we'll be sad, you may
+          choose to
+          <a href="{{unsubscribe_url}}">unsubscribe</a>. We understand, but we'll be sad.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

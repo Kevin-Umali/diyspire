@@ -55,10 +55,10 @@ const ShareDialog: React.FC<ShareDialogProps> = ({ isOpen, onClose, isSaving, sh
           <Input value={shareLink} readOnly className="mb-3" />
           <div className="flex items-center">
             <Button className="mr-2" onClick={onCopy} disabled={!shareLink} aria-label={hasCopied ? "Link Copied" : "Copy Link"}>
-              {hasCopied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
+              {hasCopied ? <Check className="size-5" /> : <Copy className="size-5" />}
             </Button>
             <Button onClick={handleWebShare} disabled={!navigator.share} aria-label="Share Link">
-              <Share2 className="h-5 w-5" />
+              <Share2 className="size-5" />
             </Button>
           </div>
         </div>

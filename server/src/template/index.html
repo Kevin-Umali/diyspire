@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monthly DIY Newsletter</title>
+    <style>
+      body {
+        font-family: "Helvetica", sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border: 2px dashed #ddd;
+        column-gap: 20px;
+      }
+
+      .header,
+      .footer,
+      .cta-section,
+      .suggested-project-section {
+        column-span: all;
+      }
+
+      .cta-section,
+      .suggested-project-section {
+        border-top: 2px dashed #ccc;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .header-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-left: 20px;
+      }
+
+      .header img {
+        width: auto;
+        height: 60px;
+      }
+
+      .section,
+      .steps-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px dashed #ccc;
+      }
+
+      .title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+        font-weight: normal;
+        margin-top: 10px;
+      }
+
+      .content {
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .unsubscribe {
+        font-size: 14px;
+      }
+
+      li {
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+
+      .footer {
+        font-size: 14px;
+        text-align: center;
+        padding-top: 20px;
+        margin-top: 20px;
+        border-top: 2px solid #ccc;
+      }
+
+      .cta-button {
+        display: block;
+        width: max-content;
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 2px;
+        margin: 10px auto;
+        text-align: center;
+      }
+
+      .cta-section {
+        text-align: center;
+        padding: 20px;
+        background-color: #e7e7e7;
+        margin-top: 20px;
+      }
+
+      .suggested-project-section {
+        text-align: center;
+        padding: 20px;
+        background-color: #ececec;
+        margin-top: 20px;
+      }
+
+      .suggested-project {
+        display: inline-block;
+        width: calc(100% - 40px);
+        margin: 10px 20px;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .suggested-project img {
+        width: 100%;
+        height: auto;
+      }
+
+      .suggested-project-content {
+        padding: 15px;
+      }
+
+      .suggested-project-content h3 {
+        margin-top: 0;
+      }
+
+      .suggested-project-content p {
+        font-size: 14px;
+      }
+
+      .suggested-project-content a {
+        text-decoration: none;
+        background-color: #333;
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+
+      .project-feature {
+        display: block;
+        margin-top: 20px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .project-image {
+        flex: 1;
+      }
+
+      .project-image img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+
+      .project-details {
+        text-align: left;
+        order: 2;
+      }
+
+      .project-title {
+        width: 100%;
+        font-size: 22px;
+
+        margin: 10px 0;
+      }
+
+      .project-info {
+        margin-bottom: 5px;
+        font-size: 16px;
+      }
+
+      .project-purpose {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header Section -->
+      <!-- Header Section -->
+      <div class="header">
+        <img src="{{header_image}}" alt="{{header_alt}}" />
+        <div class="header-title">{{header_title}}</div>
+      </div>
+
+      <!-- Welcome Section -->
+      <div class="section">
+        <div class="title">{{welcome_title}}</div>
+        <p class="content">{{welcome_content}}</p>
+      </div>
+
+      <!-- Main Feature -->
+      <!-- Purpose and Benefits Section -->
+      <div class="section project-feature">
+        <div class="project-image">
+          <img src="{{project_image}}" alt="{{project_alt}}" />
+          <p>
+            Photo by
+            <a href="{{photographer_url}}?utm_source=MakeMeDIYspire&utm_medium=referral" target="_blank" rel="noopener noreferrer">{{photographer_name}}</a>
+            on
+            <a href="{{photographer_url}}?utm_source=MakeMeDIYspire&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+          </p>
+        </div>
+        <div class="project-details">
+          <div class="project-title">{{project_title}}</div>
+          <div class="project-info"><strong>Difficulty:</strong> {{project_difficulty}}</div>
+          <div class="project-info"><strong>Category:</strong> {{project_category}}</div>
+          <div class="project-purpose">
+            <strong>Purpose of the Project</strong>
+            <p>{{project_purpose}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Materials and Tools Section -->
+      <div class="section no-column">
+        <div class="title">What You'll Need:</div>
+        <p class="content"><strong>Materials:</strong></p>
+        <ul>
+          {{project_materials}}
+        </ul>
+        <p class="content"><strong>Tools:</strong></p>
+        <ul>
+          {{project_tools}}
+        </ul>
+        <p class="content"><strong>Estimated Time:</strong> {{project_time}}</p>
+        <p class="content"><strong>Budget:</strong> {{project_budget}}</p>
+      </div>
+
+      <!-- Project Details Section -->
+      <div class="section steps-section">
+        <div class="title">Steps to Create the Project</div>
+        {{project_steps}}
+      </div>
+
+      <!-- Suggested Project Section: NEXT TIME DO THIS -->
+
+      <!-- Call to Action Section -->
+      <div class="cta-section">
+        <p class="content">Want to generate your own customized DIY project ideas?</p>
+        <a href="{{cta_url}}" class="cta-button">Start Your Project</a>
+      </div>
+
+      <!-- Footer Section -->
+      <div class="footer">
+        <div class="subtitle">Connect with us</div>
+        <p class="content">
+          <a href="mailto:hello@example.com">hello@example.com</a> |
+          <a href="http://www.example.com">www.example.com</a>
+        </p>
+        <p class="unsubscribe">
+          © Copyright, 2024, diyspire.online • We only deliver things people are happy to receive, and you received this email as a subscriber of diyspire.online. Although we'll be sad, you may
+          choose to
+          <a href="{{unsubscribe_url}}">unsubscribe</a>. We understand, but we'll be sad.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

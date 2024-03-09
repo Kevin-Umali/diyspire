@@ -3,19 +3,21 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import dotenv from "dotenv";
+import cron from "node-cron";
 import OpenAI from "openai";
 import * as nodeFetch from "node-fetch";
 import cookieParser from "cookie-parser";
 import { createApi } from "unsplash-js";
 import { PrismaClient } from "@prisma/client";
 
-import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes, counterRoutes, communityRoutes, authenticationRoutes, healthcheckRoutes } from "./routes/index.routes";
+import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes, counterRoutes, communityRoutes, authenticationRoutes, healthcheckRoutes, emailRoutes } from "./routes/index.routes";
 import { sendError } from "./utils/response-template";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
 import getConditionalCache from "./middleware/cache-response";
 import userAgentMiddleware from "./middleware/useragent-parser";
 import { allowedOrigins } from "./utils";
+import { performMonthlyDiyEmailDistribution } from "./services/monthly-diy-project.services";
 
 dotenv.config();
 
@@ -62,9 +64,15 @@ app.use(userAgentMiddleware);
 
 app.use(limiter);
 
+cron.schedule(process.env.CRON_SCHEDULE!, async () => await performMonthlyDiyEmailDistribution(prisma, openai, unsplash), {
+  scheduled: true,
+  timezone: "Asia/Manila",
+});
+
 app.use("/api/v1/healthcheck", healthcheckRoutes);
 
 app.use("/api/v1/auth", authenticationRoutes);
+app.use("/api/v1/email", emailRoutes);
 
 const oneDayCacheMiddleware = getConditionalCache("24 hours");
 app.use("/api/v1/guide", oneDayCacheMiddleware, guideRoutes);

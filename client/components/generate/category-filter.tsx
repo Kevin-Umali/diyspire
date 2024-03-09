@@ -34,7 +34,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, initialCate
     <div className={`space-y-4 border px-4 pb-10 pt-5 sm:px-20 ${className}`}>
       <div className="mb-2 flex flex-col items-center text-center sm:flex-col sm:items-center sm:text-center">
         <div className="mb-2 flex flex-col items-center space-x-0 sm:mb-0 sm:flex-row sm:space-x-2">
-          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">1</div>
+          <div className="mb-2 flex size-8 items-center justify-center rounded-full border sm:mb-0 sm:mr-2">1</div>
           <Label className="text-md block font-medium">Which category of DIY projects interests you?</Label>
         </div>
         <Label className="text-xs">Choose a category to explore projects</Label>
@@ -53,7 +53,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, initialCate
                 tabIndex={0}
               >
                 {IconComponent && (
-                  <Button variant="outline" size="icon" className={`h-12 w-12 rounded-full ${isSelected ? "border-primary" : ""}`} aria-label={`Filter by ${category} category`}>
+                  <Button variant="outline" size="icon" className={`size-12 rounded-full ${isSelected ? "border-primary" : ""}`} aria-label={`Filter by ${category} category`}>
                     <IconComponent size={20} />
                   </Button>
                 )}

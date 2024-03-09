@@ -7,35 +7,55 @@ interface UserPayload {
   username: string;
 }
 
-export interface AugmentedRequest extends Request {
-  user?: UserPayload;
+interface EmailPayload {
+  id: string;
+  email: string;
 }
 
+export interface AugmentedRequest extends Request {
+  user?: UserPayload;
+  email?: EmailPayload;
+}
+
+const handleTokenError = (err: any, res: Response) => {
+  if (err instanceof TokenExpiredError) {
+    sendError(res, "Access Token Expired", 403);
+  } else if (err instanceof JsonWebTokenError || err instanceof NotBeforeError) {
+    sendError(res, "Invalid Access Token", 403);
+  } else {
+    sendError(res, "Token Verification Failed", 403);
+  }
+};
+
 export const authenticateToken = (req: AugmentedRequest, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.split(" ")[1];
+  if (!token) {
+    sendError(res, "Access Token Required", 401);
+    return;
+  }
+
   try {
-    const authHeader = req.headers.authorization;
-    const token = authHeader?.split(" ")[1];
-
-    if (!token) {
-      sendError(res, "Access Token Required", 401);
-      return;
-    }
-
     const decoded = verify(token, process.env.JWT_SECRET_KEY!) as UserPayload;
     req.user = decoded;
     next();
   } catch (err) {
-    if (err instanceof JsonWebTokenError || err instanceof TokenExpiredError || err instanceof NotBeforeError) {
-      switch (err.name) {
-        case "TokenExpiredError":
-          return sendError(res, "Access Token Expired", 403);
-        case "JsonWebTokenError":
-        case "NotBeforeError":
-          return sendError(res, "Invalid Access Token", 403);
-        default:
-          return sendError(res, "Token Verification Failed", 403);
-      }
-    }
-    next(err);
+    handleTokenError(err, res);
+  }
+};
+
+export const authenticateEmailToken = (req: AugmentedRequest, res: Response, next: NextFunction) => {
+  const token = req.query.token as string;
+  if (!token) {
+    sendError(res, "Access Token Required", 401);
+    return;
+  }
+
+  try {
+    const decoded = verify(token, process.env.EMAIL_SECRET_KEY!) as EmailPayload;
+    req.email = decoded;
+    next();
+  } catch (err) {
+    handleTokenError(err, res);
   }
 };

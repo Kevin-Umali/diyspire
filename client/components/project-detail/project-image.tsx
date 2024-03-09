@@ -85,7 +85,7 @@ const ProjectImage: React.FC<ProjectImageProps> = ({ isLoading, isLoaded, projec
       </div>
 
       <Button className="mt-4 px-4 py-2" onClick={onOpen} disabled={isLoaded}>
-        <Share className="mr-2 h-5 w-5" />
+        <Share className="mr-2 size-5" />
         <span>Share</span>
       </Button>
     </div>
