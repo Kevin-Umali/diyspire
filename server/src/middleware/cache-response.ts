@@ -1,5 +1,5 @@
 import apicache from "apicache";
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 
 const getConditionalCache = (duration: string) => {
   if (process.env.NODE_ENV === "test") {

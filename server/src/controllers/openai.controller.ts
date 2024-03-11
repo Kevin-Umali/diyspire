@@ -1,9 +1,8 @@
-import { Response, NextFunction } from "express";
-
-import { sendSuccess } from "../utils/response-template";
+import { NextFunction, Response } from "express";
 import OpenAI from "openai";
 import { BodyRequest } from "../middleware/schema-validate";
 import { ExplainRequest, IdeaRequest } from "../schema/openai.schema";
+import { sendSuccess } from "../utils/response-template";
 
 export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response, next: NextFunction) => {
   try {

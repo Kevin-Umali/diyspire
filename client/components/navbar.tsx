@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
   );
 
   return (
-    <nav className="flex w-full items-center justify-between p-4 shadow-sm">
+    <nav className="relative z-10 flex w-full items-center justify-between p-4 shadow-sm">
       <div className="flex items-center space-x-2">
         <Image src="/android-chrome-512x512.png" alt="Logo" width={32} height={32} priority={true} />
         <div className="">

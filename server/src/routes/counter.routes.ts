@@ -1,7 +1,7 @@
 import express from "express";
-import zodValidateMiddleware from "../middleware/schema-validate";
 import { getTotalCountOfGeneratedIdea, incrementCounterOfGeneratedIdea } from "../controllers/counter.controller";
 import { authenticateToken } from "../middleware/authenticate-token";
+import zodValidateMiddleware from "../middleware/schema-validate";
 
 const router = express.Router();
 

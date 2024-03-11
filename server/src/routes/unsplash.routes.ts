@@ -1,8 +1,8 @@
 import express from "express";
-import zodValidateMiddleware from "../middleware/schema-validate";
 import { searchImages } from "../controllers/unsplash.controller";
-import { UnsplashImageSearchSchema } from "../schema/unsplash.schema";
 import { authenticateToken } from "../middleware/authenticate-token";
+import zodValidateMiddleware from "../middleware/schema-validate";
+import { UnsplashImageSearchSchema } from "../schema/unsplash.schema";
 
 const router = express.Router();
 

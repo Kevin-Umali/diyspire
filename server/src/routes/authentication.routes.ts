@@ -1,8 +1,8 @@
 import express from "express";
-import zodValidateMiddleware from "../middleware/schema-validate";
 import { authorizeUser, logoutUser, refreshToken, registerUser } from "../controllers/authentication.controller";
-import { UserSchema } from "../schema/authentication.schema";
 import { authenticateToken } from "../middleware/authenticate-token";
+import zodValidateMiddleware from "../middleware/schema-validate";
+import { UserSchema } from "../schema/authentication.schema";
 
 const router = express.Router();
 

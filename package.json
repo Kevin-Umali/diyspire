@@ -18,7 +18,8 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:docker": "concurrently \"npm run dev:client\" \"npm run docker:up\"",
     "build:all": "npm install && concurrently \"npm run build:client\" \"npm run build:server\" \"npm run docker:build\"",
-    "lint:all": "cd server && npm run lint && cd ../client && npm run lint:fix"
+    "lint:all": "cd server && npm run lint && cd ../client && npm run lint:fix",
+    "outdated": "cd server && npm outdated && cd ../client && npm outdated"
   },
   "husky": {
     "hooks": {

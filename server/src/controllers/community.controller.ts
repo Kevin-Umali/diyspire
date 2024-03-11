@@ -1,9 +1,9 @@
-import { Response, NextFunction } from "express";
-import { sendError, sendSuccess } from "../utils/response-template";
+import { NextFunction, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { validateQueryFilter } from "../utils";
 import { QueryRequest } from "../middleware/schema-validate";
 import { CommunityGeneratedIdeaRequest } from "../schema/community.schema";
+import { validateQueryFilter } from "../utils";
+import { sendError, sendSuccess } from "../utils/response-template";
 
 export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGeneratedIdeaRequest>, res: Response, next: NextFunction) => {
   try {

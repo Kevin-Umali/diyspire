@@ -1,14 +1,13 @@
-import type { Prisma, PrismaClient } from "@prisma/client";
-import type { DefaultArgs } from "@prisma/client/runtime/library";
 import { randomInt } from "crypto";
+import { promises as fs } from "fs";
+import { join } from "path";
 import nodemailer from "nodemailer";
 import type { OpenAI } from "openai";
-import { promises as fs } from "fs";
 import { createApi } from "unsplash-js";
-
+import type { DefaultArgs } from "@prisma/client/runtime/library";
 import PromisePool from "@supercharge/promise-pool";
+import type { Prisma, PrismaClient } from "@prisma/client";
 import { generateTokens } from "../utils/generate-tokens";
-import { join } from "path";
 
 interface EmailOptions {
   to: string;

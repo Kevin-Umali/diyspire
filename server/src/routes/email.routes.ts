@@ -1,7 +1,7 @@
 import express from "express";
-import zodValidateMiddleware from "../middleware/schema-validate";
-import { authenticateEmailToken } from "../middleware/authenticate-token";
 import { subscribeEmail, unsubscribeEmail } from "../controllers/email.controller";
+import { authenticateEmailToken } from "../middleware/authenticate-token";
+import zodValidateMiddleware from "../middleware/schema-validate";
 import { SubscribeEmailSchema, UnsubscribeEmailQuerySchema } from "../schema/email.schema";
 
 const router = express.Router();

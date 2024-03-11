@@ -1,8 +1,8 @@
 import express from "express";
-import zodValidateMiddleware from "../middleware/schema-validate";
 import { explainProjectByTitle, generateIdea } from "../controllers/openai.controller";
-import { ExplainSchema, IdeaSchema } from "../schema/openai.schema";
 import { authenticateToken } from "../middleware/authenticate-token";
+import zodValidateMiddleware from "../middleware/schema-validate";
+import { ExplainSchema, IdeaSchema } from "../schema/openai.schema";
 
 const router = express.Router();
 
