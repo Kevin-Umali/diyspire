@@ -1,9 +1,8 @@
-import { Response, NextFunction } from "express";
-import { sendError, sendSuccess } from "../utils/response-template";
+import { NextFunction, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
-
 import { BodyRequest, QueryParamsRequest } from "../middleware/schema-validate";
 import { GetProjectByIdParamsRequest, GetProjectByIdQueryRequest, ShareProjectBodyRequest } from "../schema/share.schema";
+import { sendError, sendSuccess } from "../utils/response-template";
 
 export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQueryRequest, GetProjectByIdParamsRequest>, res: Response, next: NextFunction) => {
   try {

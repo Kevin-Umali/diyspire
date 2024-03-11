@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { sendSuccess } from "../utils/response-template";
+import { NextFunction, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { getStartOfDay } from "../utils";
+import { sendSuccess } from "../utils/response-template";
 
 export const getTotalCountOfGeneratedIdea = async (req: Request, res: Response, next: NextFunction) => {
   try {

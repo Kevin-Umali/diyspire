@@ -1,6 +1,6 @@
 import express from "express";
-import zodValidateMiddleware from "../middleware/schema-validate";
 import { healthCheck } from "../controllers/healthcheck.controller";
+import zodValidateMiddleware from "../middleware/schema-validate";
 
 const router = express.Router();
 

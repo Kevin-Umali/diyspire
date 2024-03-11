@@ -47,7 +47,7 @@ const Newsletter: React.FC = () => {
             type="email"
             className="w-full rounded-l-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-offset-2 sm:flex-1"
           />
-          <Button type="submit" className="mt-4 w-full rounded-lg px-8 py-2 font-bold transition-colors sm:mt-0 sm:w-auto">
+          <Button type="submit" className="mt-4 w-full rounded-lg px-8 py-2 transition-colors sm:mt-0 sm:w-auto">
             {submissionStatus === "pending" ? "Subscribing..." : "Subscribe"}
           </Button>
         </div>

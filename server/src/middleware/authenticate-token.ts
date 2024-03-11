@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { JsonWebTokenError, TokenExpiredError, NotBeforeError, verify } from "jsonwebtoken";
+import { NextFunction, Request, Response } from "express";
+import { JsonWebTokenError, NotBeforeError, TokenExpiredError, verify } from "jsonwebtoken";
 import { sendError } from "../utils/response-template";
 
 interface UserPayload {
@@ -36,7 +36,7 @@ export const authenticateToken = (req: AugmentedRequest, res: Response, next: Ne
   }
 
   try {
-    const decoded = verify(token, process.env.JWT_SECRET_KEY!) as UserPayload;
+    const decoded = verify(token, process.env.JWT_SECRET_KEY) as UserPayload;
     req.user = decoded;
     next();
   } catch (err) {
@@ -52,7 +52,7 @@ export const authenticateEmailToken = (req: AugmentedRequest, res: Response, nex
   }
 
   try {
-    const decoded = verify(token, process.env.EMAIL_SECRET_KEY!) as EmailPayload;
+    const decoded = verify(token, process.env.EMAIL_SECRET_KEY) as EmailPayload;
     req.email = decoded;
     next();
   } catch (err) {

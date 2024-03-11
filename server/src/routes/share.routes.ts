@@ -1,8 +1,8 @@
 import express from "express";
-import zodValidateMiddleware from "../middleware/schema-validate";
 import { getProjectById, saveProject } from "../controllers/share.controller";
-import { GetProjectByIdParamsSchema, GetProjectByIdQuerySchema, ShareProjectSchema } from "../schema/share.schema";
 import { authenticateToken } from "../middleware/authenticate-token";
+import zodValidateMiddleware from "../middleware/schema-validate";
+import { GetProjectByIdParamsSchema, GetProjectByIdQuerySchema, ShareProjectSchema } from "../schema/share.schema";
 
 const router = express.Router();
 

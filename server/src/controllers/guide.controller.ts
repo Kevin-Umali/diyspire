@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
-import { sendError, sendSuccess } from "../utils/response-template";
+import { NextFunction, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { QueryParamsRequest } from "../middleware/schema-validate";
 import { GetHowToGuideByPathParamsRequest, GetHowToGuideByPathQueryRequest } from "../schema/guide.schema";
+import { sendError, sendSuccess } from "../utils/response-template";
 
 export async function getHowToGuideByPath(req: QueryParamsRequest<GetHowToGuideByPathQueryRequest, GetHowToGuideByPathParamsRequest>, res: Response, next: NextFunction) {
   try {

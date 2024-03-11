@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { sendSuccess } from "../utils/response-template";
-import { PrismaClient } from "@prisma/client";
+import { NextFunction, Request, Response } from "express";
 import OpenAI from "openai";
+import { PrismaClient } from "@prisma/client";
+import { sendSuccess } from "../utils/response-template";
 
 export const healthCheck = async (req: Request, res: Response, _next: NextFunction) => {
   const prismaStatus = { name: "Prisma", status: "Outage", message: "Prisma is down" };

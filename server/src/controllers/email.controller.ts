@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import { Response, NextFunction } from "express";
-import { sendError, sendSuccess } from "../utils/response-template";
-import { BodyRequest, QueryRequest } from "../middleware/schema-validate";
+import { NextFunction, Response } from "express";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaClient } from "@prisma/client";
+import { BodyRequest, QueryRequest } from "../middleware/schema-validate";
 import { SubscribeEmailRequest, UnsubscribeEmailQueryRequest } from "../schema/email.schema";
+import { sendError, sendSuccess } from "../utils/response-template";
 
 export const unsubscribeEmail = async (req: QueryRequest<UnsubscribeEmailQueryRequest>, res: Response, next: NextFunction) => {
   try {

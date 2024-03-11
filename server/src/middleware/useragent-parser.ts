@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import UAParser from "ua-parser-js";
+import { NextFunction, Request, Response } from "express";
 import { isbot } from "isbot";
+import UAParser from "ua-parser-js";
 
 const userAgentMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const userAgentString = req.headers["user-agent"] ?? "";

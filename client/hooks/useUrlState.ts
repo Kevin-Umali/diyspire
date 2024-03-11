@@ -23,7 +23,7 @@ const useURLState = <T>(key: string, defaultValue: T): [T, React.Dispatch<React.
     (newValue: T) => {
       const newParams = new URLSearchParams(searchParams);
       newParams.set(key, JSON.stringify(newValue));
-      router.replace(`/?${newParams.toString()}`, { scroll: false });
+      router.replace(`?${newParams.toString()}`, { scroll: false });
     },
     [key, router, searchParams],
   );

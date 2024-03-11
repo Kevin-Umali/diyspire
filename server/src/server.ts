@@ -1,32 +1,32 @@
-import express, { Express, Response } from "express";
-import cors from "cors";
-import helmet from "helmet";
 import compression from "compression";
-import dotenv from "dotenv";
-import cron from "node-cron";
-import OpenAI from "openai";
-import * as nodeFetch from "node-fetch";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import express, { Express, Response } from "express";
+import helmet from "helmet";
+import cron from "node-cron";
+import * as nodeFetch from "node-fetch";
+import OpenAI from "openai";
 import { createApi } from "unsplash-js";
 import { PrismaClient } from "@prisma/client";
-
-import { guideRoutes, unsplashRoutes, openaiRoutes, shareRoutes, counterRoutes, communityRoutes, authenticationRoutes, healthcheckRoutes, emailRoutes } from "./routes/index.routes";
-import { sendError } from "./utils/response-template";
+import getConditionalCache from "./middleware/cache-response";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
-import getConditionalCache from "./middleware/cache-response";
 import userAgentMiddleware from "./middleware/useragent-parser";
-import { allowedOrigins } from "./utils";
+import { authenticationRoutes, communityRoutes, counterRoutes, emailRoutes, guideRoutes, healthcheckRoutes, openaiRoutes, shareRoutes, unsplashRoutes } from "./routes/index.routes";
 import { performMonthlyDiyEmailDistribution } from "./services/monthly-diy-project.services";
+import { allowedOrigins } from "./utils";
+import { sendError } from "./utils/response-template";
+import "./utils/env";
 
 dotenv.config();
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const unsplash = createApi({
-  accessKey: process.env.UNSPLASH_ACCESS_KEY!,
+  accessKey: process.env.UNSPLASH_ACCESS_KEY,
   fetch: nodeFetch.default as unknown as typeof fetch,
 });
 
@@ -64,7 +64,7 @@ app.use(userAgentMiddleware);
 
 app.use(limiter);
 
-cron.schedule(process.env.CRON_SCHEDULE!, async () => await performMonthlyDiyEmailDistribution(prisma, openai, unsplash), {
+cron.schedule(process.env.CRON_SCHEDULE, async () => await performMonthlyDiyEmailDistribution(prisma, openai, unsplash), {
   scheduled: true,
   timezone: "Asia/Manila",
 });

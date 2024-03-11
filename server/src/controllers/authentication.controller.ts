@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client";
-import { Request, Response, NextFunction } from "express";
-import { sendError, sendSuccess } from "../utils/response-template";
 import { compare, hash } from "bcrypt";
-import { generateTokens, refreshTokenExpiry } from "../utils/generate-tokens";
+import { NextFunction, Request, Response } from "express";
+import { JwtPayload, TokenExpiredError, verify } from "jsonwebtoken";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaClient } from "@prisma/client";
 import { BodyRequest } from "../middleware/schema-validate";
 import { UserRequest } from "../schema/authentication.schema";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { JwtPayload, TokenExpiredError, verify } from "jsonwebtoken";
+import { generateTokens, refreshTokenExpiry } from "../utils/generate-tokens";
+import { sendError, sendSuccess } from "../utils/response-template";
 
 export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response, next: NextFunction) => {
   try {
@@ -103,7 +103,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 
     const prisma: PrismaClient = req.app.get("prisma");
 
-    const decoded = verify(refreshToken, process.env.JWT_REFRESH_SECRET_KEY!) as JwtPayload;
+    const decoded = verify(refreshToken, process.env.JWT_REFRESH_SECRET_KEY) as JwtPayload;
 
     const refreshTokenInDb = await prisma.refreshToken.findUnique({
       where: { token: refreshToken },

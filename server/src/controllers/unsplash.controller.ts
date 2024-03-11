@@ -1,10 +1,9 @@
-import { Response, NextFunction } from "express";
-
-import { sendError, sendSuccess } from "../utils/response-template";
 import { randomInt } from "crypto";
+import { NextFunction, Response } from "express";
+import { createApi } from "unsplash-js";
 import { QueryRequest } from "../middleware/schema-validate";
 import { UnsplashImageSearchQueryRequest } from "../schema/unsplash.schema";
-import { createApi } from "unsplash-js";
+import { sendError, sendSuccess } from "../utils/response-template";
 
 export const searchImages = async (req: QueryRequest<UnsplashImageSearchQueryRequest>, res: Response, next: NextFunction) => {
   try {

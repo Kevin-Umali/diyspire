@@ -1,5 +1,5 @@
+import { z, ZodType } from "zod";
 import { JsonValue } from "@prisma/client/runtime/library";
-import { ZodType, z } from "zod";
 
 export const customEscape = (str: string): string => {
   return str

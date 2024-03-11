@@ -31,7 +31,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push(`/?${redirectParams}`);
+      router.push(`/generate?${redirectParams}`);
     }
   }, [isAuthenticated, redirectParams, router]);
 

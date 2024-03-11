@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
-import { ZodType, ZodError } from "zod";
-import { sendSuccess } from "../utils/response-template";
+import { ZodError, ZodType } from "zod";
 import { parseOrDefault } from "../utils";
+import { sendSuccess } from "../utils/response-template";
 
 interface ZodRequest<B = any, Q extends ParsedQs = ParsedQs, P extends ParamsDictionary = ParamsDictionary> extends Request {
   [x: string]: any;
