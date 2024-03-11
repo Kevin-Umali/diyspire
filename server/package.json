@@ -7,7 +7,7 @@
     "start": "node dist/src/index.js",
     "start:dev": "ts-node src/index.ts",
     "watch:dev": "nodemon -L",
-    "copy-files": "copyfiles -u 1 src/template/*.html dist/src/template/",
+    "copy-files": "copyfiles -u 1 src/template/*.html dist/src/",
     "prebuild": "npm install && npm audit fix",
     "build": "npx prisma generate && tsc -p . && npm run copy-files",
     "docker:up": "docker-compose -f docker-compose.dev.yml up",
