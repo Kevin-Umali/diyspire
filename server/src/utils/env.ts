@@ -4,7 +4,7 @@ const environmentSchema = z.object({
   PORT: z.number().default(3000),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   OPENAI_API_KEY: z.string(),
-  WEBSITE_URL: z.string().url(),
+  WEBSITE_URL: z.string(),
   UNSPLASH_ACCESS_KEY: z.string(),
   UNSPLASH_SECRET_KEY: z.string(),
   COOKIE_SECRET_KEY: z.string(),
@@ -21,16 +21,13 @@ const environmentSchema = z.object({
   EMAIL_PORT: z.string().default("465"),
   EMAIL_SECRET_KEY: z.string(),
 
-  POSTGRES_HOST: z.string(),
-  POSTGRES_USER: z.string(),
-  POSTGRES_PASSWORD: z.string(),
-  POSTGRES_DB: z.string(),
+  POSTGRES_HOST: z.string().optional(),
+  POSTGRES_USER: z.string().optional(),
+  POSTGRES_PASSWORD: z.string().optional(),
+  POSTGRES_DB: z.string().optional(),
   POSTGRES_PORT: z.number().optional().default(5432),
 
-  DATABASE_URL: z
-    .string()
-    .regex(/^postgresql:\/\/[\w]+:[\w]+@[\w.]+:\d+\/[\w]+$/)
-    .default(""),
+  DATABASE_URL: z.string(),
 });
 
 const env = {
@@ -43,7 +40,7 @@ const env = {
   COOKIE_SECRET_KEY: process.env.COOKIE_SECRET_KEY,
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
   JWT_REFRESH_SECRET_KEY: process.env.JWT_REFRESH_SECRET_KEY,
-  MIGRATE_FLAG: process.env.MIGRATE_FLAG,
+  MIGRATE_FLAG: !!process.env.MIGRATE_FLAG,
   BACKEND_URL: process.env.BACKEND_URL,
 
   EMAIL_USER: process.env.EMAIL_USER,
