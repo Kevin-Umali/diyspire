@@ -4,6 +4,33 @@ const environmentSchema = z.object({
   PORT: z.number().default(3000),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   OPENAI_API_KEY: z.string(),
+  OPENAI_CHATGPT_MODEL: z
+    .enum([
+      "gpt-3.5-turbo-0125",
+      "gpt-3.5-turbo",
+      "gpt-3.5-turbo-1106",
+      "gpt-3.5-turbo-instruct",
+      "gpt-3.5-turbo-16k",
+      "gpt-3.5-turbo-0613",
+      "gpt-3.5-turbo-16k-0613",
+      "gpt-4-0125-preview",
+      "gpt-4-turbo-preview",
+      "gpt-4-1106-preview",
+      "gpt-4-vision-preview",
+      "gpt-4-1106-vision-preview",
+      "gpt-4",
+      "gpt-4-0613",
+      "gpt-4-32k",
+      "gpt-4-32k-0613",
+    ])
+    .refine((value) => {
+      if (["gpt-3.5-turbo-16k", "gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613"].includes(value)) {
+        console.warn(`WARNING: ${value} is a legacy model and will be deprecated on June 13, 2024.`);
+      }
+
+      return true;
+    })
+    .default("gpt-3.5-turbo-0613"),
   WEBSITE_URL: z.string(),
   UNSPLASH_ACCESS_KEY: z.string(),
   UNSPLASH_SECRET_KEY: z.string(),
@@ -34,6 +61,7 @@ const env = {
   PORT: process.env.PORT ? Number(process.env.PORT) : 3000,
   NODE_ENV: process.env.NODE_ENV,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  OPENAI_CHATGPT_MODEL: process.env.OPENAI_CHATGPT_MODEL,
   WEBSITE_URL: process.env.WEBSITE_URL,
   UNSPLASH_ACCESS_KEY: process.env.UNSPLASH_ACCESS_KEY,
   UNSPLASH_SECRET_KEY: process.env.UNSPLASH_SECRET_KEY,

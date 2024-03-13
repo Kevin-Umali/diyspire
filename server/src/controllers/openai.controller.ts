@@ -53,7 +53,7 @@ export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response,
     `;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo-0613",
+      model: process.env.OPENAI_CHATGPT_MODEL,
       response_format: {
         type: "json_object",
       },
@@ -109,7 +109,7 @@ export const explainProjectByTitle = async (req: BodyRequest<ExplainRequest>, re
     `;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo-0613",
+      model: process.env.OPENAI_CHATGPT_MODEL,
       messages: [
         {
           role: "system",
