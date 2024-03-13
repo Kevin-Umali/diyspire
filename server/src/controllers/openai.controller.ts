@@ -6,7 +6,7 @@ import { sendSuccess } from "../utils/response-template";
 
 export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response, next: NextFunction) => {
   try {
-    const { materials, onlySpecified, difficulty, category, tools, time, budget, currency, endPurpose } = req.body;
+    const { materials, onlySpecified, difficulty, category, tools, timeUnit, timeValue, budget, currency, endPurpose } = req.body;
 
     const openai: OpenAI = req.app.get("openai");
 
@@ -16,7 +16,7 @@ export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response,
 
     const toolsDescription = tools.filter(Boolean).length > 0 ? `Work with these tools: ${tools.join(", ")}.` : "Recommend tools that might be beneficial for the projects.";
 
-    const timeDescription = time.length !== 0 ? "There's no strict time constraint." : `The available time to complete the project is approximately ${time}.`;
+    const timeDescription = timeUnit?.length !== 0 && timeValue === 0 ? "There's no strict time constraint." : `The available time to complete the project is approximately ${timeValue} ${timeUnit}.`;
 
     const budgetDescription = budget === "0" ? "The budget is flexible." : `The budget is set ${budget}`;
 
@@ -54,6 +54,9 @@ export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response,
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-0613",
+      response_format: {
+        type: "json_object",
+      },
       messages: [
         {
           role: "system",

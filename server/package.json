@@ -45,6 +45,7 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.12",
     "openai": "^4.28.4",
+    "pgvector": "^0.1.8",
     "ua-parser-js": "^1.0.37",
     "unsplash-js": "^7.0.19",
     "zod": "^3.22.4"

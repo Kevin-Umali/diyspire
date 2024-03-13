@@ -295,20 +295,6 @@ export const budgetOptions: Budget[] = [
 
 export const currencyList: string[] = ["USD", "EUR", "JPY", "GBP", "CHF", "CAD", "AUD", "CNY", "INR", "BRL", "RUB", "KRW", "SGD", "HKD", "NZD", "ZAR", "MXN", "PHP"];
 
-export enum HttpMethod {
-  GET = "GET",
-  POST = "POST",
-  PUT = "PUT",
-  DELETE = "DELETE",
-}
-
-export type FetchApiOptions = {
-  method?: HttpMethod;
-  body?: object;
-  queryParams?: Record<string, string | number | boolean>;
-  accessToken?: string;
-};
-
 export const statusIcons: Record<ServiceStatusType, React.ElementType> = {
   Normal: CheckCircle,
   Maintenance: Timer,

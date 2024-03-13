@@ -151,6 +151,9 @@ const generateMonthlyDiyProject = async (
 
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo-0613",
+    response_format: {
+      type: "json_object",
+    },
     messages: [
       {
         role: "system",
