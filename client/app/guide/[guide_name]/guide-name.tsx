@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
+import { getGuideByPath } from "@/api";
 import { GuidePathData } from "@/interfaces";
 import { AxiosError } from "axios";
 
-import { getGuideByPath } from "@/lib/api-helper";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import CustomMarkdown from "@/components/custom-markdown";

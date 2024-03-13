@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { checkBackEndHealthStatus } from "@/api";
 import { statusDown } from "@/constants";
 import { HealthCheckData, HealthCheckStatus } from "@/interfaces";
 import { AxiosError } from "axios";
 import { CheckCircle, XCircle } from "lucide-react";
 
-import { checkBackEndHealthStatus } from "@/lib/api-helper";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import Legend from "@/components/status/legend";

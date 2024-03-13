@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { loginUser, registerUser } from "@/api";
 import { useAuth } from "@/context/authContext";
 import { AxiosError } from "axios";
 
-import { loginUser, registerUser } from "@/lib/api-helper";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";

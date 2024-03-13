@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
+import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/api";
 import { categories } from "@/constants";
 import { useAuth } from "@/context/authContext";
 import { useCurrency } from "@/context/currencyContext";
@@ -10,7 +11,6 @@ import { GeneratedIdea } from "@/interfaces";
 import { AxiosError } from "axios";
 import { RefreshCcw } from "lucide-react";
 
-import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/lib/api-helper";
 import useURLState from "@/hooks/useUrlState";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";

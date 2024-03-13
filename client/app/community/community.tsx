@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { getCommunityGeneratedIdea } from "@/api";
 import { CommunityIdeaData } from "@/interfaces";
 import { AxiosError } from "axios";
 
-import { getCommunityGeneratedIdea } from "@/lib/api-helper";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";

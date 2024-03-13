@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-
-import { getGuideByPathMetadata } from "@/lib/api-helper";
+import { getGuideByPathMetadata } from "@/api";
 
 import HowToGuideDetail from "./guide-name";
 

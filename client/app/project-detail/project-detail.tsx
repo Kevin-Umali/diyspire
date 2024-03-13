@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { generateProjectExplanations, saveShareLinkData, searchImages } from "@/api";
 import { useAuth } from "@/context/authContext";
 import withAuth from "@/hocs/withAuth";
 import { ProjectDetails, ProjectImages } from "@/interfaces";
 import { AxiosError } from "axios";
 
-import { generateProjectExplanations, saveShareLinkData, searchImages } from "@/lib/api-helper";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import ProjectImage from "@/components/project-detail/project-image";

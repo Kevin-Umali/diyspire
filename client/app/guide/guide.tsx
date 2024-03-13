@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { getAllGuides } from "@/api";
 import { GuideData } from "@/interfaces";
 import { AxiosError } from "axios";
 
-import { getAllGuides } from "@/lib/api-helper";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";

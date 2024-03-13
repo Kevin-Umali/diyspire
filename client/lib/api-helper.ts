@@ -1,20 +1,4 @@
-import { FetchApiOptions, HttpMethod } from "@/constants";
-import {
-  CommunityIdeaResponse,
-  CounterResponse,
-  GeneratedIdeaResponse,
-  GuidePathMetadataResponse,
-  GuidePathResponse,
-  GuideResponse,
-  HealthCheckResponse,
-  IdeaExplanationResponse,
-  ImageSearchResponse,
-  ProjectDetails,
-  ProjectImages,
-  ShareLinkDataMetadataResponse,
-  ShareLinkDataResponse,
-  ShareLinkResponse,
-} from "@/interfaces";
+import { FetchApiOptions, HttpMethod } from "@/interfaces";
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -78,7 +62,7 @@ api.interceptors.response.use(
   },
 );
 
-const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {}): Promise<T> => {
+export const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {}): Promise<T> => {
   const { method = HttpMethod.GET, body, queryParams, accessToken } = options;
 
   if (method === HttpMethod.GET && body) {
@@ -104,139 +88,4 @@ const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {}): Pro
     console.error("API Error: ", error.message);
     throw error;
   }
-};
-
-export const generateProjectIdeas = (
-  params: {
-    materials: string[];
-    onlySpecified: boolean;
-    difficulty: string;
-    category: string;
-    tools: string[];
-    timeValue: number;
-    timeUnit: string | null;
-    budget: string | number;
-    currency: string;
-    endPurpose: string;
-  },
-  accessToken: string,
-): Promise<GeneratedIdeaResponse> => {
-  const time = params.timeValue && params.timeUnit ? `${params.timeValue} ${params.timeUnit}` : "";
-  return fetchApi<GeneratedIdeaResponse>("/v1/generate/idea", {
-    method: HttpMethod.POST,
-    body: { ...params, time },
-    accessToken,
-  });
-};
-
-export const generateProjectExplanations = (
-  params: { title: string; materials: string[]; tools: string[]; time: string; budget: string; description: string },
-  accessToken: string,
-): Promise<IdeaExplanationResponse> => {
-  return fetchApi<IdeaExplanationResponse>("/v1/generate/explain", {
-    method: HttpMethod.POST,
-    body: params,
-    accessToken,
-  });
-};
-
-export const searchImages = (query: string, accessToken: string): Promise<ImageSearchResponse> => {
-  return fetchApi<ImageSearchResponse>("/v1/image/search", {
-    queryParams: { query },
-    accessToken,
-  });
-};
-
-export const getGuideByPath = (path: string): Promise<GuidePathResponse> => {
-  return fetchApi<GuidePathResponse>(`/v1/guide/${path}`);
-};
-
-export const getGuideByPathMetadata = (path: string): Promise<GuidePathMetadataResponse> => {
-  return fetchApi<GuidePathMetadataResponse>(`/v1/guide/${path}`, {
-    queryParams: { onlyMetadata: "true" },
-  });
-};
-
-export const getAllGuides = (): Promise<GuideResponse> => {
-  return fetchApi<GuideResponse>("/v1/guide");
-};
-
-export const saveShareLinkData = (
-  params: { projectDetails: ProjectDetails | null; projectImage: ProjectImages | null; explanation: string | null },
-  accessToken: string,
-): Promise<ShareLinkResponse> => {
-  return fetchApi<ShareLinkResponse>("/v1/share", {
-    method: HttpMethod.POST,
-    body: params,
-    accessToken,
-  });
-};
-
-export const getShareLinkData = (id: string): Promise<ShareLinkDataResponse> => {
-  return fetchApi<ShareLinkDataResponse>(`/v1/share/${id}`);
-};
-
-export const getShareLinkDataMetadata = (id: string): Promise<ShareLinkDataMetadataResponse> => {
-  return fetchApi<ShareLinkDataMetadataResponse>(`/v1/share/${id}`, {
-    queryParams: { onlyMetadata: "true" },
-  });
-};
-
-export const getTotalCountOfGeneratedIdea = (): Promise<CounterResponse> => {
-  return fetchApi<CounterResponse>("/v1/counter");
-};
-
-export const incrementCounterOfGeneratedIdea = (accessToken: string): Promise<void> => {
-  return fetchApi("/v1/counter", { method: HttpMethod.POST, accessToken });
-};
-
-export const getCommunityGeneratedIdea = (
-  params: {
-    limit?: number;
-    orderBy?: string;
-  } = {},
-): Promise<CommunityIdeaResponse> => {
-  return fetchApi<CommunityIdeaResponse>("/v1/community", {
-    queryParams: params,
-  });
-};
-
-export const registerUser = (userData: { signupUsername: string; signupPassword: string }): Promise<any> => {
-  return fetchApi("/v1/auth/register", {
-    method: HttpMethod.POST,
-    body: { username: userData.signupUsername, password: userData.signupPassword },
-  });
-};
-
-export const loginUser = (credentials: { username: string; password: string }): Promise<any> => {
-  return fetchApi("/v1/auth/login", {
-    method: HttpMethod.POST,
-    body: credentials,
-  });
-};
-
-export const logoutUser = (accessToken: string): Promise<void> => {
-  return fetchApi("/v1/auth/logout", {
-    method: HttpMethod.POST,
-    accessToken,
-  });
-};
-
-export const refreshToken = (): Promise<any> => {
-  return fetchApi("/v1/auth/refresh", {
-    method: HttpMethod.POST,
-  });
-};
-
-export const checkBackEndHealthStatus = (): Promise<HealthCheckResponse> => {
-  return fetchApi("/v1/healthcheck", {
-    method: HttpMethod.GET,
-  });
-};
-
-export const subscribeToNewsletter = (email: string): Promise<any> => {
-  return fetchApi("/v1/email/subscribe", {
-    method: HttpMethod.POST,
-    body: { email },
-  });
 };

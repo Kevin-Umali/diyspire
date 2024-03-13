@@ -290,3 +290,17 @@ export interface HealthCheckStatus {
 }
 
 export type ServiceStatusType = "Normal" | "Maintenance" | "Outage";
+
+export enum HttpMethod {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+}
+
+export type FetchApiOptions = {
+  method?: HttpMethod;
+  body?: object;
+  queryParams?: Record<string, string | number | boolean>;
+  accessToken?: string;
+};

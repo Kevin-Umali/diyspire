@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { subscribeToNewsletter } from "@/api";
 import { Label } from "@radix-ui/react-label";
 import { useForm } from "react-hook-form";
 
-import { subscribeToNewsletter } from "@/lib/api-helper";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 

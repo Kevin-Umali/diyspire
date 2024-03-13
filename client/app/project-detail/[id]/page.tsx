@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-
-import { getShareLinkDataMetadata } from "@/lib/api-helper";
+import { getShareLinkDataMetadata } from "@/api";
 
 import ProjectDetailById from "./project-detail-by-id";
 

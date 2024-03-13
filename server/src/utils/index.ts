@@ -49,6 +49,8 @@ export const createRequiredArray = (message: string) =>
     path: [],
   });
 
+export const createNonRequiredArray = () => z.array(z.string().transform(customEscape)).optional().default([]);
+
 export const defaultSchema = z.object({}).strict();
 
 export const parseOrDefault = async <T>(value: any, schema?: ZodType<T, any, any>): Promise<T> => {

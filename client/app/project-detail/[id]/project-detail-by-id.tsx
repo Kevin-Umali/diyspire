@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getShareLinkData } from "@/api";
 import { ProjectDetails, ProjectImages } from "@/interfaces";
 import { AxiosError } from "axios";
 
-import { getShareLinkData } from "@/lib/api-helper";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import ProjectImage from "@/components/project-detail/project-image";
