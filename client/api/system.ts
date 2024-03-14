@@ -1,9 +1,9 @@
-import { HealthCheckResponse, HttpMethod } from "@/interfaces";
+import { ApiResponse, HealthCheckData, HttpMethod } from "@/interfaces";
 
 import { fetchApi } from "@/lib/api-helper";
 
-export const checkBackEndHealthStatus = (): Promise<HealthCheckResponse> => {
-  return fetchApi("/v1/healthcheck", {
+export const checkBackEndHealthStatus = (): Promise<ApiResponse<HealthCheckData>> => {
+  return fetchApi<ApiResponse<HealthCheckData>>("/v1/healthcheck", {
     method: HttpMethod.GET,
   });
 };

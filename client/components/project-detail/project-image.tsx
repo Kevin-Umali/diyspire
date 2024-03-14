@@ -10,7 +10,7 @@ interface ProjectImageProps {
   isLoading: boolean;
   isLoaded: boolean;
   projectTitle: string;
-  relatedImages: ProjectImages | null;
+  relatedImages?: ProjectImages | null;
   onOpen: () => void;
 }
 

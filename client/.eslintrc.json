@@ -1,11 +1,11 @@
 {
   "root": true,
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:tailwindcss/recommended", "prettier"],
-  "plugins": ["@typescript-eslint", "tailwindcss", "import", "unused-imports"],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:tailwindcss/recommended", "prettier", "plugin:@tanstack/eslint-plugin-query/recommended"],
+  "plugins": ["@typescript-eslint", "tailwindcss", "import", "@tanstack/query", "unused-imports"],
   "rules": {
     "import/no-unused-modules": "error",
     "unused-imports/no-unused-imports": "error",
-    "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }],
     "@typescript-eslint/no-explicit-any": "off",
     "no-console": ["warn", { "allow": ["warn", "error", "info", "debug"] }],
     "@next/next/no-html-link-for-pages": "off",

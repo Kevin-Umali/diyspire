@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { logoutUser, refreshToken } from "@/api";
+import { useLogoutUser, useRefreshToken } from "@/api/queries";
 import { AxiosError } from "axios";
 
 import { useToast } from "@/components/ui/use-toast";
@@ -31,10 +31,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const { toast } = useToast();
 
+  const { mutate: mutateRefreshToken } = useRefreshToken();
+  const { mutate: mutateLogoutUser } = useLogoutUser();
+
   useEffect(() => {
-    const checkAuthenticationStatus = async () => {
-      try {
-        const response = await refreshToken();
+    mutateRefreshToken(undefined, {
+      onSuccess: (response, _variables, _context) => {
         if (response.data?.accessToken) {
           setAccessToken(response.data.accessToken);
           setUser({
@@ -42,11 +44,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             username: response.data.username,
           });
         }
-      } catch (error) {}
-    };
-
-    checkAuthenticationStatus();
-  }, []);
+      },
+    });
+  }, [mutateRefreshToken]);
 
   const login = (data: { user: User; token: string }) => {
     setUser(data.user);
@@ -55,26 +55,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = useCallback(async () => {
     if (accessToken) {
-      try {
-        await logoutUser(accessToken);
-
-        setUser(null);
-        setAccessToken(null);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: `API ERROR - ${error.code}`,
-            description: error.response?.data.error || "An error occurred while fetching data from the API.",
-          });
-        } else {
-          toast({
-            title: "Unexpected Error!",
-            description: "An unexpected error occurred. Please try again later.",
-          });
-        }
-      }
+      mutateLogoutUser(accessToken, {
+        onSuccess: () => {
+          setUser(null);
+          setAccessToken(null);
+        },
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            toast({
+              title: `API ERROR - ${error.code}`,
+              description: error.response?.data.error || "An error occurred while fetching data from the API.",
+            });
+          } else {
+            toast({
+              title: "Unexpected Error!",
+              description: "An unexpected error occurred. Please try again later.",
+            });
+          }
+        },
+      });
     }
-  }, [accessToken, toast]);
+  }, [accessToken, mutateLogoutUser, toast]);
 
   const contextValue = useMemo(() => {
     return {

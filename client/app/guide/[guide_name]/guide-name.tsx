@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { getGuideByPath } from "@/api";
-import { GuidePathData } from "@/interfaces";
+import { useGuideByPath } from "@/api/queries";
 import { AxiosError } from "axios";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,9 +13,7 @@ import CustomMarkdown from "@/components/custom-markdown";
 export default function HowToGuideDetail({ params }: { params: { guide_name: string } }) {
   const router = useRouter();
 
-  const [guideDetails, setGuideDetails] = useState<GuidePathData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  const { data: guideDetails, error, isLoading } = useGuideByPath(params.guide_name);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -30,38 +27,28 @@ export default function HowToGuideDetail({ params }: { params: { guide_name: str
       return;
     }
 
-    const fetchGuide = async () => {
-      try {
-        const fetchedGuide = await getGuideByPath(params.guide_name);
-        setGuideDetails(fetchedGuide.data);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: `API ERROR - ${error.code}`,
-            description: error.response?.data.error || "An error occurred while fetching data from the API.",
-          });
-        } else {
-          toast({
-            title: "Unexpected Error!",
-            description: "An unexpected error occurred. Please try again later.",
-          });
-        }
-        router.push("/guide");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (error && error instanceof AxiosError) {
+      toast({
+        title: `API ERROR - ${error.code}`,
+        description: error.response?.data.error || "An error occurred while fetching data from the API.",
+      });
+    }
 
-    fetchGuide();
-  }, [params.guide_name, router, toast]);
+    if (error) {
+      toast({
+        title: "Unexpected Error!",
+        description: "An unexpected error occurred. Please try again later.",
+      });
+    }
+  }, [error, params.guide_name, router, toast]);
 
   return (
     <div className="container mx-auto p-5 sm:p-10">
       <Head>
         {guideDetails && (
           <>
-            <title>{guideDetails.metadata.title}</title>
-            <meta name="description" content={guideDetails.content.substring(0, 150) + " ..."} />
+            <title>{guideDetails.data.metadata.title}</title>
+            <meta name="description" content={guideDetails.data.content.substring(0, 150) + " ..."} />
           </>
         )}
       </Head>
@@ -83,7 +70,7 @@ export default function HowToGuideDetail({ params }: { params: { guide_name: str
 
           {guideDetails && (
             <div className="w-full p-4">
-              <CustomMarkdown content={guideDetails.content} />
+              <CustomMarkdown content={guideDetails.data.content} />
             </div>
           )}
         </>

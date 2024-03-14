@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getShareLinkData } from "@/api";
-import { ProjectDetails, ProjectImages } from "@/interfaces";
+import { useRouter } from "next/navigation";
+import { useShareLinkData } from "@/api/queries";
 import { AxiosError } from "axios";
 
 import { Separator } from "@/components/ui/separator";
@@ -13,66 +13,61 @@ import ProjectSteps from "@/components/project-detail/project-step";
 import ShareDialog from "@/components/project-detail/share-dialog";
 
 export default function ProjectDetailById({ params }: { params: { id: string } }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [projectExplanation, setProjectExplanation] = useState<string | null>(null);
-  const [relatedImages, setRelatedImages] = useState<ProjectImages | null>(null);
   const [shareLink, setShareLink] = useState<string | null>(null);
-  const [project, setProject] = useState<ProjectDetails | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const router = useRouter();
 
   const { toast } = useToast();
 
+  const { data: shareLinkData, error, isLoading } = useShareLinkData(params.id);
+
   useEffect(() => {
-    async function fetchData() {
-      try {
-        if (params.id) {
-          const response = await getShareLinkData(params.id);
-          setProjectExplanation(response.data.explanation);
-          setRelatedImages(response.data.projectImage);
-          setProject(response.data.projectDetails);
-        } else {
-          return;
-        }
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: `API ERROR - ${error.code}`,
-            description: error.response?.data.error || "An error occurred while fetching data from the API.",
-          });
-        } else {
-          toast({
-            title: "Unexpected Error!",
-            description: "An unexpected error occurred. Please try again later.",
-          });
-        }
-      } finally {
-        setIsLoading(false);
-      }
+    if (!params.id) {
+      toast({
+        title: "Oops!",
+        description: "Not found",
+      });
+
+      router.push("/community");
+      return;
     }
 
-    fetchData();
-  }, [params.id, toast]);
+    if (error && error instanceof AxiosError) {
+      toast({
+        title: `API ERROR - ${error.code}`,
+        description: error.response?.data.error || "An error occurred while fetching data from the API.",
+      });
+    }
+
+    if (error) {
+      toast({
+        title: "Unexpected Error!",
+        description: "An unexpected error occurred. Please try again later.",
+      });
+    }
+  }, [error, params.id, router, toast]);
 
   return (
     <div className="container mx-auto py-5 sm:py-10">
-      {project && (
+      {shareLinkData?.data && (
         <>
           <div className="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-2">
             <ProjectImage
               isLoading={isLoading}
               isLoaded={isLoading}
-              relatedImages={relatedImages}
-              projectTitle={project.title}
+              relatedImages={shareLinkData.data.projectImage}
+              projectTitle={shareLinkData.data.projectDetails.title}
               onOpen={() => {
                 setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${params.id}`);
                 setIsOpen(true);
               }}
             />
             <ShareDialog isOpen={isOpen} onClose={() => setIsOpen(false)} isSaving={false} shareLink={shareLink} />
-            <ProjectInfo isLoading={isLoading} project={project} />
+            <ProjectInfo isLoading={isLoading} project={shareLinkData.data.projectDetails} />
           </div>
           <Separator className="mt-10" />
-          <ProjectSteps isLoading={isLoading} projectExplanation={projectExplanation} />
+          <ProjectSteps isLoading={isLoading} projectExplanation={shareLinkData.data.explanation} />
         </>
       )}
     </div>

@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { generateProjectExplanations, saveShareLinkData, searchImages } from "@/api";
+import { useGenerateProjectExplanations, useSaveShareLinkData, useSearchImages } from "@/api/queries";
 import { useAuth } from "@/context/authContext";
 import withAuth from "@/hocs/withAuth";
-import { ProjectDetails, ProjectImages } from "@/interfaces";
+import { ProjectDetails } from "@/interfaces";
 import { AxiosError } from "axios";
 
 import { Separator } from "@/components/ui/separator";
@@ -19,11 +19,6 @@ function ProjectDetail() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [isExplanationLoading, setIsExplanationLoading] = useState(true);
-  const [isImageLoading, setIsImageLoading] = useState(true);
-  const [projectExplanation, setProjectExplanation] = useState<string | null>(null);
-  const [relatedImages, setRelatedImages] = useState<ProjectImages | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [project, setProject] = useState<ProjectDetails | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +27,10 @@ function ProjectDetail() {
 
   const { toast } = useToast();
   const { accessToken } = useAuth();
+
+  const { mutate: mutateGenerateProjectExplanations, data: projectExplanation, isPending: isExplanationPending } = useGenerateProjectExplanations();
+  const { mutate: mutateSaveShareLinkData, isPending: isSavingPending } = useSaveShareLinkData();
+  const { data: relatedImages, error: imageError, isLoading: isImageLoading } = useSearchImages(project?.title ?? "", accessToken!);
 
   useEffect(() => {
     return () => {
@@ -65,93 +64,87 @@ function ProjectDetail() {
     });
   }, [router, searchParams]);
 
-  const fetchProjectExplanation = useCallback(async () => {
-    if (!project) return;
-
-    setIsExplanationLoading(true);
-    try {
-      const explanationResult = await generateProjectExplanations(
+  useEffect(() => {
+    if (project && accessToken) {
+      mutateGenerateProjectExplanations(
         {
-          title: project.title,
-          materials: project.materials,
-          tools: project.tools,
-          time: project.time,
-          budget: project.budget,
-          description: project.description,
+          params: {
+            title: project.title,
+            materials: project.materials,
+            tools: project.tools,
+            time: project.time,
+            budget: project.budget,
+            description: project.description,
+          },
+          accessToken: accessToken!,
         },
-        accessToken!,
+        {
+          onError: (error) => {
+            if (error instanceof AxiosError) {
+              toast({
+                title: `API ERROR - ${error.code}`,
+                description: error.response?.data.error || "An error occurred while fetching data from the API.",
+              });
+            } else {
+              toast({
+                title: "Unexpected Error!",
+                description: "An unexpected error occurred. Please try again later.",
+              });
+            }
+          },
+        },
       );
-      setProjectExplanation(explanationResult.data.explanation);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast({
-          title: `API ERROR - ${error.code}`,
-          description: error.response?.data.error || "An error occurred while fetching data from the API.",
-        });
-      } else {
-        toast({
-          title: "Unexpected Error!",
-          description: "An unexpected error occurred. Please try again later.",
-        });
-      }
-    } finally {
-      setIsExplanationLoading(false);
     }
-  }, [accessToken, project, toast]);
-
-  const fetchProjectImages = useCallback(async () => {
-    if (!project) return;
-
-    setIsImageLoading(true);
-    try {
-      const imageResult = await searchImages(project.title, accessToken!);
-      setRelatedImages(imageResult.data);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast({
-          title: `API ERROR - ${error.code}`,
-          description: error.response?.data.error || "An error occurred while fetching data from the API.",
-        });
-      } else {
-        toast({
-          title: "Unexpected Error!",
-          description: "An unexpected error occurred. Please try again later.",
-        });
-      }
-    } finally {
-      setIsImageLoading(false);
-    }
-  }, [accessToken, project, toast]);
+  }, [accessToken, mutateGenerateProjectExplanations, project, toast]);
 
   useEffect(() => {
-    fetchProjectExplanation();
-    fetchProjectImages();
-  }, [fetchProjectExplanation, fetchProjectImages]);
+    if (imageError && imageError instanceof AxiosError) {
+      toast({
+        title: `API ERROR - ${imageError.code}`,
+        description: imageError.response?.data.error || "An error occurred while fetching data from the API.",
+      });
+    }
+
+    if (imageError) {
+      toast({
+        title: "Unexpected Error!",
+        description: "An unexpected error occurred. Please try again later.",
+      });
+    }
+  }, [imageError, toast]);
 
   const handleSaveProject = useCallback(async () => {
-    try {
-      setIsSaving(true);
-      if (!shareLink && accessToken) {
-        const response = await saveShareLinkData({ projectDetails: project, projectImage: relatedImages, explanation: projectExplanation }, accessToken!);
-
-        setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${response.data.id}`);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast({
-          title: `API ERROR - ${error.code}`,
-          description: error.response?.data.error || "An error occurred while fetching data from the API.",
-        });
-      } else {
-        toast({
-          title: "Unexpected Error!",
-          description: "An unexpected error occurred. Please try again later.",
-        });
-      }
-    } finally {
-      setIsSaving(false);
+    if (!shareLink && accessToken) {
+      mutateSaveShareLinkData(
+        {
+          params: {
+            projectDetails: project,
+            projectImage: relatedImages?.data,
+            explanation: projectExplanation?.data.explanation,
+          },
+          accessToken: accessToken!,
+        },
+        {
+          onSuccess: (response, _variables, _context) => {
+            setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${response.data.id}`);
+          },
+          onError: (error) => {
+            if (error instanceof AxiosError) {
+              toast({
+                title: `API ERROR - ${error.code}`,
+                description: error.response?.data.error || "An error occurred while fetching data from the API.",
+              });
+            } else {
+              toast({
+                title: "Unexpected Error!",
+                description: "An unexpected error occurred. Please try again later.",
+              });
+            }
+          },
+        },
+      );
     }
-  }, [accessToken, project, projectExplanation, relatedImages, shareLink, toast]);
+  }, [accessToken, mutateSaveShareLinkData, project, projectExplanation?.data.explanation, relatedImages?.data, shareLink, toast]);
 
   return (
     <div className="container mx-auto py-5 sm:py-10">
@@ -160,19 +153,19 @@ function ProjectDetail() {
           <div className="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-2">
             <ProjectImage
               isLoading={isImageLoading}
-              isLoaded={isExplanationLoading}
-              relatedImages={relatedImages}
+              isLoaded={isExplanationPending}
+              relatedImages={relatedImages?.data}
               projectTitle={project.title}
               onOpen={() => {
                 handleSaveProject();
                 setIsOpen(true);
               }}
             />
-            <ShareDialog isOpen={isOpen} onClose={() => setIsOpen(false)} isSaving={isSaving} shareLink={shareLink} />
+            <ShareDialog isOpen={isOpen} onClose={() => setIsOpen(false)} isSaving={isSavingPending} shareLink={shareLink} />
             <ProjectInfo isLoading={isImageLoading} project={project} />
           </div>
           <Separator className="mt-10" />
-          <ProjectSteps isLoading={isExplanationLoading} projectExplanation={projectExplanation} />
+          <ProjectSteps isLoading={isExplanationPending} projectExplanation={projectExplanation?.data.explanation ?? ""} />
         </>
       )}
     </div>

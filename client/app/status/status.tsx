@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { checkBackEndHealthStatus } from "@/api";
-import { statusDown } from "@/constants";
-import { HealthCheckData, HealthCheckStatus } from "@/interfaces";
+import { useEffect } from "react";
+import { useCheckBackEndHealthStatus } from "@/api/queries";
+import { HealthCheckStatus } from "@/interfaces";
 import { AxiosError } from "axios";
 import { CheckCircle, XCircle } from "lucide-react";
 
@@ -20,42 +19,31 @@ const renderServiceItem = (status: HealthCheckStatus) => {
 };
 
 const StatusPage: React.FC = () => {
-  const [statusData, setStatusData] = useState<HealthCheckData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
+  const { data: statusData, error, isLoading: loading } = useCheckBackEndHealthStatus();
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const healthCheckResponse = await checkBackEndHealthStatus();
-        setStatusData(healthCheckResponse.data);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: `API ERROR - ${error.code}`,
-            description: error.response?.data.error || "An error occurred while fetching data from the API.",
-          });
-        } else {
-          toast({
-            title: "Unexpected Error!",
-            description: "An unexpected error occurred. Please try again later.",
-          });
-        }
+    if (error && error instanceof AxiosError) {
+      toast({
+        title: `API ERROR - ${error.code}`,
+        description: error.response?.data.error || "An error occurred while fetching data from the API.",
+      });
+    }
 
-        setStatusData(statusDown.data);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [toast]);
+    if (error) {
+      toast({
+        title: "Unexpected Error!",
+        description: "An unexpected error occurred. Please try again later.",
+      });
+    }
+  }, [error, toast]);
 
   if (loading || !statusData) {
     return <Loading />;
   }
 
-  const { message, uptime, responseTime, openaiStatus, prismaStatus, apiStatus } = statusData;
+  const { message, uptime, responseTime, openaiStatus, prismaStatus, apiStatus } = statusData.data;
 
   return (
     <div className="container mx-auto px-5 py-12 sm:px-10">
