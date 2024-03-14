@@ -5,7 +5,7 @@ import CustomMarkdown from "../custom-markdown";
 
 interface ProjectStepsProps {
   isLoading: boolean;
-  projectExplanation: string | null;
+  projectExplanation?: string | null;
 }
 
 const ProjectSteps: React.FC<ProjectStepsProps> = ({ isLoading, projectExplanation }) => {

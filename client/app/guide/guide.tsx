@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
-import { getAllGuides } from "@/api";
-import { GuideData } from "@/interfaces";
+import { useGuides } from "@/api/queries";
 import { AxiosError } from "axios";
 
 import { Label } from "@/components/ui/label";
@@ -12,34 +11,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function HowToGuidesList() {
-  const [guides, setGuides] = useState<GuideData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: guides, error, isLoading: loading } = useGuides();
   const { toast } = useToast();
 
   useEffect(() => {
-    const fetchGuides = async () => {
-      try {
-        const fetchedGuides = await getAllGuides();
-        setGuides(fetchedGuides.data);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          toast({
-            title: `API ERROR - ${error.code}`,
-            description: error.response?.data.error || "An error occurred while fetching data from the API.",
-          });
-        } else {
-          toast({
-            title: "Unexpected Error!",
-            description: "An unexpected error occurred. Please try again later.",
-          });
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (error && error instanceof AxiosError) {
+      toast({
+        title: `API ERROR - ${error.code}`,
+        description: error.response?.data.error || "An error occurred while fetching data from the API.",
+      });
+    }
 
-    fetchGuides();
-  }, [toast]);
+    if (error) {
+      toast({
+        title: "Unexpected Error!",
+        description: "An unexpected error occurred. Please try again later.",
+      });
+    }
+  }, [error, toast]);
 
   return (
     <>
@@ -56,15 +45,15 @@ export default function HowToGuidesList() {
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-full" />
               </div>
-              {i !== guides.length - 1 && <Separator className="my-4" />}
+              {i !== 1 && <Separator className="my-4" />}
             </div>
           ))
         ) : (
           <ul>
-            {guides.map((guide, index) => (
+            {guides?.data.map((guide, index) => (
               <li key={index} className="py-1">
                 <Link href={`/guide/${guide.path}`}>{guide.metadata.title}</Link>
-                {index !== guides.length - 1 && <Separator className="my-4" />}
+                {index !== guides.data.length - 1 && <Separator className="my-4" />}
               </li>
             ))}
           </ul>

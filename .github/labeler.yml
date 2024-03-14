@@ -2,8 +2,7 @@ enhancement:
   - head-branch: ["^feature/"]
 
 bug:
-  - any:
-      - head-branch: ["^bugfix/", "^hotfix/"]
+  - head-branch: ["^bugfix/", "^hotfix/"]
 
 cleanup:
   - head-branch: ["^chore/"]
@@ -12,57 +11,14 @@ client:
   - changed-files:
       - AnyGlobToAnyFile: ["client/**/*"]
 
-client-components:
-  - changed-files:
-      - AnyGlobToAnyFile: ["client/components/**/*"]
-
-client-hooks:
-  - changed-files:
-      - AnyGlobToAnyFile: ["client/hooks/**/*"]
-
-client-config:
-  - changed-files:
-      - AnyGlobToAnyFile: ["client/*.config.js", "client/*.config.ts"]
-
-client-pages:
-  - changed-files:
-      - AnyGlobToAnyFile: ["client/app/**/*"]
-
-client-constants:
-  - changed-files:
-      - AnyGlobToAnyFile: ["client/constants/**/*"]
-
-client-context:
-  - changed-files:
-      - AnyGlobToAnyFile: ["client/context/**/*"]
-
-client-interfaces:
-  - changed-files:
-      - AnyGlobToAnyFile: ["client/interfaces/**/*"]
-
-client-public:
-  - changed-files:
-      - AnyGlobToAnyFile: ["client/public/**/*"]
-
 server:
   - changed-files:
       - AnyGlobToAnyFile: ["server/**/*"]
 
-server-controllers:
-  - changed-files:
-      - AnyGlobToAnyFile: ["server/src/controllers/**/*"]
-
-server-routes:
-  - changed-files:
-      - AnyGlobToAnyFile: ["server/src/routes/**/*"]
-
-server-middleware:
-  - changed-files:
-      - AnyGlobToAnyFile: ["server/src/middleware/**/*"]
-
 docker:
   - changed-files:
-      - AnyGlobToAnyFile: ["server/*.dockerignore", "server/docker-*.sh", "server/Dockerfile*", "server/docker-compose*.yml"]
+      - AnyGlobToAnyFile:
+          ["server/*.dockerignore", "server/docker-*.sh", "server/Dockerfile*", "server/docker-compose*.yml"]
 
 github:
   - changed-files:
@@ -74,7 +30,7 @@ root:
 
 config-utilities:
   - changed-files:
-      - AnyGlobToAnyFile: ["client/lib/**/*", "server/src/utils/**/*"]
+      - AnyGlobToAnyFile: ["**/*.config.js", "**/*.config.ts", "client/lib/**/*", "server/src/utils/**/*"]
 
 database:
   - changed-files:

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { subscribeToNewsletter } from "@/api";
+import { useSubscribeToNewsletter } from "@/api/queries";
 import { Label } from "@radix-ui/react-label";
 import { useForm } from "react-hook-form";
 
@@ -10,18 +9,15 @@ import { Input } from "@/components/ui/input";
 
 const Newsletter: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<{ email: string }>({ criteriaMode: "all" });
-  const [submissionStatus, setSubmissionStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
+
+  const { mutate, isPending, isSuccess, isError } = useSubscribeToNewsletter();
 
   const onSubmit = async (data: { email: string }) => {
-    setSubmissionStatus("pending");
-    try {
-      await subscribeToNewsletter(data.email);
-      setSubmissionStatus("success");
-      reset();
-      setTimeout(() => setSubmissionStatus("idle"), 5000);
-    } catch (error) {
-      setSubmissionStatus("error");
-    }
+    mutate(data.email, {
+      onSuccess: () => {
+        reset();
+      },
+    });
   };
 
   return (
@@ -48,11 +44,11 @@ const Newsletter: React.FC = () => {
             className="w-full rounded-l-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-offset-2 sm:flex-1"
           />
           <Button type="submit" className="mt-4 w-full rounded-lg px-8 py-2 transition-colors sm:mt-0 sm:w-auto">
-            {submissionStatus === "pending" ? "Subscribing..." : "Subscribe"}
+            {isPending ? "Subscribing..." : "Subscribe"}
           </Button>
         </div>
-        {submissionStatus === "success" && <p className="mt-4 text-green-500">Thanks for subscribing!</p>}
-        {submissionStatus === "error" && <p className="mt-4 text-red-500">Failed to subscribe or Email already subscribed. Please try again.</p>}
+        {isSuccess && <p className="mt-4 text-green-500">Thanks for subscribing!</p>}
+        {isError && <p className="mt-4 text-red-500">Failed to subscribe or Email already subscribed. Please try again.</p>}
       </div>
     </form>
   );

@@ -61,18 +61,13 @@ export interface Budget {
 
 /* API RESPONSE INTERFACE */
 
-export interface CounterResponse {
+export interface ApiResponse<T> {
   success: boolean;
-  data: CounterData;
+  data: T;
 }
 
 export interface CounterData {
   totalCount: number;
-}
-
-export interface ShareLinkDataResponse {
-  success: boolean;
-  data: ShareLinkData;
 }
 
 export interface ShareLinkData {
@@ -125,17 +120,7 @@ export interface ProjectImageUsers {
   username: string;
 }
 
-export interface ShareLinkDataMetadataResponse {
-  success: boolean;
-  data: ProjectDetailsMetadata;
-}
-
 export type ProjectDetailsMetadata = Pick<ProjectDetails, "title" | "tags" | "description">;
-
-export interface GuideResponse {
-  success: boolean;
-  data: GuideData[];
-}
 
 export interface GuideData {
   path: string;
@@ -144,11 +129,6 @@ export interface GuideData {
 
 export interface GuideMetadata {
   title: string;
-}
-
-export interface GuidePathResponse {
-  success: boolean;
-  data: GuidePathData;
 }
 
 export interface GuidePathData {
@@ -166,19 +146,9 @@ export interface GuidePathMetadata {
   imageUrl?: string | null;
 }
 
-export interface GuidePathMetadataResponse {
-  success: boolean;
-  data: GuidePathMetadataData;
-}
-
 export interface GuidePathMetadataData {
   path: string;
   metadata: GuidePathMetadata;
-}
-
-export interface GeneratedIdeaResponse {
-  success: boolean;
-  data: GeneratedIdeaData;
 }
 
 export interface GeneratedIdeaData {
@@ -195,34 +165,14 @@ export interface GeneratedIdea {
   description: string;
 }
 
-export interface ImageSearchResponse {
-  success: boolean;
-  data: ImageSearchData;
-}
-
 export type ImageSearchData = ProjectImages;
-
-export interface IdeaExplanationResponse {
-  success: boolean;
-  data: IdeaExplanationData;
-}
 
 export interface IdeaExplanationData {
   explanation: string;
 }
 
-export interface ShareLinkResponse {
-  success: boolean;
-  data: ShareLinkResponseData;
-}
-
 export interface ShareLinkResponseData {
   id: string;
-}
-
-export interface CommunityIdeaResponse {
-  success: boolean;
-  data: CommunityIdeaData[];
 }
 
 export interface CommunityIdeaData {
@@ -244,33 +194,6 @@ type StatusType = "Normal" | "Maintenance" | "Outage";
 export interface ServiceStatusProps {
   serviceName: string;
   status: StatusType;
-}
-
-export interface StatusDataResponse {
-  success: boolean;
-  data: {
-    uptime: number;
-    responseTime: number[];
-    message: string;
-    timeStamp: number;
-    apiStatus: {
-      available: boolean;
-      message: string;
-    };
-    prismaStatus: {
-      available: boolean;
-      message: string;
-    };
-    openaiStatus: {
-      available: boolean;
-      message: string;
-    };
-  };
-}
-
-export interface HealthCheckResponse {
-  success: boolean;
-  data: HealthCheckData;
 }
 
 export interface HealthCheckData {

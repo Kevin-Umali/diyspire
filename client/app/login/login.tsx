@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { loginUser, registerUser } from "@/api";
+import { useLoginUser, useRegisterUser } from "@/api/queries";
 import { useAuth } from "@/context/authContext";
 import { AxiosError } from "axios";
 
@@ -13,7 +13,6 @@ import SignIn from "@/components/login/signin";
 import SignUp from "@/components/login/signup";
 
 export default function Login() {
-  const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [tab, setTab] = useState("login");
 
@@ -23,6 +22,9 @@ export default function Login() {
 
   const { toast } = useToast();
   const { login, isAuthenticated } = useAuth();
+
+  const { mutate: mutateLogin, isPending: loginPending } = useLoginUser();
+  const { mutate: mutateRegister, isPending: registerPending } = useRegisterUser();
 
   useEffect(() => {
     const queryString = new URLSearchParams(searchParams).toString();
@@ -36,78 +38,77 @@ export default function Login() {
   }, [isAuthenticated, redirectParams, router]);
 
   const handleLoginSubmit = async (data: { username: string; password: string }) => {
-    setIsLoading(true);
-    try {
-      const response = await loginUser(data);
-      if (response?.data && login) {
-        login({
-          user: {
-            id: response.data.id,
-            username: response.data.username,
-          },
-          token: response.data.accessToken,
-        });
+    mutateLogin(data, {
+      onSuccess(response, _variables, _context) {
+        if (response?.data && login) {
+          login({
+            user: {
+              id: response.data.id,
+              username: response.data.username,
+            },
+            token: response.data.accessToken,
+          });
+        }
+
         router.push(`/?${redirectParams}`);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast({
-          title: `API ERROR - ${error.code}`,
-          description: error.response?.data.error || "An error occurred while fetching data from the API.",
-        });
-      } else {
-        toast({
-          title: "Unexpected Error!",
-          description: "An unexpected error occurred. Please try again later.",
-        });
-      }
-    } finally {
-      setIsLoading(false);
-    }
+      },
+      onError: (error) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: `API ERROR - ${error.code}`,
+            description: error.response?.data.error || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
+      },
+    });
   };
 
   const handleSignupSubmit = async (data: { signupUsername: string; signupPassword: string }) => {
-    setIsLoading(true);
-    try {
-      const response = await registerUser(data);
-      if (response?.data) {
-        setSuccessMessage(response.data.message);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast({
-          title: `API ERROR - ${error.code}`,
-          description: error.response?.data.error || "An error occurred while fetching data from the API.",
-        });
-      } else {
-        toast({
-          title: "Unexpected Error!",
-          description: "An unexpected error occurred. Please try again later.",
-        });
-      }
-    } finally {
-      setIsLoading(false);
-    }
+    mutateRegister(data, {
+      onSuccess(response, _variables, _context) {
+        if (response?.data) {
+          setSuccessMessage(response.data.message);
+        }
+      },
+      onError: (error) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: `API ERROR - ${error.code}`,
+            description: error.response?.data.error || "An error occurred while fetching data from the API.",
+          });
+        } else {
+          toast({
+            title: "Unexpected Error!",
+            description: "An unexpected error occurred. Please try again later.",
+          });
+        }
+      },
+    });
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="login" disabled={isLoading}>
+          <TabsTrigger value="login" disabled={loginPending || registerPending}>
             Login
           </TabsTrigger>
-          <TabsTrigger value="signup" disabled={isLoading}>
+          <TabsTrigger value="signup" disabled={registerPending || loginPending}>
             Signup
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="login">
-          <SignIn isLoading={isLoading} handleLoginSubmit={handleLoginSubmit} />
+          <SignIn isLoading={loginPending} handleLoginSubmit={handleLoginSubmit} />
         </TabsContent>
 
         <TabsContent value="signup">
-          <SignUp isLoading={isLoading} successMessage={successMessage} handleSignupSubmit={handleSignupSubmit} />
+          <SignUp isLoading={registerPending} successMessage={successMessage} handleSignupSubmit={handleSignupSubmit} />
         </TabsContent>
       </Tabs>
 

@@ -1,4 +1,4 @@
-import { Budget, Categories, Commit, FAQ, Footer, HealthCheckResponse, ServiceStatusType, Steps } from "@/interfaces";
+import { ApiResponse, Budget, Categories, Commit, FAQ, Footer, HealthCheckData, ServiceStatusType, Steps } from "@/interfaces";
 import {
   Activity,
   Asterisk,
@@ -301,7 +301,7 @@ export const statusIcons: Record<ServiceStatusType, React.ElementType> = {
   Outage: XCircle,
 };
 
-export const statusDown: HealthCheckResponse = {
+export const statusDown: ApiResponse<HealthCheckData> = {
   success: true,
   data: {
     uptime: 0,

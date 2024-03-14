@@ -1,8 +1,11 @@
-import { CommunityIdeaResponse, CounterResponse, GeneratedIdeaResponse, HttpMethod, IdeaExplanationResponse } from "@/interfaces";
+import { ApiResponse, CommunityIdeaData, CounterData, GeneratedIdeaData, HttpMethod, IdeaExplanationData } from "@/interfaces";
 
 import { fetchApi } from "@/lib/api-helper";
 
-export const generateProjectIdeas = (
+export const generateProjectIdeas = ({
+  params,
+  accessToken,
+}: {
   params: {
     materials: string[];
     onlySpecified: boolean;
@@ -14,30 +17,33 @@ export const generateProjectIdeas = (
     budget: string | number;
     currency: string;
     endPurpose: string;
-  },
-  accessToken: string,
-): Promise<GeneratedIdeaResponse> => {
+  };
+  accessToken: string;
+}): Promise<ApiResponse<GeneratedIdeaData>> => {
   const time = params.timeValue && params.timeUnit ? `${params.timeValue} ${params.timeUnit}` : "";
-  return fetchApi<GeneratedIdeaResponse>("/v1/generate/idea", {
+  return fetchApi<ApiResponse<GeneratedIdeaData>>("/v1/generate/idea", {
     method: HttpMethod.POST,
     body: { ...params, time },
     accessToken,
   });
 };
 
-export const generateProjectExplanations = (
-  params: { title: string; materials: string[]; tools: string[]; time: string; budget: string; description: string },
-  accessToken: string,
-): Promise<IdeaExplanationResponse> => {
-  return fetchApi<IdeaExplanationResponse>("/v1/generate/explain", {
+export const generateProjectExplanations = ({
+  params,
+  accessToken,
+}: {
+  params: { title: string; materials: string[]; tools: string[]; time: string; budget: string; description: string };
+  accessToken: string;
+}): Promise<ApiResponse<IdeaExplanationData>> => {
+  return fetchApi<ApiResponse<IdeaExplanationData>>("/v1/generate/explain", {
     method: HttpMethod.POST,
     body: params,
     accessToken,
   });
 };
 
-export const getTotalCountOfGeneratedIdea = (): Promise<CounterResponse> => {
-  return fetchApi<CounterResponse>("/v1/counter");
+export const getTotalCountOfGeneratedIdea = (): Promise<ApiResponse<CounterData>> => {
+  return fetchApi<ApiResponse<CounterData>>("/v1/counter");
 };
 
 export const incrementCounterOfGeneratedIdea = (accessToken: string): Promise<void> => {
@@ -49,8 +55,8 @@ export const getCommunityGeneratedIdea = (
     limit?: number;
     orderBy?: string;
   } = {},
-): Promise<CommunityIdeaResponse> => {
-  return fetchApi<CommunityIdeaResponse>("/v1/community", {
+): Promise<ApiResponse<CommunityIdeaData[]>> => {
+  return fetchApi<ApiResponse<CommunityIdeaData[]>>("/v1/community", {
     queryParams: params,
   });
 };

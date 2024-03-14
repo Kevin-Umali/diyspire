@@ -1,13 +1,12 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
-import { generateProjectIdeas, incrementCounterOfGeneratedIdea } from "@/api";
+import { useGenerateProjectIdeas, useIncrementCounterOfGeneratedIdea } from "@/api/queries";
 import { categories } from "@/constants";
 import { useAuth } from "@/context/authContext";
 import { useCurrency } from "@/context/currencyContext";
-import { GeneratedIdea } from "@/interfaces";
 import { AxiosError } from "axios";
 import { RefreshCcw } from "lucide-react";
 
@@ -41,11 +40,6 @@ export default function Generate() {
   const [showAdvancedOptions, setShowAdvancedOptions] = useURLState<boolean>("show_advanced_options", false);
   const [isSafe, setIsSafe] = useURLState<boolean>("is_safe", false);
 
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isGenerated, setIsGenerated] = useState(false);
-
-  const [projects, setProjects] = useState<GeneratedIdea[] | never[]>([]);
-
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -54,25 +48,47 @@ export default function Generate() {
   const { isAuthenticated, accessToken } = useAuth();
   const { currency } = useCurrency();
 
+  const { mutate, data: projects, isPending, isSuccess, reset } = useGenerateProjectIdeas();
+  const incrementCounterMutation = useIncrementCounterOfGeneratedIdea();
+
   const toggleAdvancedOptions = () => {
     setShowAdvancedOptions(!showAdvancedOptions);
   };
 
+  const incrementCounter = useCallback(
+    (accessToken: string) => {
+      incrementCounterMutation.mutate(accessToken, {
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            toast({
+              title: `Increment Counter Error - ${error.code}`,
+              description: error.response?.data.error || "An error occurred while incrementing the idea generation counter.",
+            });
+          } else {
+            toast({
+              title: "Unexpected Error!",
+              description: "An unexpected error occurred during the counter increment. Please try again later.",
+            });
+          }
+        },
+      });
+    },
+    [incrementCounterMutation, toast],
+  );
+
   const handleGenerateProjects = useCallback(async () => {
-    try {
-      if (!isAuthenticated) {
-        const queryString: string = new URLSearchParams(searchParams).toString();
-        const redirectPath = queryString ? `/login?${queryString}` : "/login";
-        router.push(redirectPath);
-        return;
-      }
+    if (!isAuthenticated) {
+      const queryString: string = new URLSearchParams(searchParams).toString();
+      const redirectPath = queryString ? `/login?${queryString}` : "/login";
+      router.push(redirectPath);
+      return;
+    }
 
-      if (!isSafe) throw new Error("Please check the safety checkbox");
+    if (!isSafe) throw new Error("Please check the safety checkbox");
 
-      setIsGenerating(true);
-
-      const response = await generateProjectIdeas(
-        {
+    mutate(
+      {
+        params: {
           materials,
           onlySpecified,
           difficulty: selectedDifficulty,
@@ -84,30 +100,49 @@ export default function Generate() {
           currency,
           endPurpose: purpose,
         },
-        accessToken!,
-      );
-
-      if (response.data?.ideas) {
-        setProjects(response.data.ideas);
-        await incrementCounterOfGeneratedIdea(accessToken!);
-        setIsGenerated(true);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast({
-          title: `API ERROR - ${error.code}`,
-          description: error.response?.data.error || "An error occurred while fetching data from the API.",
-        });
-      } else {
-        toast({
-          title: "Unexpected Error!",
-          description: "An unexpected error occurred. Please try again later.",
-        });
-      }
-    } finally {
-      setIsGenerating(false);
-    }
-  }, [isAuthenticated, isSafe, materials, onlySpecified, selectedDifficulty, selectedCategory, tools, timeValue, timeUnit, budget, currency, purpose, accessToken, searchParams, router, toast]);
+        accessToken: accessToken!,
+      },
+      {
+        onSuccess: async (response, _variables, _context) => {
+          if (response.data?.ideas) {
+            incrementCounter(accessToken!);
+          }
+        },
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            toast({
+              title: `API ERROR - ${error.code}`,
+              description: error.response?.data.error || "An error occurred while fetching data from the API.",
+            });
+          } else {
+            toast({
+              title: "Unexpected Error!",
+              description: "An unexpected error occurred. Please try again later.",
+            });
+          }
+        },
+      },
+    );
+  }, [
+    isAuthenticated,
+    isSafe,
+    mutate,
+    materials,
+    onlySpecified,
+    selectedDifficulty,
+    selectedCategory,
+    tools,
+    timeValue,
+    timeUnit,
+    budget,
+    currency,
+    purpose,
+    accessToken,
+    searchParams,
+    router,
+    incrementCounter,
+    toast,
+  ]);
 
   const advancedOptions = useMemo(
     () => (
@@ -133,16 +168,16 @@ export default function Generate() {
   );
 
   const renderContent = () => {
-    if (isGenerating) {
+    if (isPending) {
       return <GenerateLoading />;
     }
 
-    if (isGenerated) {
+    if (isSuccess) {
       return (
         <div className="mb-4">
-          <ProjectTabs projects={projects} />
+          <ProjectTabs projects={projects.data.ideas} />
           <div className="flex justify-center space-x-2">
-            <Button className="mt-4 w-full px-4 py-2" onClick={() => setIsGenerated(false)}>
+            <Button className="mt-4 w-full px-4 py-2" onClick={() => reset()}>
               <RefreshCcw className="mr-2 size-5" />
               <span>Generate Again</span>
             </Button>
