@@ -15,7 +15,8 @@
     "sourceMap": true,
     "lib": ["ES2022"],
     "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true
   },
   "include": ["src/**/*", "src/__tests__/**/*.ts", "prisma/*", "@types"],
   "exclude": ["node_modules", "dist"]

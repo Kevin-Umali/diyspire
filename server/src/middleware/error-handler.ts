@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { sendError } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-const errorHandlerMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
+const errorHandlerMiddleware = (err: any, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
-  sendError(res, "Internal Server Error");
+  return sendResponse(res, { success: false, error: "Internal Server Error", message: process.env.NODE_ENV === "production" ? "*" : err.stack });
 };
 
 export default errorHandlerMiddleware;

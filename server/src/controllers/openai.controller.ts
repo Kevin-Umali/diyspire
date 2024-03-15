@@ -2,7 +2,7 @@ import { NextFunction, Response } from "express";
 import OpenAI from "openai";
 import { BodyRequest } from "../middleware/schema-validate";
 import { ExplainRequest, IdeaRequest } from "../schema/openai.schema";
-import { sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response, next: NextFunction) => {
   try {
@@ -71,7 +71,7 @@ export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response,
     });
 
     if (completion?.choices?.[0]?.message?.content) {
-      sendSuccess(res, JSON.parse(completion.choices[0].message.content));
+      return sendResponse(res, { success: true, data: JSON.parse(completion.choices[0].message.content) });
     }
   } catch (error) {
     next(error);
@@ -124,9 +124,7 @@ export const explainProjectByTitle = async (req: BodyRequest<ExplainRequest>, re
     });
 
     if (completion?.choices?.[0]?.message?.content) {
-      sendSuccess(res, {
-        explanation: completion.choices[0].message.content,
-      });
+      return sendResponse(res, { success: true, data: { explanation: completion.choices[0].message.content } });
     }
   } catch (error) {
     next(error);

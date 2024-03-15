@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import OpenAI from "openai";
 import { PrismaClient } from "@prisma/client";
-import { sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 export const healthCheck = async (req: Request, res: Response, _next: NextFunction) => {
   const prismaStatus = { name: "Prisma", status: "Outage", message: "Prisma is down" };
@@ -20,9 +20,9 @@ export const healthCheck = async (req: Request, res: Response, _next: NextFuncti
   }
 
   if (openaiResult.status === "fulfilled") {
-    const openaiValue = openaiResult.value as { status: { indicator: string } };
+    const openaiValue = openaiResult.value as { status: { indicator: string; description: string } };
     openaiStatus.status = openaiValue.status.indicator === "none" ? "Normal" : "Outage";
-    openaiStatus.message = "Openai is operational";
+    openaiStatus.message = openaiValue.status.indicator === "none" ? "Openai is operational" : openaiValue.status.description;
   } else {
     console.error("OpenAI error:", openaiResult.reason);
   }
@@ -42,8 +42,8 @@ export const healthCheck = async (req: Request, res: Response, _next: NextFuncti
   };
 
   if (allServicesOperational) {
-    return sendSuccess(res, response);
+    return sendResponse(res, { success: true, data: response });
   } else {
-    return sendSuccess(res, response, 200);
+    return sendResponse(res, { success: true, data: response });
   }
 };

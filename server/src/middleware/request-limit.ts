@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
-import { sendError } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 const keyGenerator = (request: Request, _response: Response): string => {
   if (!request.ip) {
     console.error("Warning: request.ip is missing!");
@@ -16,7 +15,7 @@ const limiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (_req: Request, res: Response) => sendError(res, "You can't make any more requests at the moment. Try again later", 429),
+  handler: (_req: Request, res: Response) => sendResponse(res, { success: false, error: "Too many requests, please try again later." }, 429),
   keyGenerator: keyGenerator,
 });
 

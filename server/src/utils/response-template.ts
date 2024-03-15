@@ -1,19 +1,30 @@
 import { Response } from "express";
 
-interface SuccessResponseData {
-  [key: string]: any;
+interface BaseResponse {
+  success: boolean;
 }
 
-export function sendSuccess(res: Response, data: SuccessResponseData, status: number = 200) {
-  res.status(status).setHeader("Content-Type", "application/json").json({
-    success: true,
-    data,
-  });
+interface SuccessData<T> {
+  data?: T;
 }
 
-export function sendError(res: Response, message: string, status: number = 500) {
-  res.status(status).setHeader("Content-Type", "application/json").json({
-    success: false,
-    error: message,
-  });
+type ErrorData = { error: string | object };
+
+type CombinedResponse<T> = T extends { success: true } ? SuccessData<T> : ErrorData;
+
+interface ResponseOptions {
+  headers?: Record<string, string>;
 }
+
+const sendResponse = <T extends BaseResponse>(res: Response, response: T, status: number = response.success ? 200 : 500, options?: ResponseOptions): void => {
+  res.status(status).setHeader("Content-Type", "application/json");
+  if (options?.headers) {
+    Object.entries(options.headers).forEach(([key, value]) => {
+      res.setHeader(key, value);
+    });
+  }
+
+  res.json(response as unknown as CombinedResponse<T>);
+};
+
+export default sendResponse;

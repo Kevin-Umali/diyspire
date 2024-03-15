@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 
 const getConditionalCache = (duration: string) => {
   if (process.env.NODE_ENV === "test") {
-    return (req: Request, res: Response, next: NextFunction) => next();
+    return (_req: Request, _res: Response, next: NextFunction) => next();
   }
 
   const cacheOptions = {

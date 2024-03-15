@@ -3,7 +3,7 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { ZodError, ZodType } from "zod";
 import { parseOrDefault } from "../utils";
-import { sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 interface ZodRequest<B = any, Q extends ParsedQs = ParsedQs, P extends ParamsDictionary = ParamsDictionary> extends Request {
   [x: string]: any;
@@ -33,9 +33,10 @@ const zodValidateMiddleware =
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        return sendSuccess(
+        return sendResponse(
           res,
           {
+            success: false,
             errors: error.issues.map((e) => ({ path: e.path[0], message: e.message })),
           },
           400,

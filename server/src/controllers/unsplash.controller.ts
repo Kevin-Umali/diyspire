@@ -3,7 +3,7 @@ import { NextFunction, Response } from "express";
 import { createApi } from "unsplash-js";
 import { QueryRequest } from "../middleware/schema-validate";
 import { UnsplashImageSearchQueryRequest } from "../schema/unsplash.schema";
-import { sendError, sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 export const searchImages = async (req: QueryRequest<UnsplashImageSearchQueryRequest>, res: Response, next: NextFunction) => {
   try {
@@ -18,7 +18,7 @@ export const searchImages = async (req: QueryRequest<UnsplashImageSearchQueryReq
     });
 
     if (result.errors) {
-      sendSuccess(res, { errors: result.errors }, 400);
+      return sendResponse(res, { success: false, error: result.errors }, 400);
     } else {
       const maxLength = result.response.results.length < 5 ? result.response.results.length : 6;
       const randomIndex = randomInt(maxLength);
@@ -29,22 +29,25 @@ export const searchImages = async (req: QueryRequest<UnsplashImageSearchQueryReq
           downloadLocation: photo.links.download_location,
         });
 
-        sendSuccess(res, {
-          id: photo.id,
-          width: photo.width,
-          height: photo.height,
-          color: photo.color,
-          alt_description: photo.alt_description,
-          urls: photo.urls,
-          links: photo.links,
-          user: {
-            username: photo.user.username,
-            name: photo.user.name,
-            link: photo.user.links.html,
+        return sendResponse(res, {
+          success: true,
+          data: {
+            id: photo.id,
+            width: photo.width,
+            height: photo.height,
+            color: photo.color,
+            alt_description: photo.alt_description,
+            urls: photo.urls,
+            links: photo.links,
+            user: {
+              username: photo.user.username,
+              name: photo.user.name,
+              link: photo.user.links.html,
+            },
           },
         });
       } else {
-        sendError(res, "No photos found for the given query.", 400);
+        return sendResponse(res, { success: false, error: "No photos found for the given query." }, 400);
       }
     }
   } catch (error) {

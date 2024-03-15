@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { QueryRequest } from "../middleware/schema-validate";
 import { CommunityGeneratedIdeaRequest } from "../schema/community.schema";
 import { validateQueryFilter } from "../utils";
-import { sendError, sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGeneratedIdeaRequest>, res: Response, next: NextFunction) => {
   try {
@@ -32,8 +32,7 @@ export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGener
     });
 
     if (projects.length <= 0) {
-      sendError(res, "No community project exist", 404);
-      return;
+      return sendResponse(res, { success: false, error: "No community project exist" }, 404);
     }
 
     const transformedProjects = projects.map((project) => ({
@@ -48,7 +47,7 @@ export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGener
       createdAt: project.createdAt,
     }));
 
-    return sendSuccess(res, transformedProjects);
+    return sendResponse(res, { success: true, data: transformedProjects });
   } catch (error) {
     next(error);
   }

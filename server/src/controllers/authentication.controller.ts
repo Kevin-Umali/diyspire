@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 import { BodyRequest } from "../middleware/schema-validate";
 import { UserRequest } from "../schema/authentication.schema";
 import { generateTokens, refreshTokenExpiry } from "../utils/generate-tokens";
-import { sendError, sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response, next: NextFunction) => {
   try {
@@ -21,13 +21,11 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
     });
 
     if (!user || !(await compare(password, user.password))) {
-      sendError(res, "Invalid credentials", 400);
-      return;
+      return sendResponse(res, { success: false, error: "Invalid credentials" }, 400);
     }
 
     if (user.banned) {
-      sendError(res, "User is banned.", 401);
-      return;
+      return sendResponse(res, { success: false, error: "User is banned." }, 401);
     }
 
     const { accessToken, refreshToken } = await generateTokens({ options: { id: user.id, username: user.username } });
@@ -59,7 +57,7 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
       expires: refreshTokenExpiry(),
     });
 
-    return sendSuccess(res, { id: user.id, username: user.username, accessToken });
+    return sendResponse(res, { success: true, data: { id: user.id, username: user.username, accessToken } });
   } catch (error) {
     next(error);
   }
@@ -80,10 +78,10 @@ export const registerUser = async (req: BodyRequest<UserRequest>, res: Response,
       },
     });
 
-    return sendSuccess(res, { message: "User registered successfully! Please log in." }, 201);
+    return sendResponse(res, { success: true, message: "User registered successfully! Please log in." }, 201);
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
-      return sendError(res, "Username already exists.", 400);
+      return sendResponse(res, { success: false, error: "Username already exists." }, 400);
     } else {
       next(error);
     }
@@ -97,8 +95,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     if (!refreshToken) {
       res.clearCookie("refreshToken");
 
-      sendError(res, "Refresh token is required", 400);
-      return;
+      return sendResponse(res, { success: false, error: "Refresh token is required" }, 400);
     }
 
     const prisma: PrismaClient = req.app.get("prisma");
@@ -115,8 +112,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     if (!refreshTokenInDb || refreshTokenInDb.userId !== decoded.id || refreshTokenInDb.user.username !== decoded.username) {
       res.clearCookie("refreshToken");
 
-      sendError(res, "Invalid refresh token.", 401);
-      return;
+      return sendResponse(res, { success: false, error: "Invalid refresh token." }, 401);
     }
 
     if (new Date(refreshTokenInDb.expiresAt) < new Date() || refreshTokenInDb.user.banned) {
@@ -127,8 +123,8 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       res.clearCookie("refreshToken");
 
       const errorMessage = refreshTokenInDb.user.banned ? "User is banned." : "Refresh token has expired.";
-      sendError(res, errorMessage, 401);
-      return;
+
+      return sendResponse(res, { success: false, error: errorMessage }, 401);
     }
 
     const { accessToken } = await generateTokens({ options: { id: decoded.id, username: decoded.username } });
@@ -141,16 +137,17 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       expires: refreshTokenInDb.expiresAt,
     });
 
-    return sendSuccess(res, { id: refreshTokenInDb.user.id, username: refreshTokenInDb.user.username, accessToken });
+    return sendResponse(res, { success: true, data: { id: refreshTokenInDb.user.id, username: refreshTokenInDb.user.username, accessToken } });
   } catch (error) {
     if (error instanceof TokenExpiredError) {
       res.clearCookie("refreshToken");
-      return sendError(res, "Refresh token has expired. Please re-login.", 401);
+      return sendResponse(res, { success: false, error: "Refresh token has expired. Please re-login." }, 401);
     }
 
     if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
-      return sendError(res, "Token issue. Please re-login.", 401);
+      return sendResponse(res, { success: false, error: "Token issue. Please re-login." }, 401);
     }
+
     next(error);
   }
 };
@@ -169,7 +166,7 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
 
     res.clearCookie("refreshToken");
 
-    return sendSuccess(res, { message: "Logged out successfully." });
+    return sendResponse(res, { success: true, message: "Logged out successfully." });
   } catch (error) {
     next(error);
   }

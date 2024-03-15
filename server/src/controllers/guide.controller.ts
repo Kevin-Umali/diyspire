@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { QueryParamsRequest } from "../middleware/schema-validate";
 import { GetHowToGuideByPathParamsRequest, GetHowToGuideByPathQueryRequest } from "../schema/guide.schema";
-import { sendError, sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 export async function getHowToGuideByPath(req: QueryParamsRequest<GetHowToGuideByPathQueryRequest, GetHowToGuideByPathParamsRequest>, res: Response, next: NextFunction) {
   try {
@@ -23,11 +23,10 @@ export async function getHowToGuideByPath(req: QueryParamsRequest<GetHowToGuideB
       });
 
       if (!guideMetadata?.metadata) {
-        sendError(res, "Metadata not found.", 404);
-        return;
+        return sendResponse(res, { success: false, error: "Metadata not found." }, 404);
       }
 
-      return sendSuccess(res, guideMetadata);
+      return sendResponse(res, { success: true, data: guideMetadata });
     }
 
     const guide = await prisma.howToGuide.findUnique({
@@ -40,11 +39,10 @@ export async function getHowToGuideByPath(req: QueryParamsRequest<GetHowToGuideB
     });
 
     if (!guide) {
-      sendError(res, "How To Guide not found.", 404);
-      return;
+      return sendResponse(res, { success: false, error: "How To Guide not found." }, 404);
     }
 
-    return sendSuccess(res, guide);
+    return sendResponse(res, { success: true, data: guide });
   } catch (error) {
     next(error);
   }
@@ -66,11 +64,10 @@ export async function getAllGuidePaths(req: Request, res: Response, next: NextFu
     });
 
     if (!paths || paths.length === 0) {
-      sendError(res, "No How To Guides found.", 404);
-      return;
+      return sendResponse(res, { success: false, error: "No How To Guides found." }, 404);
     }
 
-    return sendSuccess(res, paths);
+    return sendResponse(res, { success: true, data: paths });
   } catch (error) {
     next(error);
   }

@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express, Response } from "express";
 import helmet from "helmet";
+import morgan from "morgan";
 import cron from "node-cron";
 import * as nodeFetch from "node-fetch";
 import OpenAI from "openai";
@@ -16,31 +17,24 @@ import userAgentMiddleware from "./middleware/useragent-parser";
 import { authenticationRoutes, communityRoutes, counterRoutes, emailRoutes, guideRoutes, healthcheckRoutes, openaiRoutes, shareRoutes, unsplashRoutes } from "./routes/index.routes";
 import { performMonthlyDiyEmailDistribution } from "./services/monthly-diy-project.services";
 import { allowedOrigins } from "./utils";
-import { sendError } from "./utils/response-template";
+import sendResponse from "./utils/response-template";
 import "./utils/env";
+import logger from "./utils/logger";
 
 dotenv.config();
 
+const app: Express = express();
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
 const unsplash = createApi({
   accessKey: process.env.UNSPLASH_ACCESS_KEY,
   fetch: nodeFetch.default as unknown as typeof fetch,
 });
-
 const prisma = new PrismaClient();
 
-const app: Express = express();
-
-app.set("openai", openai);
-app.set("unsplash", unsplash);
-app.set("prisma", prisma);
-
-app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
+app.use(compression());
 app.use(helmet());
-
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -58,11 +52,17 @@ app.use(
 );
 
 app.use(express.json());
-app.use(compression());
+app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
+
+app.use(limiter);
+
+app.set("openai", openai);
+app.set("unsplash", unsplash);
+app.set("prisma", prisma);
 
 app.use(userAgentMiddleware);
 
-app.use(limiter);
+app.use(morgan("tiny", { skip: () => process.env.NODE_ENV === "test", stream: { write: (message: string) => logger.info(message.trim()) } }));
 
 cron.schedule(process.env.CRON_SCHEDULE, async () => await performMonthlyDiyEmailDistribution(prisma, openai, unsplash), {
   scheduled: true,
@@ -70,11 +70,12 @@ cron.schedule(process.env.CRON_SCHEDULE, async () => await performMonthlyDiyEmai
 });
 
 app.use("/api/v1/healthcheck", healthcheckRoutes);
-
 app.use("/api/v1/auth", authenticationRoutes);
 app.use("/api/v1/email", emailRoutes);
+app.use("/api/v1/counter", counterRoutes);
 
 const oneDayCacheMiddleware = getConditionalCache("24 hours");
+
 app.use("/api/v1/guide", oneDayCacheMiddleware, guideRoutes);
 app.use("/api/v1/image", oneDayCacheMiddleware, unsplashRoutes);
 app.use("/api/v1/community", oneDayCacheMiddleware, communityRoutes);
@@ -85,11 +86,7 @@ app.use("/api/v1/share", twentyFourCacheMiddleware, shareRoutes);
 const openaiCacheMiddleware = getConditionalCache("2 hours");
 app.use("/api/v1/generate", openaiCacheMiddleware, openaiRoutes);
 
-app.use("/api/v1/counter", counterRoutes);
-
-app.get("*", (_, res: Response) => {
-  sendError(res, "API Path Not Found", 404);
-});
+app.get("*", (_, res: Response) => sendResponse(res, { success: false, error: "API Path Not Found" }, 404));
 
 app.use(errorHandlerMiddleware);
 

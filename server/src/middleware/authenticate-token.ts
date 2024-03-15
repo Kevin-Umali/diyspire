@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { JsonWebTokenError, NotBeforeError, TokenExpiredError, verify } from "jsonwebtoken";
-import { sendError } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 interface UserPayload {
   id: string;
@@ -19,11 +19,11 @@ export interface AugmentedRequest extends Request {
 
 const handleTokenError = (err: any, res: Response) => {
   if (err instanceof TokenExpiredError) {
-    sendError(res, "Access Token Expired", 403);
+    return sendResponse(res, { success: false, error: "Access Token Expired" }, 403);
   } else if (err instanceof JsonWebTokenError || err instanceof NotBeforeError) {
-    sendError(res, "Invalid Access Token", 403);
+    return sendResponse(res, { success: false, error: "Invalid Access Token" }, 403);
   } else {
-    sendError(res, "Token Verification Failed", 403);
+    return sendResponse(res, { success: false, error: "Token Verification Failed" }, 403);
   }
 };
 
@@ -31,8 +31,7 @@ export const authenticateToken = (req: AugmentedRequest, res: Response, next: Ne
   const authHeader = req.headers.authorization;
   const token = authHeader?.split(" ")[1];
   if (!token) {
-    sendError(res, "Access Token Required", 401);
-    return;
+    return sendResponse(res, { success: false, error: "Access Token Required" }, 401);
   }
 
   try {
@@ -47,8 +46,7 @@ export const authenticateToken = (req: AugmentedRequest, res: Response, next: Ne
 export const authenticateEmailToken = (req: AugmentedRequest, res: Response, next: NextFunction) => {
   const token = req.query.token as string;
   if (!token) {
-    sendError(res, "Access Token Required", 401);
-    return;
+    return sendResponse(res, { success: false, error: "Access Token Required" }, 401);
   }
 
   try {
