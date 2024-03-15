@@ -9,7 +9,7 @@
     "watch:dev": "nodemon -L",
     "copy-files": "copyfiles -u 1 src/template/*.html dist/src/",
     "prebuild": "npm install && npm audit fix",
-    "build": "npx prisma generate && swc src -d dist --copy-files",
+    "build": "npx prisma generate && swc ./src ./prisma/seed.ts -d dist --copy-files",
     "build:tsc": "npx prisma generate && tsc -p . && npm run copy-files",
     "docker:up": "docker-compose -f docker-compose.dev.yml up",
     "docker-prod:up": "docker-compose -f docker-compose.yml up",
