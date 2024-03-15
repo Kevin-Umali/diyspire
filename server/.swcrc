@@ -5,7 +5,7 @@
       "syntax": "typescript",
       "tsx": false,
       "dynamicImport": true,
-      "decorators": false
+      "decorators": true
     },
     "transform": {},
     "target": "es2022",
@@ -76,6 +76,7 @@
     "noInterop": false,
     "lazy": false
   },
+  "sourceMaps": true,
   "minify": true,
   "isModule": true
 }
