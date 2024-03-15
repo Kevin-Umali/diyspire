@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { getStartOfDay } from "../utils";
-import { sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 export const getTotalCountOfGeneratedIdea = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -13,7 +13,7 @@ export const getTotalCountOfGeneratedIdea = async (req: Request, res: Response, 
       },
     });
 
-    return sendSuccess(res, { totalCount: totalCount._sum.count ?? 0 });
+    return sendResponse(res, { success: true, data: { totalCount: totalCount._sum.count ?? 0 } });
   } catch (error) {
     next(error);
   }
@@ -54,7 +54,7 @@ export const incrementCounterOfGeneratedIdea = async (req: Request, res: Respons
       });
     }
 
-    return sendSuccess(res, {}, 201);
+    return sendResponse(res, { success: true, data: {} }, 201);
   } catch (error) {
     next(error);
   }

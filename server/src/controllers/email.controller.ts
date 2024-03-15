@@ -3,12 +3,12 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { PrismaClient } from "@prisma/client";
 import { BodyRequest, QueryRequest } from "../middleware/schema-validate";
 import { SubscribeEmailRequest, UnsubscribeEmailQueryRequest } from "../schema/email.schema";
-import { sendError, sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 export const unsubscribeEmail = async (req: QueryRequest<UnsubscribeEmailQueryRequest>, res: Response, next: NextFunction) => {
   try {
     if (!req?.email?.email || !req?.email?.id || req?.email?.email !== req.query.email) {
-      return sendError(res, "Unauthorized or invalid token.", 401);
+      return sendResponse(res, { success: false, error: "Unauthorized or invalid token." }, 401);
     }
 
     const { id } = req.email;
@@ -48,10 +48,10 @@ export const subscribeEmail = async (req: BodyRequest<SubscribeEmailRequest>, re
       },
     });
 
-    return sendSuccess(res, { message: `Subscription "${createSubscription.address}" has been successfully created.` }, 201);
+    return sendResponse(res, { success: true, message: `Subscription "${createSubscription.address}" has been successfully created.` }, 201);
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
-      return sendError(res, "Email already subscribed.", 400);
+      return sendResponse(res, { success: false, error: "Email already subscribed." }, 400);
     } else {
       next(error);
     }

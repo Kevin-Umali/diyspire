@@ -2,7 +2,7 @@ import { NextFunction, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { BodyRequest, QueryParamsRequest } from "../middleware/schema-validate";
 import { GetProjectByIdParamsRequest, GetProjectByIdQueryRequest, ShareProjectBodyRequest } from "../schema/share.schema";
-import { sendError, sendSuccess } from "../utils/response-template";
+import sendResponse from "../utils/response-template";
 
 export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQueryRequest, GetProjectByIdParamsRequest>, res: Response, next: NextFunction) => {
   try {
@@ -28,12 +28,12 @@ export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQuery
       });
 
       if (!projectDetail?.projectDetails) {
-        sendError(res, "Metadata not found.", 404);
-        return;
+        return sendResponse(res, { success: false, error: "Metadata not found." }, 404);
       }
+
       const { title, description, tags } = projectDetail.projectDetails;
 
-      return sendSuccess(res, { title, description, tags });
+      return sendResponse(res, { success: true, data: { title, description, tags } });
     }
 
     const project = await prisma.projectShareLink.findUnique({
@@ -53,11 +53,10 @@ export const getProjectById = async (req: QueryParamsRequest<GetProjectByIdQuery
     });
 
     if (!project) {
-      sendError(res, "Project not found.", 404);
-      return;
+      return sendResponse(res, { success: false, error: "Project not found." }, 404);
     }
 
-    return sendSuccess(res, project);
+    return sendResponse(res, { success: true, data: project });
   } catch (error) {
     next(error);
   }
@@ -129,11 +128,11 @@ export const saveProject = async (req: BodyRequest<ShareProjectBodyRequest>, res
     );
 
     if (!result) {
-      sendError(res, "Failed to save the project.", 500);
+      sendResponse(res, { success: false, error: "Failed to save the project." });
       return;
     }
 
-    return sendSuccess(res, { id: result }, 201);
+    return sendResponse(res, { success: true, data: { id: result } }, 201);
   } catch (error) {
     next(error);
   }
