@@ -22,7 +22,9 @@ export const saveProject = async (req: BodyRequest<ProjectBodyRequest>, res: Res
         const baseSlug = projectDetails.title
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-*|-*$/g, "");
+          .split("-")
+          .filter(Boolean)
+          .join("-");
         const uniqueSlug = `how-to-make-${baseSlug}`;
         let slug = uniqueSlug;
         let counter = 1;
