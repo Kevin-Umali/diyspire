@@ -49,26 +49,29 @@ This project uses Prisma as an ORM to interact with the database. Follow these s
 
 2. Apply database migrations to create the schema:
 
-   ```bash
-   npx prisma migrate dev --name init
-   ```
+```bash
+npx prisma migrate dev --name init
+```
+
+2.1. If there's already a migration file use this to sync:
+
+```bash
+npx prisma db push
+```
 
 3. If seed doesn't automatically run, it will seed the database with initial data
 
-   ```bash
-   npx prisma db seed
-   ```
-
-   or
-
-   ```bash
-   npx prisma migrate reset
-   ```
+```bash
+npx prisma db seed
+# or
+npx prisma migrate reset
+```
 
 4. Deploy in the production
-   ```bash
-   npx prisma migrate dev --create-only
-   npx prisma migrate deploy
-   ```
+
+```bash
+npx prisma migrate dev --create-only
+npx prisma migrate deploy
+```
 
 This sets up the database schema and populates it with initial data, allowing your server to interact with the database using Prisma.

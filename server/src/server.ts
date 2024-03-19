@@ -10,16 +10,16 @@ import * as nodeFetch from "node-fetch";
 import OpenAI from "openai";
 import { createApi } from "unsplash-js";
 import { PrismaClient } from "@prisma/client";
-import getConditionalCache from "./middleware/cache-response";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import limiter from "./middleware/request-limit";
 import userAgentMiddleware from "./middleware/useragent-parser";
-import { authenticationRoutes, communityRoutes, counterRoutes, emailRoutes, guideRoutes, healthcheckRoutes, openaiRoutes, shareRoutes, unsplashRoutes } from "./routes/index.routes";
+import { authenticationRoutes, communityRoutes, counterRoutes, emailRoutes, guideRoutes, healthcheckRoutes, openaiRoutes, projectRoutes, unsplashRoutes } from "./routes/index.routes";
 import { performMonthlyDiyEmailDistribution } from "./services/monthly-diy-project.services";
 import { allowedOrigins } from "./utils";
 import sendResponse from "./utils/response-template";
 import "./utils/env";
 import logger from "./utils/logger";
+import initRedisClient from "./utils/redis";
 
 dotenv.config();
 
@@ -32,6 +32,7 @@ const unsplash = createApi({
   fetch: nodeFetch.default as unknown as typeof fetch,
 });
 const prisma = new PrismaClient();
+const redis = initRedisClient();
 
 app.use(compression());
 app.use(helmet());
@@ -59,6 +60,7 @@ app.use(limiter);
 app.set("openai", openai);
 app.set("unsplash", unsplash);
 app.set("prisma", prisma);
+app.set("redis", redis);
 
 app.use(userAgentMiddleware);
 
@@ -74,20 +76,17 @@ app.use("/api/v1/auth", authenticationRoutes);
 app.use("/api/v1/email", emailRoutes);
 app.use("/api/v1/counter", counterRoutes);
 
-const oneDayCacheMiddleware = getConditionalCache("24 hours");
+// One day cache
+app.use("/api/v1/guide", guideRoutes);
+app.use("/api/v1/image", unsplashRoutes);
+app.use("/api/v1/community", communityRoutes);
 
-app.use("/api/v1/guide", oneDayCacheMiddleware, guideRoutes);
-app.use("/api/v1/image", oneDayCacheMiddleware, unsplashRoutes);
-app.use("/api/v1/community", oneDayCacheMiddleware, communityRoutes);
+app.use("/api/v1/project", projectRoutes);
 
-const twentyFourCacheMiddleware = getConditionalCache("24 days");
-app.use("/api/v1/share", twentyFourCacheMiddleware, shareRoutes);
-
-const openaiCacheMiddleware = getConditionalCache("2 hours");
-app.use("/api/v1/generate", openaiCacheMiddleware, openaiRoutes);
+app.use("/api/v1/generate", openaiRoutes);
 
 app.get("*", (_, res: Response) => sendResponse(res, { success: false, error: "API Path Not Found" }, 404));
 
 app.use(errorHandlerMiddleware);
 
-export default app;
+export { app, prisma, redis };

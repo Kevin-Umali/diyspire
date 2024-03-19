@@ -1,28 +1,31 @@
-import { PrismaClient } from "@prisma/client";
-import app from "./server";
+import { app, prisma, redis } from "./server"; // Adjust the path as necessary
 import logger from "./utils/logger";
 
-const PORT: number = Number(process.env.PORT) || 3000;
-const prisma = new PrismaClient();
-
-const server = app.listen(PORT, () => {
-  logger.info(`Server is running on http://localhost:${PORT}`);
+const server = app.listen(process.env.PORT || 3000, () => {
+  logger.info(`Server running on http://localhost:${process.env.PORT || 3000}`);
 });
 
-process.on("SIGINT", async () => {
-  logger.info("Received SIGINT. Shutting down gracefully...");
-  server.close(async () => {
+const gracefulShutdown = async (signal: string) => {
+  logger.info(`Received ${signal}. Shutting down gracefully...`);
+  try {
+    server.close(() => {
+      logger.info("HTTP server closed.");
+    });
+
+    if (redis) {
+      redis.disconnect();
+      logger.info("Redis client disconnected.");
+    }
+
     await prisma.$disconnect();
-    logger.info("Server and Prisma disconnected!");
-    process.exit(0);
-  });
-});
+    logger.info("Prisma client disconnected.");
 
-process.on("SIGTERM", async () => {
-  logger.info("Received SIGTERM. Shutting down gracefully...");
-  server.close(async () => {
-    await prisma.$disconnect();
-    logger.info("Server and Prisma disconnected!");
     process.exit(0);
-  });
-});
+  } catch (error) {
+    logger.error("Failed to shut down gracefully:", error);
+    process.exit(1);
+  }
+};
+
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));

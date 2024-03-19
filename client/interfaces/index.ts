@@ -70,7 +70,7 @@ export interface CounterData {
   totalCount: number;
 }
 
-export interface ShareLinkData {
+export interface ProjectData {
   id: string;
   projectDetails: ProjectDetails;
   projectImage: ProjectImages;
@@ -171,20 +171,27 @@ export interface IdeaExplanationData {
   explanation: string;
 }
 
-export interface ShareLinkResponseData {
+export interface SaveProjectResponseData {
   id: string;
+  slug: string;
 }
 
-export interface CommunityIdeaData {
+export interface CommunityProjectData {
+  projects: CommunityProjects[];
+  totalCount: number;
+}
+
+export interface CommunityProjects {
   id: number;
+  slug: string;
   title: string;
   description: string;
   tags: string[];
-  projectImage: CommunityIdeaProjectImages;
+  projectImage: CommunityProjectImages;
   createdAt: string;
 }
 
-export interface CommunityIdeaProjectImages {
+export interface CommunityProjectImages {
   urls: ProjectImageUrls;
   alt_description?: string;
 }

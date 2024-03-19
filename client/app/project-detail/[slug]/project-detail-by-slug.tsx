@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useShareLinkData } from "@/api/queries";
+import { useCommunityProjectBySlugData } from "@/api/queries";
 import { AxiosError } from "axios";
 
 import { Separator } from "@/components/ui/separator";
@@ -12,7 +12,7 @@ import ProjectInfo from "@/components/project-detail/project-info";
 import ProjectSteps from "@/components/project-detail/project-step";
 import ShareDialog from "@/components/project-detail/share-dialog";
 
-export default function ProjectDetailById({ params }: { params: { id: string } }) {
+export default function ProjectDetailBySlug({ params }: { params: { slug: string } }) {
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -20,10 +20,10 @@ export default function ProjectDetailById({ params }: { params: { id: string } }
 
   const { toast } = useToast();
 
-  const { data: shareLinkData, error, isLoading } = useShareLinkData(params.id);
+  const { data: communityProjectData, error, isLoading } = useCommunityProjectBySlugData(params.slug);
 
   useEffect(() => {
-    if (!params.id) {
+    if (!params.slug) {
       toast({
         title: "Oops!",
         description: "Not found",
@@ -46,28 +46,28 @@ export default function ProjectDetailById({ params }: { params: { id: string } }
         description: "An unexpected error occurred. Please try again later.",
       });
     }
-  }, [error, params.id, router, toast]);
+  }, [error, params.slug, router, toast]);
 
   return (
     <div className="container mx-auto py-5 sm:py-10">
-      {shareLinkData?.data && (
+      {communityProjectData?.data && (
         <>
           <div className="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-2">
             <ProjectImage
               isLoading={isLoading}
               isLoaded={isLoading}
-              relatedImages={shareLinkData.data.projectImage}
-              projectTitle={shareLinkData.data.projectDetails.title}
+              relatedImages={communityProjectData.data.projectImage}
+              projectTitle={communityProjectData.data.projectDetails.title}
               onOpen={() => {
-                setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${params.id}`);
+                setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${params.slug}`);
                 setIsOpen(true);
               }}
             />
             <ShareDialog isOpen={isOpen} onClose={() => setIsOpen(false)} isSaving={false} shareLink={shareLink} />
-            <ProjectInfo isLoading={isLoading} project={shareLinkData.data.projectDetails} />
+            <ProjectInfo isLoading={isLoading} project={communityProjectData.data.projectDetails} />
           </div>
           <Separator className="mt-10" />
-          <ProjectSteps isLoading={isLoading} projectExplanation={shareLinkData.data.explanation} />
+          <ProjectSteps isLoading={isLoading} projectExplanation={communityProjectData.data.explanation} />
         </>
       )}
     </div>
