@@ -2,9 +2,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { loginUser, logoutUser, refreshToken, registerUser } from "./auth";
 import { getAllGuides, getGuideByPath } from "./guide";
-import { generateProjectExplanations, generateProjectIdeas, getCommunityGeneratedIdea, incrementCounterOfGeneratedIdea } from "./idea";
+import { generateProjectExplanations, generateProjectIdeas, getCommunityGeneratedProjectData, getProjectDataBySlug, incrementCounterOfGeneratedIdea } from "./idea";
 import { searchImages } from "./image";
-import { getShareLinkData, saveShareLinkData } from "./share";
+import { saveProjectData } from "./project";
 import { checkBackEndHealthStatus, subscribeToNewsletter } from "./system";
 
 /** Guides API */
@@ -84,10 +84,10 @@ export const useGenerateProjectExplanations = () => {
   });
 };
 
-export const useCommunityGeneratedIdea = (params: { limit?: number; orderBy?: string } = {}) => {
+export const useCommunityGeneratedIdea = (params: { page?: number; limit?: number; orderBy?: string } = {}) => {
   return useQuery({
     queryKey: ["community", params],
-    queryFn: () => getCommunityGeneratedIdea(params),
+    queryFn: () => getCommunityGeneratedProjectData(params),
   });
 };
 
@@ -101,17 +101,17 @@ export const useSearchImages = (query: string, accessToken: string) => {
   });
 };
 
-/** Share API */
+/** Project API */
 
-export const useSaveShareLinkData = () => {
+export const useSaveProjectData = () => {
   return useMutation({
-    mutationFn: saveShareLinkData,
+    mutationFn: saveProjectData,
   });
 };
 
-export const useShareLinkData = (id: string) => {
+export const useCommunityProjectBySlugData = (slug: string) => {
   return useQuery({
-    queryKey: ["share", id],
-    queryFn: () => getShareLinkData(id),
+    queryKey: ["slug", slug],
+    queryFn: () => getProjectDataBySlug(slug),
   });
 };

@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
+import logger from "../utils/logger";
 import sendResponse from "../utils/response-template";
 
 const keyGenerator = (request: Request, _response: Response): string => {
   if (!request.ip) {
-    console.error("Warning: request.ip is missing!");
+    logger.error("Warning: request.ip is missing!");
     return request.socket.remoteAddress as string;
   }
   return request.ip.replace(/:\d+[^:]*$/, "");

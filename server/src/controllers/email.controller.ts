@@ -17,7 +17,7 @@ export const unsubscribeEmail = async (req: QueryRequest<UnsubscribeEmailQueryRe
 
     const updatedSubscription = await prisma.emailSubscription.update({
       where: {
-        id: id,
+        id: Number(id),
         unsubscribe: false,
       },
       data: {

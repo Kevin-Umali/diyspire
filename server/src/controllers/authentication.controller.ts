@@ -14,26 +14,26 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
 
     const prisma: PrismaClient = req.app.get("prisma");
 
-    const user = await prisma.users.findUnique({
+    const account = await prisma.account.findUnique({
       where: {
         username,
       },
     });
 
-    if (!user || !(await compare(password, user.password))) {
+    if (!account || !(await compare(password, account.password))) {
       return sendResponse(res, { success: false, error: "Invalid credentials" }, 400);
     }
 
-    if (user.banned) {
+    if (account.banned) {
       return sendResponse(res, { success: false, error: "User is banned." }, 401);
     }
 
-    const { accessToken, refreshToken } = await generateTokens({ options: { id: user.id, username: user.username } });
+    const { accessToken, refreshToken } = await generateTokens({ options: { id: account.id, username: account.username } });
 
     await prisma.refreshToken.create({
       data: {
         token: refreshToken!,
-        user: { connect: { id: user.id } },
+        account: { connect: { id: account.id } },
         deviceInfo: {
           create: {
             isMobile: req.useragent?.isMobile ?? false,
@@ -57,7 +57,7 @@ export const authorizeUser = async (req: BodyRequest<UserRequest>, res: Response
       expires: refreshTokenExpiry(),
     });
 
-    return sendResponse(res, { success: true, data: { id: user.id, username: user.username, accessToken } });
+    return sendResponse(res, { success: true, data: { id: account.id, username: account.username, accessToken } });
   } catch (error) {
     next(error);
   }
@@ -71,7 +71,7 @@ export const registerUser = async (req: BodyRequest<UserRequest>, res: Response,
 
     const hashedPassword = await hash(password, 10);
 
-    await prisma.users.create({
+    await prisma.account.create({
       data: {
         username,
         password: hashedPassword,
@@ -105,24 +105,24 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     const refreshTokenInDb = await prisma.refreshToken.findUnique({
       where: { token: refreshToken },
       include: {
-        user: true,
+        account: true,
       },
     });
 
-    if (!refreshTokenInDb || refreshTokenInDb.userId !== decoded.id || refreshTokenInDb.user.username !== decoded.username) {
+    if (!refreshTokenInDb || refreshTokenInDb.accountId !== decoded.id || refreshTokenInDb.account.username !== decoded.username) {
       res.clearCookie("refreshToken");
 
       return sendResponse(res, { success: false, error: "Invalid refresh token." }, 401);
     }
 
-    if (new Date(refreshTokenInDb.expiresAt) < new Date() || refreshTokenInDb.user.banned) {
+    if (new Date(refreshTokenInDb.expiresAt) < new Date() || refreshTokenInDb.account.banned) {
       await prisma.refreshToken.delete({
         where: { token: refreshToken },
       });
 
       res.clearCookie("refreshToken");
 
-      const errorMessage = refreshTokenInDb.user.banned ? "User is banned." : "Refresh token has expired.";
+      const errorMessage = refreshTokenInDb.account.banned ? "User is banned." : "Refresh token has expired.";
 
       return sendResponse(res, { success: false, error: errorMessage }, 401);
     }
@@ -137,7 +137,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       expires: refreshTokenInDb.expiresAt,
     });
 
-    return sendResponse(res, { success: true, data: { id: refreshTokenInDb.user.id, username: refreshTokenInDb.user.username, accessToken } });
+    return sendResponse(res, { success: true, data: { id: refreshTokenInDb.account.id, username: refreshTokenInDb.account.username, accessToken } });
   } catch (error) {
     if (error instanceof TokenExpiredError) {
       res.clearCookie("refreshToken");

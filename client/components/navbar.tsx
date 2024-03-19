@@ -58,7 +58,7 @@ const Navbar: React.FC = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Link href="https://github.com/Kevin-Umali/make-me" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository" className="p-2 text-lg lg:text-xl">
+          <Link href="https://github.com/Kevin-Umali/diyspire" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository" className="p-2 text-lg lg:text-xl">
             <Github size={20} />
           </Link>
           <Button variant="ghost" aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`} className="rounded-md p-2" onClick={toggleColorMode}>
@@ -85,7 +85,7 @@ const Navbar: React.FC = () => {
                 </Select>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href="https://github.com/Kevin-Umali/make-me" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository">
+                <Link href="https://github.com/Kevin-Umali/diyspire" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository">
                   <span className="flex items-center space-x-2">
                     <Github size={20} />
                     <span>GitHub</span>

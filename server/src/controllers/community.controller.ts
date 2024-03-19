@@ -1,42 +1,61 @@
 import { NextFunction, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { QueryRequest } from "../middleware/schema-validate";
-import { CommunityGeneratedIdeaRequest } from "../schema/community.schema";
+import { QueryParamsRequest, QueryRequest } from "../middleware/schema-validate";
+import { CommunityGeneratedIdeaRequest, ProjectBySlugParamsRequest, ProjectBySlugQueryRequest } from "../schema/community.schema";
 import { validateQueryFilter } from "../utils";
 import sendResponse from "../utils/response-template";
 
 export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGeneratedIdeaRequest>, res: Response, next: NextFunction) => {
   try {
-    const { limit, orderBy } = req.query;
+    const { page, limit, orderBy } = req.query;
 
-    const { validLimit, validOrderBy } = validateQueryFilter(limit, orderBy);
+    const { validOffset, validLimit, validOrderBy } = validateQueryFilter(page, limit, orderBy);
 
     const prisma = req.app.get("prisma") as PrismaClient;
 
-    const projects = await prisma.projectShareLink.findMany({
-      select: {
-        id: true,
-        projectDetails: true,
-        projectImage: {
-          select: {
-            alt_description: true,
-            urls: true,
+    const [projects, count] = await Promise.allSettled([
+      prisma.project.findMany({
+        select: {
+          id: true,
+          slug: true,
+          projectDetails: true,
+          projectImage: {
+            select: {
+              alt_description: true,
+              urls: true,
+            },
+          },
+          createdAt: true,
+          accountProjects: {
+            select: {
+              account: {
+                select: {
+                  id: true,
+                  username: true,
+                },
+              },
+            },
           },
         },
-        createdAt: true,
-      },
-      orderBy: {
-        createdAt: validOrderBy,
-      },
-      take: validLimit,
-    });
+        orderBy: {
+          createdAt: validOrderBy,
+        },
+        take: validLimit,
+        skip: validOffset,
+      }),
+      prisma.project.count(),
+    ]);
 
-    if (projects.length <= 0) {
+    const projectsResult = projects.status === "fulfilled" ? projects.value : [];
+    const totalCountResult = count.status === "fulfilled" ? count.value : 0;
+
+    if (projectsResult.length <= 0) {
       return sendResponse(res, { success: false, error: "No community project exist" }, 404);
     }
 
-    const transformedProjects = projects.map((project) => ({
+    const transformedProjects = projectsResult.map((project) => ({
       id: project.id,
+      slug: project.slug,
       title: project.projectDetails.title,
       description: project.projectDetails.description,
       tags: project.projectDetails.tags,
@@ -45,9 +64,76 @@ export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGener
         urls: project.projectImage.urls,
       },
       createdAt: project.createdAt,
+      accounts: project.accountProjects.map((ap) => ({
+        id: ap.account.id,
+        username: ap.account.username,
+      })),
     }));
 
-    return sendResponse(res, { success: true, data: transformedProjects });
+    return sendResponse(res, { success: true, data: { projects: transformedProjects, totalCount: totalCountResult } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getProjectBySlug = async (req: QueryParamsRequest<ProjectBySlugQueryRequest, ProjectBySlugParamsRequest>, res: Response, next: NextFunction) => {
+  try {
+    const slug = req.params.slug;
+    const onlyMetadata = req.query.onlyMetadata;
+
+    const prisma: PrismaClient = req.app.get("prisma");
+
+    if (onlyMetadata === "true") {
+      const projectDetail = await prisma.project.findUnique({
+        where: {
+          slug: slug,
+        },
+        select: {
+          projectDetails: {
+            select: {
+              title: true,
+              description: true,
+              tags: true,
+            },
+          },
+        },
+      });
+
+      if (!projectDetail?.projectDetails) {
+        return sendResponse(res, { success: false, error: "Metadata not found." }, 404);
+      }
+
+      const { title, description, tags } = projectDetail.projectDetails;
+
+      return sendResponse(res, { success: true, data: { title, description, tags } });
+    }
+
+    const project = await prisma.project.findUnique({
+      where: {
+        slug: slug,
+      },
+      include: {
+        projectDetails: true,
+        projectImage: {
+          include: {
+            urls: true,
+            links: true,
+            user: true,
+          },
+        },
+        accountProjects: {
+          include: {
+            account: true,
+          },
+        },
+      },
+    });
+
+    if (!project) {
+      return sendResponse(res, { success: false, error: "Project not found." }, 404);
+    }
+
+    return sendResponse(res, { success: true, data: project });
   } catch (error) {
     next(error);
   }

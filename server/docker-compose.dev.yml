@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   diyspire-app:
@@ -16,13 +16,27 @@ services:
       - WEBSITE_URL=$WEBSITE_URL
       - UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
       - UNSPLASH_SECRET_KEY=$UNSPLASH_SECRET_KEY
-      - MIGRATE_FLAG=$MIGRATE_FLAG
       - DATABASE_URL=$DATABASE_URL
+      - COOKIE_SECRET_KEY=${COOKIE_SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_REFRESH_SECRET_KEY=${JWT_REFRESH_SECRET_KEY}
+      - BACKEND_URL=${BACKEND_URL}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - EMAIL_DOMAIN=${EMAIL_DOMAIN}
+      - CRON_SCHEDULE=${CRON_SCHEDULE}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_SECRET_KEY=${EMAIL_SECRET_KEY}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
     volumes:
       - ./src:/usr/src/app/src
       - /usr/src/app/node_modules
     depends_on:
       - diyspire-db
+      - diyspire-redis
 
   diyspire-db:
     container_name: diyspire-docker-db
@@ -36,7 +50,27 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-    - "$POSTGRES_PORT:5432"
+      - "$POSTGRES_PORT:5432"
+
+  diyspire-redis:
+    container_name: diyspire-docker-redis
+    image: redis:7.2.4-alpine
+    restart: always
+    env_file: ./.env
+    command: >
+      redis-server
+      --save 20 1
+      --loglevel warning
+      --requirepass $REDIS_PASSWORD
+      --appendonly yes
+      --appendfilename "redis.aof"
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "$REDIS_PORT:6379"
 
 volumes:
   postgres_data:
+  redis_data:

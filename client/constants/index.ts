@@ -259,7 +259,7 @@ export const faqs: FAQ[] = [
     question: "How can I give feedback or suggestions?",
     answer: "We're always eager to hear from our users! If you have any feedback or suggestions for MakeMeDIYspire, please {githubLink}. Your insights can help us enhance the platform for everyone.",
     links: {
-      githubLink: { href: "https://github.com/Kevin-Umali/make-me/issues", text: "open a pull request or issue on our GitHub repository" },
+      githubLink: { href: "https://github.com/Kevin-Umali/diyspire/issues", text: "open a pull request or issue on our GitHub repository" },
     },
   },
 ];

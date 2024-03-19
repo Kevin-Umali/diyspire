@@ -28,12 +28,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kevin-Umali/make-me.git"
+    "url": "git+https://github.com/Kevin-Umali/diyspire.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Kevin-Umali/make-me/issues"
+    "url": "https://github.com/Kevin-Umali/diyspire/issues"
   },
-  "homepage": "https://github.com/Kevin-Umali/make-me#readme"
+  "homepage": "https://github.com/Kevin-Umali/diyspire#readme"
 }

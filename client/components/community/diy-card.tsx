@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 
 interface ProjectCardProps {
   id: string | number;
+  slug: string;
   title: string;
   createdAt: string;
   description: string;
@@ -16,7 +17,7 @@ interface ProjectCardProps {
   badges: string[];
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ id, title, createdAt, description, imgUrl, badges }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ id, slug, title, createdAt, description, imgUrl, badges }) => {
   return (
     <Card className="mx-auto flex h-full max-w-md flex-col" role="article" aria-labelledby={`projectTitle-${id}`} aria-describedby={`projectDescription-${id}`}>
       <div className="relative h-64">
@@ -48,7 +49,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ id, title, createdAt, descrip
         </Label>
       </CardContent>
       <CardFooter className="mt-auto pt-2" role="contentinfo" aria-label="Footer section">
-        <Link className="w-full" href={{ pathname: `/project-detail/${id}` }} passHref>
+        <Link className="w-full" href={{ pathname: `/project-detail/${slug}` }} passHref>
           <Button className="w-full text-sm" aria-label={`Learn more - ${title}`}>
             <BookMarked className="mr-2 size-4" />
             <span>

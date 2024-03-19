@@ -78,6 +78,7 @@ export const parsePrisma = <T = any>(json: JsonValue): T => {
 };
 
 export const validateQueryFilter = (
+  page?: string | undefined,
   limit?: string | undefined,
   orderBy?: string | undefined,
   options: {
@@ -100,7 +101,14 @@ export const validateQueryFilter = (
     throw new Error(`Invalid orderBy. It should be '${DEFAULT_ORDER_BY}' or 'desc'`);
   }
 
-  return { validLimit, validOrderBy: lowerCasedOrderBy as "asc" | "desc" };
+  const pageStr = typeof page === "string" ? page : "1"; // Default to page 1 if not specified
+  const validPage = parseInt(pageStr, 10);
+  if (isNaN(validPage) || validPage <= 0) {
+    throw new Error("Invalid page. It should be a positive number.");
+  }
+  const validOffset = (validPage - 1) * validLimit;
+
+  return { validPage, validOffset, validLimit, validOrderBy: lowerCasedOrderBy as "asc" | "desc" };
 };
 
 const getNestedProperty = (obj: { [key: string]: any }, propPath: string): any => {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import logger from "./logger";
 
 const environmentSchema = z.object({
   PORT: z.number().default(3000),
@@ -25,7 +26,7 @@ const environmentSchema = z.object({
     ])
     .refine((value) => {
       if (["gpt-3.5-turbo-16k", "gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613"].includes(value)) {
-        console.warn(`WARNING: ${value} is a legacy model and will be deprecated on June 13, 2024.`);
+        logger.warn(`WARNING: ${value} is a legacy model and will be deprecated on June 13, 2024.`);
       }
 
       return true;
@@ -37,7 +38,6 @@ const environmentSchema = z.object({
   COOKIE_SECRET_KEY: z.string(),
   JWT_SECRET_KEY: z.string(),
   JWT_REFRESH_SECRET_KEY: z.string(),
-  MIGRATE_FLAG: z.boolean().default(false),
   BACKEND_URL: z.string().url(),
 
   EMAIL_USER: z.string().email(),
@@ -55,6 +55,10 @@ const environmentSchema = z.object({
   POSTGRES_PORT: z.number().optional().default(5432),
 
   DATABASE_URL: z.string(),
+
+  REDIS_PASSWORD: z.string(),
+  REDIS_PORT: z.number().default(6379),
+  REDIS_URL: z.string(),
 });
 
 const env = {
@@ -68,7 +72,6 @@ const env = {
   COOKIE_SECRET_KEY: process.env.COOKIE_SECRET_KEY,
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
   JWT_REFRESH_SECRET_KEY: process.env.JWT_REFRESH_SECRET_KEY,
-  MIGRATE_FLAG: !!process.env.MIGRATE_FLAG,
   BACKEND_URL: process.env.BACKEND_URL,
 
   EMAIL_USER: process.env.EMAIL_USER,
@@ -86,12 +89,16 @@ const env = {
   POSTGRES_PORT: process.env.POSTGRES_PORT ? Number(process.env.POSTGRES_PORT) : 5432,
 
   DATABASE_URL: process.env.DATABASE_URL,
+
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+  REDIS_PORT: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+  REDIS_URL: process.env.REDIS_URL,
 };
 
 const parsedEnvResults = environmentSchema.safeParse(env);
 
 if (!parsedEnvResults.success) {
-  console.error(parsedEnvResults.error.issues);
+  logger.error(parsedEnvResults.error.issues);
   throw new Error("Invalid environment variables");
 }
 

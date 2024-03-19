@@ -7,6 +7,14 @@ import sendResponse from "../utils/response-template";
 
 interface ZodRequest<B = any, Q extends ParsedQs = ParsedQs, P extends ParamsDictionary = ParamsDictionary> extends Request {
   [x: string]: any;
+  user?: {
+    id: string;
+    username: string;
+  };
+  email?: {
+    id: string | number;
+    email: string;
+  };
   body: B;
   query: Q;
   params: P;

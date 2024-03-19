@@ -2,6 +2,7 @@ import { NextFunction, Response } from "express";
 import OpenAI from "openai";
 import { BodyRequest } from "../middleware/schema-validate";
 import { ExplainRequest, IdeaRequest } from "../schema/openai.schema";
+import logger from "../utils/logger";
 import sendResponse from "../utils/response-template";
 
 export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response, next: NextFunction) => {
@@ -51,6 +52,8 @@ export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response,
         ]
     }
     `;
+
+    logger.info("Waiting");
 
     const completion = await openai.chat.completions.create({
       model: process.env.OPENAI_CHATGPT_MODEL,
@@ -108,6 +111,7 @@ export const explainProjectByTitle = async (req: BodyRequest<ExplainRequest>, re
     2. **Step-by-Step Guide**: Provide detailed, actionable steps, considering the provided materials and tools. Each step should be numbered and clear.
     `;
 
+    logger.info("Waiting explain");
     const completion = await openai.chat.completions.create({
       model: process.env.OPENAI_CHATGPT_MODEL,
       messages: [
