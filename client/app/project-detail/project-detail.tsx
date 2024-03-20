@@ -117,7 +117,7 @@ function ProjectDetail() {
         onError: handleError,
       },
     );
-  }, [accessToken, mutateGenerateProjectExplanations, mutateSaveProjectData, project, relatedImages?.data, shareLink, toast]);
+  }, [accessToken, isSuccess, mutateGenerateProjectExplanations, mutateSaveProjectData, project, relatedImages?.data, shareLink, toast]);
 
   useEffect(() => {
     if (imageError && imageError instanceof AxiosError) {
