@@ -25,13 +25,13 @@ const StatusPage: React.FC = () => {
 
   useEffect(() => {
     if (error && error instanceof AxiosError) {
+      const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
+
       toast({
         title: `API ERROR - ${error.code}`,
-        description: error.response?.data.error || "An error occurred while fetching data from the API.",
+        description: errorMessage,
       });
-    }
-
-    if (error) {
+    } else if (error) {
       toast({
         title: "Unexpected Error!",
         description: "An unexpected error occurred. Please try again later.",

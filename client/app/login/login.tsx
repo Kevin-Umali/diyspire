@@ -13,7 +13,7 @@ import SignIn from "@/components/login/signin";
 import SignUp from "@/components/login/signup";
 
 export default function Login() {
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [tab, setTab] = useState("login");
 
   const router = useRouter();
@@ -53,12 +53,14 @@ export default function Login() {
         router.push(`/?${redirectParams}`);
       },
       onError: (error) => {
-        if (error instanceof AxiosError) {
+        if (error && error instanceof AxiosError) {
+          const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
+
           toast({
             title: `API ERROR - ${error.code}`,
-            description: error.response?.data.error || "An error occurred while fetching data from the API.",
+            description: errorMessage,
           });
-        } else {
+        } else if (error) {
           toast({
             title: "Unexpected Error!",
             description: "An unexpected error occurred. Please try again later.",
@@ -71,17 +73,19 @@ export default function Login() {
   const handleSignupSubmit = async (data: { signupUsername: string; signupPassword: string }) => {
     mutateRegister(data, {
       onSuccess(response, _variables, _context) {
-        if (response?.data) {
-          setSuccessMessage(response.data.message);
+        if (response?.message) {
+          setSuccessMessage(response.message);
         }
       },
       onError: (error) => {
-        if (error instanceof AxiosError) {
+        if (error && error instanceof AxiosError) {
+          const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
+
           toast({
             title: `API ERROR - ${error.code}`,
-            description: error.response?.data.error || "An error occurred while fetching data from the API.",
+            description: errorMessage,
           });
-        } else {
+        } else if (error) {
           toast({
             title: "Unexpected Error!",
             description: "An unexpected error occurred. Please try again later.",

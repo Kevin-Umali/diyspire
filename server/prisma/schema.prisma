@@ -151,3 +151,9 @@ model GeneratedMonthlyDIY {
   name      String   @unique
   createdAt DateTime @default(now())
 }
+
+model RateLimiterFlexible {
+  key    String    @id
+  points Int
+  expire DateTime?
+}
