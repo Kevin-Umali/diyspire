@@ -12,7 +12,7 @@ interface ExtendedRequest extends Request {
   user?: UserPayload;
 }
 
-const unifiedConditionalCache = <T>(duration: string | number) => {
+const unifiedConditionalCacheMiddleware = <T>(duration: string | number) => {
   return async (req: ExtendedRequest, res: Response<T>, next: NextFunction) => {
     const redisClient = req.app.get("redis") as Redis;
 
@@ -70,4 +70,4 @@ const getApicacheMiddleware = (duration: string | number) => {
   return apicache.options(cacheOptions).middleware(cacheDuration);
 };
 
-export default unifiedConditionalCache;
+export default unifiedConditionalCacheMiddleware;

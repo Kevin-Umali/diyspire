@@ -2,8 +2,8 @@ import { HttpMethod } from "@/interfaces";
 
 import { fetchApi } from "@/lib/api-helper";
 
-export const registerUser = (userData: { signupUsername: string; signupPassword: string }): Promise<any> => {
-  return fetchApi("/v1/auth/register", {
+export const registerUser = (userData: { signupUsername: string; signupPassword: string }): Promise<{ status: boolean; message: string }> => {
+  return fetchApi<{ status: boolean; message: string }>("/v1/auth/register", {
     method: HttpMethod.POST,
     body: { username: userData.signupUsername, password: userData.signupPassword },
   });

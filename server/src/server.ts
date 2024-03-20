@@ -11,13 +11,14 @@ import OpenAI from "openai";
 import { createApi } from "unsplash-js";
 import { PrismaClient } from "@prisma/client";
 import errorHandlerMiddleware from "./middleware/error-handler";
-import limiter from "./middleware/request-limit";
+import rateLimiterMiddleware from "./middleware/request-limit";
 import userAgentMiddleware from "./middleware/useragent-parser";
 import { authenticationRoutes, communityRoutes, counterRoutes, emailRoutes, guideRoutes, healthcheckRoutes, openaiRoutes, projectRoutes, unsplashRoutes } from "./routes/index.routes";
 import { performMonthlyDiyEmailDistribution } from "./services/monthly-diy-project.services";
 import { allowedOrigins } from "./utils";
 import sendResponse from "./utils/response-template";
 import "./utils/env";
+import { RateLimiterPrisma } from "rate-limiter-flexible";
 import logger from "./utils/logger";
 import initRedisClient from "./utils/redis";
 
@@ -33,6 +34,11 @@ const unsplash = createApi({
 });
 const prisma = new PrismaClient();
 const redis = initRedisClient();
+const rateLimiter = new RateLimiterPrisma({
+  storeClient: prisma,
+  points: 10,
+  duration: 60,
+});
 
 app.use(compression());
 app.use(helmet());
@@ -55,7 +61,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 
-app.use(limiter);
+app.use(rateLimiterMiddleware(rateLimiter));
 
 app.set("openai", openai);
 app.set("unsplash", unsplash);
