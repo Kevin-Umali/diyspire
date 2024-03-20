@@ -7,6 +7,6 @@ import { UnsplashImageSearchSchema } from "../schema/unsplash.schema";
 
 const router = express.Router();
 
-router.get("/search", unifiedConditionalCacheMiddleware(24 * 24 * 60 * 60), authenticateToken, zodValidateMiddleware({ query: UnsplashImageSearchSchema }), searchImages);
+router.get("/search", authenticateToken, unifiedConditionalCacheMiddleware(24 * 24 * 60 * 60), zodValidateMiddleware({ query: UnsplashImageSearchSchema }), searchImages);
 
 export default router;

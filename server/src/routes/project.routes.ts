@@ -8,6 +8,6 @@ import { ProjectByIdParamsSchema, ProjectByIdQuerySchema, ProjectSchema } from "
 const router = express.Router();
 
 router.post("", authenticateToken, zodValidateMiddleware({ body: ProjectSchema }), saveProject);
-router.get("/:id", unifiedConditionalCacheMiddleware(1 * 24 * 60 * 60), zodValidateMiddleware({ params: ProjectByIdParamsSchema, query: ProjectByIdQuerySchema }), getProjectById);
+router.get("/:id", authenticateToken, unifiedConditionalCacheMiddleware(1 * 24 * 60 * 60), zodValidateMiddleware({ params: ProjectByIdParamsSchema, query: ProjectByIdQuerySchema }), getProjectById);
 
 export default router;
