@@ -25,6 +25,8 @@ import initRedisClient from "./utils/redis";
 dotenv.config();
 
 const app: Express = express();
+app.set("trust proxy", true);
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
