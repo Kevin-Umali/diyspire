@@ -18,8 +18,8 @@ export default function Home() {
         </div>
         <div className="mx-auto max-w-2xl py-8">
           <div className="text-center">
-            <Image src="/android-chrome-192x192.png" alt="MakeMeDIYSpire logo" className="mb-8 inline-block w-1/3 sm:w-1/5 md:w-1/4 lg:w-1/3" width={200} height={200} />
-            <Label className="block text-4xl font-bold tracking-tight sm:text-6xl">MakeMeDIYspire - Unleash Your Creativity</Label>
+            <Image src="/android-chrome-192x192.png" alt="DIYspire logo" className="mb-8 inline-block w-1/3 sm:w-1/5 md:w-1/4 lg:w-1/3" width={200} height={200} />
+            <Label className="block text-4xl font-bold tracking-tight sm:text-6xl">DIYspire - Unleash Your Creativity</Label>
             <Label className="mt-6 block text-lg leading-8">Discover unique DIY project ideas with personalized step-by-step guides, powered by OpenAI.</Label>
             <div className="mt-10 flex items-center justify-center gap-x-1">
               <Link href="/generate" className="rounded-md py-2.5 text-sm  ">

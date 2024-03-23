@@ -5,10 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useLoginUser, useRegisterUser } from "@/api/queries";
 import { useAuth } from "@/context/authContext";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/components/ui/use-toast";
 import SignIn from "@/components/login/signin";
 import SignUp from "@/components/login/signup";
 
@@ -20,7 +20,6 @@ export default function Login() {
   const searchParams = useSearchParams();
   const [redirectParams, setRedirectParams] = useState("");
 
-  const { toast } = useToast();
   const { login, isAuthenticated } = useAuth();
 
   const { mutate: mutateLogin, isPending: loginPending } = useLoginUser();
@@ -56,13 +55,11 @@ export default function Login() {
         if (error && error instanceof AxiosError) {
           const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
 
-          toast({
-            title: `API ERROR - ${error.code}`,
+          toast.error(`API ERROR - ${error.code}`, {
             description: errorMessage,
           });
         } else if (error) {
-          toast({
-            title: "Unexpected Error!",
+          toast.error("Unexpected Error!", {
             description: "An unexpected error occurred. Please try again later.",
           });
         }
@@ -81,13 +78,11 @@ export default function Login() {
         if (error && error instanceof AxiosError) {
           const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
 
-          toast({
-            title: `API ERROR - ${error.code}`,
+          toast.error(`API ERROR - ${error.code}`, {
             description: errorMessage,
           });
         } else if (error) {
-          toast({
-            title: "Unexpected Error!",
+          toast.error("Unexpected Error!", {
             description: "An unexpected error occurred. Please try again later.",
           });
         }

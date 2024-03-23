@@ -7,9 +7,9 @@ import { useAuth } from "@/context/authContext";
 import withAuth from "@/hocs/withAuth";
 import { ProjectDetails } from "@/interfaces";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
 import ProjectImage from "@/components/project-detail/project-image";
 import ProjectInfo from "@/components/project-detail/project-info";
 import ProjectSteps from "@/components/project-detail/project-step";
@@ -25,7 +25,6 @@ function ProjectDetail() {
 
   const isMountedRef = useRef(true);
 
-  const { toast } = useToast();
   const { accessToken } = useAuth();
 
   const { mutate: mutateGenerateProjectExplanations, data: projectExplanation, isPending: isExplanationPending } = useGenerateProjectExplanations();
@@ -71,13 +70,11 @@ function ProjectDetail() {
       if (error && error instanceof AxiosError) {
         const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
 
-        toast({
-          title: `API ERROR - ${error.code}`,
+        toast.error(`API ERROR - ${error.code}`, {
           description: errorMessage,
         });
       } else if (error) {
-        toast({
-          title: "Unexpected Error!",
+        toast.error("Unexpected Error!", {
           description: "An unexpected error occurred. Please try again later.",
         });
       }
@@ -117,23 +114,21 @@ function ProjectDetail() {
         onError: handleError,
       },
     );
-  }, [accessToken, isSuccess, mutateGenerateProjectExplanations, mutateSaveProjectData, project, relatedImages?.data, shareLink, toast]);
+  }, [accessToken, isSuccess, mutateGenerateProjectExplanations, mutateSaveProjectData, project, relatedImages?.data, shareLink]);
 
   useEffect(() => {
     if (imageError && imageError instanceof AxiosError) {
-      toast({
-        title: `API ERROR - ${imageError.code}`,
-        description: imageError.response?.data.error || "An error occurred while fetching data from the API.",
-      });
-    }
+      const errorMessage = imageError.response?.data.error || "An error occurred while fetching data from the API.";
 
-    if (imageError) {
-      toast({
-        title: "Unexpected Error!",
+      toast.error(`API ERROR - ${imageError.code}`, {
+        description: errorMessage,
+      });
+    } else if (imageError) {
+      toast.error("Unexpected Error!", {
         description: "An unexpected error occurred. Please try again later.",
       });
     }
-  }, [imageError, toast]);
+  }, [imageError]);
 
   return (
     <div className="container mx-auto py-5 sm:py-10">

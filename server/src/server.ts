@@ -36,8 +36,8 @@ const prisma = new PrismaClient();
 const redis = initRedisClient();
 const rateLimiter = new RateLimiterPrisma({
   storeClient: prisma,
-  points: 10,
-  duration: 60,
+  points: 25,
+  duration: 100,
 });
 
 app.use(compression());
@@ -70,7 +70,12 @@ app.set("redis", redis);
 
 app.use(userAgentMiddleware);
 
-app.use(morgan("tiny", { skip: () => process.env.NODE_ENV === "test", stream: { write: (message: string) => logger.info(message.trim()) } }));
+app.use(
+  morgan("tiny", {
+    skip: () => process.env.NODE_ENV === "test" || process.env.DISABLE_LOGGING === "true",
+    stream: { write: (message: string) => logger.info(message.trim()) },
+  }),
+);
 
 cron.schedule(process.env.CRON_SCHEDULE, async () => await performMonthlyDiyEmailDistribution(prisma, openai, unsplash), {
   scheduled: true,

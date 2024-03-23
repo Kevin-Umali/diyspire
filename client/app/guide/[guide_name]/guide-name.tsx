@@ -5,21 +5,19 @@ import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { useGuideByPath } from "@/api/queries";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/components/ui/use-toast";
 import CustomMarkdown from "@/components/custom-markdown";
 
 export default function HowToGuideDetail({ params }: { params: { guide_name: string } }) {
   const router = useRouter();
 
   const { data: guideDetails, error, isLoading } = useGuideByPath(params.guide_name);
-  const { toast } = useToast();
 
   useEffect(() => {
     if (!params.guide_name) {
-      toast({
-        title: "Oops!",
+      toast.info("Oops!", {
         description: "Not found",
       });
 
@@ -30,17 +28,15 @@ export default function HowToGuideDetail({ params }: { params: { guide_name: str
     if (error && error instanceof AxiosError) {
       const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
 
-      toast({
-        title: `API ERROR - ${error.code}`,
+      toast.error(`API ERROR - ${error.code}`, {
         description: errorMessage,
       });
     } else if (error) {
-      toast({
-        title: "Unexpected Error!",
+      toast.info("Unexpected Error!", {
         description: "An unexpected error occurred. Please try again later.",
       });
     }
-  }, [error, params.guide_name, router, toast]);
+  }, [error, params.guide_name, router]);
 
   return (
     <div className="container mx-auto p-5 sm:p-10">
@@ -65,7 +61,7 @@ export default function HowToGuideDetail({ params }: { params: { guide_name: str
       ) : (
         <>
           <div className="mb-10 text-center">
-            <h1 className="mb-3 text-lg sm:text-xl lg:text-2xl">&ldquo;MakeMeDIYspire&rdquo; Guides</h1>
+            <h1 className="mb-3 text-lg sm:text-xl lg:text-2xl">&ldquo;DIYspire&rdquo; Guides</h1>
           </div>
 
           {guideDetails && (

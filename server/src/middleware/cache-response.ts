@@ -17,14 +17,10 @@ const unifiedConditionalCacheMiddleware = <T>(duration: string | number) => {
     const redisClient = req.app.get("redis") as Redis;
 
     if (!redisClient || redisClient.status !== "ready") {
-      logger.info("Using apicache as fallback");
-
       const apicachiSend = getApicacheMiddleware(duration);
 
       return apicachiSend(req, res, next);
     }
-
-    logger.info("Using Redis for caching");
 
     const cacheType = req.user?.id ? `user:${req.user.id}` : "global";
     const key = `cache:${cacheType}:${req.originalUrl}`;

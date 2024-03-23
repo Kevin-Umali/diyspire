@@ -225,39 +225,39 @@ export const faqs: FAQ[] = [
     question: "Getting Started",
     answer: "It's straightforward! Visit the {homeLink}, input your preferences, such as materials and other options, and we'll generate a unique DIY project suggestion tailored for you.",
     links: {
-      homeLink: { href: "/", text: "MakeMeDIYspire homepage" },
+      homeLink: { href: "/", text: "DIYspire homepage" },
     },
   },
   {
-    id: "makemediyspire",
-    question: "What is MakeMeDIYspire?",
+    id: "DIYspire",
+    question: "What is DIYspire?",
     answer:
-      "MakeMeDIYspire is a revolutionary platform powered by OpenAI. It provides unique DIY (Do It Yourself) project suggestions tailored for enthusiasts of all levels. Our platform not only offers project ideas but also outlines the materials required and the steps to bring these projects to life. Whether you're a seasoned DIYer or just starting, MakeMeDIYspire has something for you!",
+      "DIYspire is a revolutionary platform powered by OpenAI. It provides unique DIY (Do It Yourself) project suggestions tailored for enthusiasts of all levels. Our platform not only offers project ideas but also outlines the materials required and the steps to bring these projects to life. Whether you're a seasoned DIYer or just starting, DIYspire has something for you!",
   },
   {
     id: "how",
-    question: "How does MakeMeDIYspire work?",
+    question: "How does DIYspire work?",
     answer:
       "Utilizing the capabilities of OpenAI, our platform generates distinct DIY project ideas based on a variety of factors and categories. Once you select a project, you will receive a detailed list of materials needed and a step-by-step guide to complete the project. Refer to {guideLink} guide.",
     links: {
-      guideLink: { href: "/how-to-guide", text: "How to use the MakeMeDIYspire DIY Idea Generator" },
+      guideLink: { href: "/how-to-guide", text: "How to use the DIYspire DIY Idea Generator" },
     },
   },
   {
     id: "usage-guidelines",
     question: "Usage Guidelines",
-    answer: "MakeMeDIYspire is entirely free to use. Dive in, explore the multitude of ideas, and get started on your DIY journey!",
+    answer: "DIYspire is entirely free to use. Dive in, explore the multitude of ideas, and get started on your DIY journey!",
   },
   {
     id: "security-privacy",
     question: "Security and Privacy",
     answer:
-      "MakeMeDIYspire is a platform solely designed to generate DIY project ideas. We don't store or collect any personal information from our users. Just visit, generate ideas, and rest assured about your online privacy.",
+      "DIYspire is a platform solely designed to generate DIY project ideas. We don't store or collect any personal information from our users. Just visit, generate ideas, and rest assured about your online privacy.",
   },
   {
     id: "feedback",
     question: "How can I give feedback or suggestions?",
-    answer: "We're always eager to hear from our users! If you have any feedback or suggestions for MakeMeDIYspire, please {githubLink}. Your insights can help us enhance the platform for everyone.",
+    answer: "We're always eager to hear from our users! If you have any feedback or suggestions for DIYspire, please {githubLink}. Your insights can help us enhance the platform for everyone.",
     links: {
       githubLink: { href: "https://github.com/Kevin-Umali/diyspire/issues", text: "open a pull request or issue on our GitHub repository" },
     },

@@ -252,8 +252,8 @@ export const performMonthlyDiyEmailDistribution = async (prisma: PrismaClient<Pr
     const unplashImage = await getUnplashImage(unsplash, monthlyDiyProject.title);
     const generatedHtml = await fillTemplate(join(__dirname, "..", "template", "index.html"), {
       header_image: "https://www.diyspire.online/android-chrome-192x192.png",
-      header_alt: "MakeMeDIYspire - diyspire.online logo",
-      header_title: "MakeMeDIYspire",
+      header_alt: "DIYspire - diyspire.online logo",
+      header_title: "DIYspire",
       welcome_title: monthlyDiyProject.welcome.title,
       welcome_content: monthlyDiyProject.welcome.content,
       project_image: unplashImage.urls.regular,
@@ -292,7 +292,7 @@ export const performMonthlyDiyEmailDistribution = async (prisma: PrismaClient<Pr
 
         return {
           to: subscriber.address,
-          subject: `MakeMeDIYspire - ${monthlyDiyProject.title}`,
+          subject: `DIYspire - ${monthlyDiyProject.title}`,
           text: monthlyDiyProject.fallback,
           html: updatedGeneratedHtml,
           unsubscribeUrl: unsubscribeUrl,

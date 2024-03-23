@@ -45,7 +45,7 @@ export const generateIdea = async (req: BodyRequest<IdeaRequest>, res: Response,
                 "tools": ["List of required tools"],
                 "time": "Estimated time to complete the project",
                 "budget": "Estimated budget for the project, including the materials and tools cost if needed",
-                "tags": ["Tags/Hashtag about this project"],
+                "tags": ["Tags about this project"] - Use the Category as the first tag and the Difficulty as the second tag. You can generate the last one by yourself.,
                 "description": "A short descriptive text of the project"
             },
             ... // Please provide three ideas in total.

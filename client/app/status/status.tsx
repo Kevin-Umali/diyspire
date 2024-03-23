@@ -5,9 +5,9 @@ import { useCheckBackEndHealthStatus } from "@/api/queries";
 import { HealthCheckStatus } from "@/interfaces";
 import { AxiosError } from "axios";
 import { CheckCircle, XCircle } from "lucide-react";
+import { toast } from "sonner";
 
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import Legend from "@/components/status/legend";
 import ServiceItem from "@/components/status/service-item";
 
@@ -19,25 +19,21 @@ const renderServiceItem = (status: HealthCheckStatus) => {
 };
 
 const StatusPage: React.FC = () => {
-  const { toast } = useToast();
-
   const { data: statusData, error, isLoading: loading } = useCheckBackEndHealthStatus();
 
   useEffect(() => {
     if (error && error instanceof AxiosError) {
       const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
 
-      toast({
-        title: `API ERROR - ${error.code}`,
+      toast.error(`API ERROR - ${error.code}`, {
         description: errorMessage,
       });
     } else if (error) {
-      toast({
-        title: "Unexpected Error!",
+      toast.error("Unexpected Error!", {
         description: "An unexpected error occurred. Please try again later.",
       });
     }
-  }, [error, toast]);
+  }, [error]);
 
   if (loading || !statusData) {
     return <Loading />;

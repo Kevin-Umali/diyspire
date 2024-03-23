@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
 
         <address className="flex items-center">
           <p className="pl-2 text-sm">
-            Powered by MakeMeDIYspire ✨ | Made with ❤️ by -{" "}
+            Powered by DIYspire ✨ | Made with ❤️ by -{" "}
             <a href="#" className="px-4 py-2 text-blue-500" rel="noopener noreferrer" target="_blank" aria-label="Kooma - External Link">
               Kooma
             </a>

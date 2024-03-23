@@ -4,37 +4,34 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useGuides } from "@/api/queries";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/components/ui/use-toast";
 
 export default function HowToGuidesList() {
   const { data: guides, error, isLoading: loading } = useGuides();
-  const { toast } = useToast();
 
   useEffect(() => {
     if (error && error instanceof AxiosError) {
       const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
 
-      toast({
-        title: `API ERROR - ${error.code}`,
+      toast.error(`API ERROR - ${error.code}`, {
         description: errorMessage,
       });
     } else if (error) {
-      toast({
-        title: "Unexpected Error!",
+      toast.error("Unexpected Error!", {
         description: "An unexpected error occurred. Please try again later.",
       });
     }
-  }, [error, toast]);
+  }, [error]);
 
   return (
     <>
       <div className="container mx-auto px-5 py-12 sm:px-10">
         <div className="mb-12 text-center">
-          <h1 className="mb-3 text-3xl font-semibold lg:text-4xl">&ldquo;MakeMeDIYspire&rdquo; Guides</h1>
+          <h1 className="mb-3 text-3xl font-semibold lg:text-4xl">&ldquo;DIYspire&rdquo; Guides</h1>
           <Label className="sm:text-md mt-2 inline-block text-sm">From usage to troubleshooting, explore our detailed guides to get the most out of the DIY project generator.</Label>
         </div>
 

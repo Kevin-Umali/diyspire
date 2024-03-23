@@ -3,8 +3,7 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useLogoutUser, useRefreshToken } from "@/api/queries";
 import { AxiosError } from "axios";
-
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -28,8 +27,6 @@ const AuthContext = createContext<Partial<AuthContextProps>>({});
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-
-  const { toast } = useToast();
 
   const { mutate: mutateRefreshToken } = useRefreshToken();
   const { mutate: mutateLogoutUser } = useLogoutUser();
@@ -64,20 +61,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           if (error && error instanceof AxiosError) {
             const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
 
-            toast({
-              title: `API ERROR - ${error.code}`,
+            toast.error(`API ERROR - ${error.code}`, {
               description: errorMessage,
             });
           } else if (error) {
-            toast({
-              title: "Unexpected Error!",
+            toast.error("Unexpected Error!", {
               description: "An unexpected error occurred. Please try again later.",
             });
           }
         },
       });
     }
-  }, [accessToken, mutateLogoutUser, toast]);
+  }, [accessToken, mutateLogoutUser]);
 
   const contextValue = useMemo(() => {
     return {
