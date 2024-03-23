@@ -3,12 +3,12 @@ import { Metadata } from "next";
 import Login from "./login";
 
 export const metadata: Metadata = {
-  title: "MakeMeDIYspire Login or Signup",
-  description: "Start your journey with MakeMeDIYspire by signing up or signing in. Explore and create amazing DIY projects today!",
+  title: "DIYspire Login or Signup",
+  description: "Start your journey with DIYspire by signing up or signing in. Explore and create amazing DIY projects today!",
   keywords: [
-    "MakeMeDIYSpire Sign In",
-    "MakeMeDIYSpire Sign Up",
-    "MakeMeDIYspire Account",
+    "DIYspire Sign In",
+    "DIYspire Sign Up",
+    "DIYspire Account",
     "DIY Project Sign In",
     "DIY Project Sign Up",
     "Login for DIY Projects",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "DIY Crafting Guide",
   ],
   metadataBase: new URL("https://www.diyspire/login"),
-  applicationName: "MakeMeDIYspire",
+  applicationName: "DIYspire",
 };
 
 export default function Page() {

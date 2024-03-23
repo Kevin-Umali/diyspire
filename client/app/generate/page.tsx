@@ -3,10 +3,10 @@ import { Metadata } from "next";
 import Generate from "./generate";
 
 export const metadata: Metadata = {
-  title: "MakeMeDIYspire DIY Project Generator",
-  description: "Start your journey with MakeMeDIYspire by signing up or signing in. Explore and create amazing DIY projects today!",
+  title: "DIYspire DIY Project Generator",
+  description: "Start your journey with DIYspire by signing up or signing in. Explore and create amazing DIY projects today!",
   keywords: [
-    "MakeMeDIYSpire DIY Generator",
+    "DIYspire DIY Generator",
     "DIY Project DIY Generator",
     "Generator for DIY Projects",
     "Generate DIY Crafting",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "Generate AI DIY Project",
   ],
   metadataBase: new URL("https://www.diyspire/generate"),
-  applicationName: "MakeMeDIYspire",
+  applicationName: "DIYspire",
 };
 
 export default function Page() {

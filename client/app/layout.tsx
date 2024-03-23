@@ -7,7 +7,7 @@ import { Inter } from "next/font/google";
 import { AuthProvider } from "@/context/authContext";
 import { CurrencyProvider } from "@/context/currencyContext";
 
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 
@@ -16,8 +16,8 @@ import TanstackQueryProvider from "./tanstack-query-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MakeMeDIYspire - AI-Powered DIY Project Idea Generator",
-  description: "Unleash a world of unique DIY project ideas with MakeMeDIYspire, an AI-powered generator backed by OpenAI. Ignite your creativity and embark on your next inventive journey.",
+  title: "DIYspire - AI-Powered DIY Project Idea Generator",
+  description: "Unleash a world of unique DIY project ideas with DIYspire, an AI-powered generator backed by OpenAI. Ignite your creativity and embark on your next inventive journey.",
   keywords: [
     "AI DIY Projects",
     "OpenAI Project Ideas",
@@ -29,17 +29,17 @@ export const metadata: Metadata = {
     "DIY Creativity",
   ],
   metadataBase: new URL("https://www.diyspire.online/"),
-  applicationName: "MakeMeDIYspire",
+  applicationName: "DIYspire",
   openGraph: {
     type: "website",
     url: "https://www.diyspire.online/",
-    title: "MakeMeDIYspire - AI-Powered DIY Project Idea Generator",
-    description: "Unleash a world of unique DIY project ideas with MakeMeDIYspire, an AI-powered generator backed by OpenAI. Ignite your creativity and embark on your next inventive journey.",
+    title: "DIYspire - AI-Powered DIY Project Idea Generator",
+    description: "Unleash a world of unique DIY project ideas with DIYspire, an AI-powered generator backed by OpenAI. Ignite your creativity and embark on your next inventive journey.",
   },
   twitter: {
     site: "https://www.diyspire.online/",
-    title: "MakeMeDIYspire - AI-Powered DIY Project Idea Generator",
-    description: "Unleash a world of unique DIY project ideas with MakeMeDIYspire, an AI-powered generator backed by OpenAI. Ignite your creativity and embark on your next inventive journey.",
+    title: "DIYspire - AI-Powered DIY Project Idea Generator",
+    description: "Unleash a world of unique DIY project ideas with DIYspire, an AI-powered generator backed by OpenAI. Ignite your creativity and embark on your next inventive journey.",
   },
   themeColor: [{ color: "#ffffff" }],
   colorScheme: "light",
@@ -57,11 +57,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <AuthProvider>
               <CurrencyProvider>
+                <Toaster position="top-center" richColors />
                 <div className="flex min-h-screen flex-col">
                   <Navbar />
                   <main className="grow">{children}</main>
                   <Footer />
-                  <Toaster />
                 </div>
               </CurrencyProvider>
             </AuthProvider>

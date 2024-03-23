@@ -1,11 +1,11 @@
 import { Check, Copy, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 import useClipboard from "@/hooks/useClipboard";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 
 interface ShareDialogProps {
   isOpen: boolean;
@@ -16,7 +16,6 @@ interface ShareDialogProps {
 
 const ShareDialog: React.FC<ShareDialogProps> = ({ isOpen, onClose, isSaving, shareLink }) => {
   const { hasCopied, onCopy } = useClipboard(shareLink ?? "");
-  const { toast } = useToast();
 
   const handleWebShare = async () => {
     if (navigator.share && shareLink) {
@@ -26,14 +25,12 @@ const ShareDialog: React.FC<ShareDialogProps> = ({ isOpen, onClose, isSaving, sh
           url: shareLink,
         });
       } catch (error) {
-        toast({
-          title: "Share Failed",
+        toast.error("Share Failed", {
           description: "There was an error while sharing.",
         });
       }
     } else {
-      toast({
-        title: "Share Unavailable",
+      toast.error("Share Unavailable", {
         description: "Web Share API is not supported in this browser.",
       });
     }

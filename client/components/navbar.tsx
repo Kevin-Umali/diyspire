@@ -40,7 +40,7 @@ const Navbar: React.FC = () => {
         <Image src="/android-chrome-512x512.png" alt="Logo" width={32} height={32} priority={true} />
         <div className="">
           <h1 className="text-md sm:text-xl lg:text-xl">
-            <Link href="/">MakeMeDIYspire</Link>
+            <Link href="/">DIYspire</Link>
           </h1>
         </div>
       </div>

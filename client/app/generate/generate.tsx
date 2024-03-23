@@ -9,11 +9,11 @@ import { useAuth } from "@/context/authContext";
 import { useCurrency } from "@/context/currencyContext";
 import { AxiosError } from "axios";
 import { RefreshCcw } from "lucide-react";
+import { toast } from "sonner";
 
 import useURLState from "@/hooks/useUrlState";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import CategoryFilter from "@/components/generate/category-filter";
 import DifficultyFilter from "@/components/generate/difficulty-filter";
 import MaterialInput from "@/components/generate/material-input";
@@ -43,8 +43,6 @@ export default function Generate() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const { toast } = useToast();
-
   const { isAuthenticated, accessToken } = useAuth();
   const { currency } = useCurrency();
 
@@ -60,20 +58,18 @@ export default function Generate() {
       incrementCounterMutation.mutate(accessToken, {
         onError: (error) => {
           if (error instanceof AxiosError) {
-            toast({
-              title: `Increment Counter Error - ${error.code}`,
+            toast.error(`Increment Counter Error - ${error.code}`, {
               description: error.response?.data.error || "An error occurred while incrementing the idea generation counter.",
             });
           } else {
-            toast({
-              title: "Unexpected Error!",
+            toast.error("Unexpected Error!", {
               description: "An unexpected error occurred during the counter increment. Please try again later.",
             });
           }
         },
       });
     },
-    [incrementCounterMutation, toast],
+    [incrementCounterMutation],
   );
 
   const handleGenerateProjects = useCallback(async () => {
@@ -112,13 +108,11 @@ export default function Generate() {
           if (error && error instanceof AxiosError) {
             const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
 
-            toast({
-              title: `API ERROR - ${error.code}`,
+            toast.error(`API ERROR - ${error.code}`, {
               description: errorMessage,
             });
           } else if (error) {
-            toast({
-              title: "Unexpected Error!",
+            toast.error("Unexpected Error!", {
               description: "An unexpected error occurred. Please try again later.",
             });
           }
@@ -143,7 +137,6 @@ export default function Generate() {
     searchParams,
     router,
     incrementCounter,
-    toast,
   ]);
 
   const advancedOptions = useMemo(
@@ -219,8 +212,8 @@ export default function Generate() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-12 text-center">
-        <h1 className="mb-3 text-3xl font-semibold lg:text-4xl">&ldquo;MakeMeDIYspire&rdquo; DIY Ideas Generator</h1>
-        <Label className="sm:text-md mt-2 inline-block text-sm">Explore our detailed guides and unleash your creativity with the MakeMeDIYspire DIY Ideas Generator.</Label>
+        <h1 className="mb-3 text-3xl font-semibold lg:text-4xl">&ldquo;DIYspire&rdquo; DIY Ideas Generator</h1>
+        <Label className="sm:text-md mt-2 inline-block text-sm">Explore our detailed guides and unleash your creativity with the DIYspire DIY Ideas Generator.</Label>
       </div>
       {renderContent()}
     </div>

@@ -7,7 +7,7 @@ const initRedisClient = (): Redis | null => {
     return null;
   }
 
-  const maxRetries = 2;
+  const maxRetries = 1;
   let retryAttempt = 0;
 
   const redis = new Redis(process.env.REDIS_URL, {
@@ -19,7 +19,7 @@ const initRedisClient = (): Redis | null => {
         return null;
       }
 
-      const delay = Math.min(times * 100, 5000); // Calculate delay, but cap at 5000ms
+      const delay = Math.min(times * 100, 5000);
       logger.info(`Retrying Redis connection. Attempt ${retryAttempt}. Next retry in ${delay}ms.`);
       return delay;
     },

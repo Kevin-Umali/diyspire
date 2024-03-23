@@ -39,6 +39,7 @@ const environmentSchema = z.object({
   JWT_SECRET_KEY: z.string(),
   JWT_REFRESH_SECRET_KEY: z.string(),
   BACKEND_URL: z.string().url(),
+  DISABLED_LOGGING: z.enum(["true", "false"]).optional().default("false"),
 
   EMAIL_USER: z.string().email(),
   EMAIL_PASSWORD: z.string(),
@@ -73,6 +74,7 @@ const env = {
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
   JWT_REFRESH_SECRET_KEY: process.env.JWT_REFRESH_SECRET_KEY,
   BACKEND_URL: process.env.BACKEND_URL,
+  DISABLED_LOGGING: process.env.DISABLED_LOGGING,
 
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,

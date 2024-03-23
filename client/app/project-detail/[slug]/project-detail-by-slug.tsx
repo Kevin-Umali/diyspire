@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCommunityProjectBySlugData } from "@/api/queries";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
 import ProjectImage from "@/components/project-detail/project-image";
 import ProjectInfo from "@/components/project-detail/project-info";
 import ProjectSteps from "@/components/project-detail/project-step";
@@ -18,14 +18,11 @@ export default function ProjectDetailBySlug({ params }: { params: { slug: string
 
   const router = useRouter();
 
-  const { toast } = useToast();
-
   const { data: communityProjectData, error, isLoading } = useCommunityProjectBySlugData(params.slug);
 
   useEffect(() => {
     if (!params.slug) {
-      toast({
-        title: "Oops!",
+      toast.info("Oops!", {
         description: "Not found",
       });
 
@@ -36,17 +33,15 @@ export default function ProjectDetailBySlug({ params }: { params: { slug: string
     if (error && error instanceof AxiosError) {
       const errorMessage = error.response?.data.error || "An error occurred while fetching data from the API.";
 
-      toast({
-        title: `API ERROR - ${error.code}`,
+      toast.error(`API ERROR - ${error.code}`, {
         description: errorMessage,
       });
     } else if (error) {
-      toast({
-        title: "Unexpected Error!",
+      toast.error("Unexpected Error!", {
         description: "An unexpected error occurred. Please try again later.",
       });
     }
-  }, [error, params.slug, router, toast]);
+  }, [error, params.slug, router]);
 
   return (
     <div className="container mx-auto py-5 sm:py-10">
