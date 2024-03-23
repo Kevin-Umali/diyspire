@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { z, ZodType } from "zod";
 import { JsonValue } from "@prisma/client/runtime/library";
 
@@ -130,3 +131,63 @@ export const removeDuplicates = (data: { [key: string]: any }[], props: string[]
 };
 
 export const allowedOrigins = process.env.WEBSITE_URL!.split(",").map((origin) => origin.trim());
+
+const isIp = (value: any): boolean => {
+  const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+  const ipv6Regex =
+    /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
+
+  return ipv4Regex.test(value) || ipv6Regex.test(value);
+};
+
+const getClientIpFromXForwardedFor = (value: string | undefined): string | null => {
+  if (!value) {
+    return null;
+  }
+
+  const forwardedIps = value.split(",").map((e) => {
+    const ip = e.trim();
+    if (ip.includes(":")) {
+      const splitted = ip.split(":");
+      if (splitted.length === 2 && isIp(splitted[0])) {
+        return splitted[0];
+      }
+    }
+    return ip;
+  });
+
+  for (let i = forwardedIps.length - 1; i >= 0; i--) {
+    if (forwardedIps[i] && isIp(forwardedIps[i])) {
+      return forwardedIps[i] as string;
+    }
+  }
+
+  return null;
+};
+
+export const extractClientIp = (request: Request): string => {
+  const headers = [
+    "X-Client-IP",
+    "X-Forwarded-For",
+    "CF-Connecting-IP",
+    "Fastly-Client-Ip",
+    "True-Client-Ip",
+    "X-Real-IP",
+    "X-Cluster-Client-IP",
+    "X-Forwarded",
+    "Forwarded-For",
+    "Forwarded",
+    "appengine-user-ip",
+    "Cf-Pseudo-IPv4",
+  ];
+
+  for (const header of headers) {
+    const value = request.headers[header.toLowerCase()] as string | undefined;
+    if (value) {
+      const ip = getClientIpFromXForwardedFor(value);
+      if (ip) return ip;
+    }
+  }
+
+  return (request.ip || request.socket.remoteAddress || (request.connection && request.connection.remoteAddress) || "unknown").replace(/:\d+[^:]*$/, "");
+};
