@@ -1,15 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import { RateLimiterPrisma, RateLimiterRes } from "rate-limiter-flexible";
-import { extractClientIp } from "../utils";
+import { extractClientIpFromHeaders, isIp } from "../utils";
 import logger from "../utils/logger";
 import sendResponse from "../utils/response-template";
 
 const keyGenerator = (request: Request): string => {
-  const ip = extractClientIp(request);
-  if (ip === "unknown") {
-    logger.error("Warning: Unable to extract client IP!");
+  let ip: string | null | undefined = request.ip || request.socket.remoteAddress || request.connection?.remoteAddress;
+  ip = ip?.replace(/:\d+[^:]*$/, "");
+
+  if (ip && isIp(ip)) {
+    return ip;
+  } else {
+    ip = extractClientIpFromHeaders(request);
+    if (ip) {
+      return ip;
+    } else {
+      logger.error("Warning: Unable to extract client IP, defaulting to 'unknown'");
+      return "unknown";
+    }
   }
-  return ip;
 };
 
 const rateLimitMiddleware = (rateLimiter: RateLimiterPrisma) => {
