@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.diyspire.online
+
+# Sitemaps
+Sitemap: https://www.diyspire.online/sitemap.xml

@@ -181,6 +181,10 @@ export interface CommunityProjectData {
   totalCount: number;
 }
 
+export interface CommunityProjectSlugData extends Omit<CommunityProjectData, "projects"> {
+  projects: { slug: string }[];
+}
+
 export interface CommunityProjects {
   id: number;
   slug: string;

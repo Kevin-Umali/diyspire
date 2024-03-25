@@ -7,7 +7,7 @@ import sendResponse from "../utils/response-template";
 
 export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGeneratedIdeaRequest>, res: Response, next: NextFunction) => {
   try {
-    const { page, limit, orderBy } = req.query;
+    const { page, limit, orderBy, onlySlug } = req.query;
 
     const { validOffset, validLimit, validOrderBy } = validateQueryFilter(page, limit, orderBy);
 
@@ -53,22 +53,26 @@ export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGener
       return sendResponse(res, { success: false, error: "No community project exist" }, 404);
     }
 
-    const transformedProjects = projectsResult.map((project) => ({
-      id: project.id,
-      slug: project.slug,
-      title: project.projectDetails.title,
-      description: project.projectDetails.description,
-      tags: project.projectDetails.tags,
-      projectImage: {
-        alt_description: project.projectImage.alt_description,
-        urls: project.projectImage.urls,
-      },
-      createdAt: project.createdAt,
-      accounts: project.accountProjects.map((ap) => ({
-        id: ap.account.id,
-        username: ap.account.username,
-      })),
-    }));
+    const transformedProjects = projectsResult.map((project) =>
+      onlySlug === "true"
+        ? { slug: project.slug }
+        : {
+            id: project.id,
+            slug: project.slug,
+            title: project.projectDetails.title,
+            description: project.projectDetails.description,
+            tags: project.projectDetails.tags,
+            projectImage: {
+              alt_description: project.projectImage.alt_description,
+              urls: project.projectImage.urls,
+            },
+            createdAt: project.createdAt,
+            accounts: project.accountProjects.map((ap) => ({
+              id: ap.account.id,
+              username: ap.account.username,
+            })),
+          },
+    );
 
     return sendResponse(res, { success: true, data: { projects: transformedProjects, totalCount: totalCountResult } });
   } catch (error) {
