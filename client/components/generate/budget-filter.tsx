@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 interface BudgetFilterProps {
-  currency: string;
+  currency?: string;
   budget: string;
   onBudgetChange: (budget: string) => void;
   className?: string;

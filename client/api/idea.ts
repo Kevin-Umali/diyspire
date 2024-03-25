@@ -1,4 +1,4 @@
-import { ApiResponse, CommunityProjectData, CounterData, GeneratedIdeaData, HttpMethod, IdeaExplanationData, ProjectData, ProjectDetailsMetadata } from "@/interfaces";
+import { ApiResponse, CommunityProjectData, CommunityProjectSlugData, CounterData, GeneratedIdeaData, HttpMethod, IdeaExplanationData, ProjectData, ProjectDetailsMetadata } from "@/interfaces";
 
 import { fetchApi } from "@/lib/api-helper";
 
@@ -50,14 +50,10 @@ export const incrementCounterOfGeneratedIdea = (accessToken: string): Promise<vo
   return fetchApi("/v1/counter", { method: HttpMethod.POST, accessToken });
 };
 
-export const getCommunityGeneratedProjectData = (
-  params: {
-    page?: number;
-    limit?: number;
-    orderBy?: string;
-  } = {},
-): Promise<ApiResponse<CommunityProjectData>> => {
-  return fetchApi<ApiResponse<CommunityProjectData>>("/v1/community", {
+export const getCommunityGeneratedProjectData = <T extends { page?: number; limit?: number; orderBy?: string; onlySlug?: boolean }>(
+  params: T,
+): Promise<ApiResponse<T["onlySlug"] extends true ? CommunityProjectSlugData : CommunityProjectData>> => {
+  return fetchApi<ApiResponse<T["onlySlug"] extends true ? CommunityProjectSlugData : CommunityProjectData>>("/v1/community", {
     queryParams: params,
   });
 };

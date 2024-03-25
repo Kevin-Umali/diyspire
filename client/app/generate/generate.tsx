@@ -93,7 +93,7 @@ export default function Generate() {
           timeValue,
           timeUnit,
           budget,
-          currency,
+          currency: currency ?? "PHP",
           endPurpose: purpose,
         },
         accessToken: accessToken!,

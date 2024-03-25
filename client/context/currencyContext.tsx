@@ -1,10 +1,10 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 interface CurrencyContextProps {
   currency: string;
-  setCurrency: React.Dispatch<React.SetStateAction<string>>;
+  setCurrency: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 const CurrencyContext = createContext<CurrencyContextProps | undefined>(undefined);
@@ -14,7 +14,7 @@ interface CurrencyProviderProps {
 }
 
 export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) => {
-  const [currency, setCurrency] = useState<string>("PHP");
+  const [currency, setCurrency] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const savedCurrency = localStorage.getItem("selectedCurrency") ?? "PHP";
@@ -22,12 +22,29 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("selectedCurrency", currency);
+    if (currency !== undefined) {
+      localStorage.setItem("selectedCurrency", currency);
+    }
   }, [currency]);
 
-  const contextValue = useMemo(() => {
-    return { currency, setCurrency };
-  }, [currency, setCurrency]);
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === "selectedCurrency") {
+        setCurrency(event.newValue ?? "PHP");
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  const contextValue = {
+    currency: currency ?? "PHP",
+    setCurrency,
+  };
 
   return <CurrencyContext.Provider value={contextValue}>{children}</CurrencyContext.Provider>;
 };

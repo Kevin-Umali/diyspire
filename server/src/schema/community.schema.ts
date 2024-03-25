@@ -5,6 +5,7 @@ export const CommunityGeneratedIdeaSchema = z.object({
   limit: createNonRequiredString().optional(),
   page: createNonRequiredString().optional(),
   orderBy: z.enum(["asc", "desc"]).optional(),
+  onlySlug: z.enum(["true", "false"]).optional().default("false"),
 });
 
 export type CommunityGeneratedIdeaRequest = z.infer<typeof CommunityGeneratedIdeaSchema>;

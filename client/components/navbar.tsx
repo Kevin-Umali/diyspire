@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
 
       <div className="flex items-center space-x-2">
         <div className="hidden space-x-2 lg:flex">
-          <Select onValueChange={setCurrency} defaultValue={currency} aria-label="Select currency">
+          <Select key={currency} onValueChange={setCurrency} defaultValue={currency} aria-label="Select currency">
             <SelectTrigger className="w-[130px]" aria-label="Select a currency to use">
               <SelectValue placeholder="Select currency" />
             </SelectTrigger>
