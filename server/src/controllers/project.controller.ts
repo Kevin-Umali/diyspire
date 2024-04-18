@@ -226,8 +226,6 @@ export const getProjectByAccountId = async (req: QueryRequest<ProjectByAccountId
       }
     }
 
-    console.info(page, limit, orderBy, sortBy, search, filter, orderBy ? { [orderBy]: validSortBy } : undefined);
-
     const [projects, count] = await Promise.allSettled([
       prisma.accountProjects.findMany({
         where: whereCondition,
