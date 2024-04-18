@@ -1,4 +1,4 @@
-import { ApiResponse, HttpMethod, ProjectData, ProjectDetails, ProjectDetailsMetadata, ProjectImages, SaveProjectResponseData } from "@/interfaces";
+import { ApiResponse, HttpMethod, ProjectByAccountIdData, ProjectData, ProjectDetails, ProjectDetailsMetadata, ProjectImages, SaveProjectResponseData } from "@/interfaces";
 
 import { fetchApi } from "@/lib/api-helper";
 
@@ -23,5 +23,15 @@ export const getProjectDataById = (id: string): Promise<ApiResponse<ProjectData>
 export const getProjectDataByIdMetadata = (id: string): Promise<ApiResponse<ProjectDetailsMetadata>> => {
   return fetchApi<ApiResponse<ProjectDetailsMetadata>>(`/v1/project/${id}`, {
     queryParams: { onlyMetadata: "true" },
+  });
+};
+
+export const getProjectByAccountId = (
+  accessToken: string,
+  params: { page?: number; limit?: number; sortBy?: string; orderBy?: string; search?: string; filter?: string[] },
+): Promise<ApiResponse<ProjectByAccountIdData>> => {
+  return fetchApi<ApiResponse<ProjectByAccountIdData>>("/v1/project", {
+    queryParams: params,
+    accessToken,
   });
 };

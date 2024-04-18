@@ -6,8 +6,8 @@ import { Label } from "@/components/ui/label";
 
 export default function Home() {
   return (
-    <div>
-      <div className="relative isolate px-6 pt-14 lg:px-8">
+    <div className="flex h-screen items-center justify-center">
+      <div className="relative isolate mt-[-10vh] px-6 pt-14 lg:px-8">
         <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
           <div
             className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#6ee7b7] to-[#3f6212] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
@@ -22,7 +22,7 @@ export default function Home() {
             <Label className="block text-4xl font-bold tracking-tight sm:text-6xl">DIYspire - Unleash Your Creativity</Label>
             <Label className="mt-6 block text-lg leading-8">Discover unique DIY project ideas with personalized step-by-step guides, powered by OpenAI.</Label>
             <div className="mt-10 flex items-center justify-center gap-x-1">
-              <Link href="/generate" className="rounded-md py-2.5 text-sm  ">
+              <Link href="/login" className="rounded-md py-2.5 text-sm  ">
                 <Button>Get started</Button>
               </Link>
               <Link href="/guide" className="text-sm leading-6 ">

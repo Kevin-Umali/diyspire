@@ -4,7 +4,7 @@ import { createNonRequiredString, createRequiredString } from "../utils";
 export const CommunityGeneratedIdeaSchema = z.object({
   limit: createNonRequiredString().optional(),
   page: createNonRequiredString().optional(),
-  orderBy: z.enum(["asc", "desc"]).optional(),
+  sortBy: z.enum(["asc", "desc"]).optional(),
   onlySlug: z.enum(["true", "false"]).optional().default("false"),
 });
 

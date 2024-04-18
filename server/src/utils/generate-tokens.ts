@@ -19,23 +19,23 @@ export const generateTokens = async ({ options }: GenerateTokenOptions) => {
 
   if ("email" in options) {
     keys = {
-      accessTokenKey: process.env.EMAIL_SECRET_KEY!,
+      accessTokenKey: process.env.EMAIL_SECRET_KEY,
       expiresIn: "30d",
     };
   } else {
     keys = {
-      accessTokenKey: process.env.JWT_SECRET_KEY!,
-      refreshTokenKey: process.env.JWT_REFRESH_SECRET_KEY!,
+      accessTokenKey: process.env.JWT_SECRET_KEY,
+      refreshTokenKey: process.env.JWT_REFRESH_SECRET_KEY,
       expiresIn: "1h",
     };
   }
 
   const payload = "email" in options ? { id: options.id, email: options.email } : { id: options.id, username: options.username };
-  const accessToken = sign(payload, keys.accessTokenKey, { expiresIn: keys.expiresIn ?? "1h" });
+  const accessToken = sign(payload, keys.accessTokenKey, { expiresIn: keys.expiresIn ?? "1h", issuer: process.env.BACKEND_URL.slice(0, -1), audience: options.id.toString() });
 
   let refreshToken;
   if (keys.refreshTokenKey) {
-    refreshToken = sign(payload, keys.refreshTokenKey, { expiresIn: "2d" });
+    refreshToken = sign(payload, keys.refreshTokenKey, { expiresIn: "2d", issuer: process.env.BACKEND_URL.slice(0, -1), audience: options.id.toString() });
   }
 
   return refreshToken ? { accessToken, refreshToken } : { accessToken };

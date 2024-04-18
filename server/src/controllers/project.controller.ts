@@ -1,7 +1,8 @@
 import { NextFunction, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
-import { BodyRequest, QueryParamsRequest } from "../middleware/schema-validate";
-import { ProjectBodyRequest, ProjectByIdParamsRequest, ProjectByIdQueryRequest } from "../schema/project.schema";
+import { BodyRequest, QueryParamsRequest, QueryRequest } from "../middleware/schema-validate";
+import { ProjectBodyRequest, ProjectByAccountIdRequest, ProjectByIdParamsRequest, ProjectByIdQueryRequest } from "../schema/project.schema";
+import { validateQueryFilter } from "../utils";
 import sendResponse from "../utils/response-template";
 
 export const saveProject = async (req: BodyRequest<ProjectBodyRequest>, res: Response, next: NextFunction) => {
@@ -27,11 +28,6 @@ export const saveProject = async (req: BodyRequest<ProjectBodyRequest>, res: Res
           .join("-");
         const uniqueSlug = `how-to-make-${baseSlug}`;
         let slug = uniqueSlug;
-        let counter = 1;
-        while (await tx.project.findUnique({ where: { slug } })) {
-          slug = `${uniqueSlug}-${counter}`;
-          counter++;
-        }
 
         const existingProject = await tx.projectDetails.findFirst({
           where: { project: { projectDetails: { title: projectDetails.title } } },
@@ -44,6 +40,7 @@ export const saveProject = async (req: BodyRequest<ProjectBodyRequest>, res: Res
 
         if (existingProject?.project) {
           projectId = existingProject.project.id;
+          slug = existingProject.project.slug ?? slug;
         } else {
           const imageToUse = await tx.projectImage.upsert({
             where: {
@@ -177,6 +174,106 @@ export const getProjectById = async (req: QueryParamsRequest<ProjectByIdQueryReq
     }
 
     return sendResponse(res, { success: true, data: project });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getProjectByAccountId = async (req: QueryRequest<ProjectByAccountIdRequest>, res: Response, next: NextFunction) => {
+  try {
+    const { page, limit, orderBy, sortBy, search, filter } = req.query;
+    const { validOffset, validLimit, validSortBy } = validateQueryFilter(page, limit, sortBy);
+    const accountId = req.user?.id;
+    const filterArray = filter ? filter.split(",") : [];
+
+    const prisma: PrismaClient = req.app.get("prisma");
+
+    let whereCondition: Prisma.AccountProjectsWhereInput = { accountId: accountId };
+
+    if (search && filterArray.length > 0) {
+      const filterValues: (Prisma.ProjectWhereInput | undefined)[] = filterArray
+        .map((value): Prisma.ProjectWhereInput | undefined => {
+          if (value === "title") {
+            return {
+              projectDetails: {
+                title: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+            };
+          } else if (value === "materials" || value === "tools") {
+            return {
+              projectDetails: {
+                [value]: {
+                  hasSome: [search],
+                },
+              },
+            };
+          }
+
+          return undefined;
+        })
+        .filter(Boolean);
+
+      if (filterValues.length > 0) {
+        whereCondition = {
+          ...whereCondition,
+          project: {
+            OR: filterValues as Prisma.ProjectWhereInput[],
+          },
+        };
+      }
+    }
+
+    console.info(page, limit, orderBy, sortBy, search, filter, orderBy ? { [orderBy]: validSortBy } : undefined);
+
+    const [projects, count] = await Promise.allSettled([
+      prisma.accountProjects.findMany({
+        where: whereCondition,
+        select: {
+          projectId: true,
+          project: {
+            select: {
+              id: true,
+              slug: true,
+              projectImage: {
+                select: {
+                  urls: true,
+                  user: true,
+                },
+              },
+              projectDetails: {
+                select: {
+                  title: true,
+                  materials: true,
+                  tools: true,
+                  time: true,
+                  budget: true,
+                  tags: true,
+                },
+              },
+              createdAt: true,
+            },
+          },
+        },
+        orderBy: {
+          project: orderBy === "createdAt" || !orderBy ? { createdAt: validSortBy } : { projectDetails: { [orderBy]: validSortBy } },
+        },
+        take: validLimit,
+        skip: validOffset,
+      }),
+      prisma.accountProjects.count({ where: whereCondition }),
+    ]);
+
+    const projectsData = projects.status === "fulfilled" ? projects.value : [];
+    const projectsCount = count.status === "fulfilled" ? count.value : 0;
+
+    if (projectsData.length <= 0) {
+      return sendResponse(res, { success: true, data: [] });
+    }
+
+    return sendResponse(res, { success: true, data: { projects: projectsData, totalCount: projectsCount } });
   } catch (error) {
     next(error);
   }

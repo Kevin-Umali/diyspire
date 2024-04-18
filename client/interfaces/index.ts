@@ -70,6 +70,24 @@ export interface CounterData {
   totalCount: number;
 }
 
+export interface ProjectByAccountIdData {
+  projects: AccountProjects[];
+  totalCount: number;
+}
+
+export interface AccountProjects {
+  projectId: string;
+  project: AccountProject;
+}
+
+export interface AccountProject {
+  id: string;
+  slug: string;
+  projectImage: Pick<ProjectImages, "urls" | "user">;
+  projectDetails: Omit<ProjectDetails, "description">;
+  createdAt: string;
+}
+
 export interface ProjectData {
   id: string;
   projectDetails: ProjectDetails;
@@ -235,6 +253,12 @@ export enum HttpMethod {
 export type FetchApiOptions = {
   method?: HttpMethod;
   body?: object;
-  queryParams?: Record<string, string | number | boolean>;
+  queryParams?: Record<string, string | number | boolean | string[] | number[] | undefined>;
   accessToken?: string;
 };
+
+/*--------------*/
+export interface GlobalFilterState {
+  search: string;
+  filteredColumn: string[];
+}

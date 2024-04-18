@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createNonRequiredArray, createRequiredString, createRequiredUUIDString } from "../utils";
+import { createNonRequiredArray, createNonRequiredString, createRequiredString, createRequiredUUIDString } from "../utils";
 
 const UrlsSchema = z.object({
   raw: createRequiredString("Image raw URL is required", { shouldEscape: false }),
@@ -62,3 +62,14 @@ export const ProjectByIdParamsSchema = z.object({
 
 export type ProjectByIdQueryRequest = z.infer<typeof ProjectByIdQuerySchema>;
 export type ProjectByIdParamsRequest = z.infer<typeof ProjectByIdParamsSchema>;
+
+export const ProjectByAccountIdSchema = z.object({
+  limit: createNonRequiredString().optional(),
+  page: createNonRequiredString().optional(),
+  sortBy: z.enum(["asc", "desc"]).optional(),
+  orderBy: createNonRequiredString().optional(),
+  search: createNonRequiredString().optional(),
+  filter: createNonRequiredString().optional(),
+});
+
+export type ProjectByAccountIdRequest = z.infer<typeof ProjectByAccountIdSchema>;

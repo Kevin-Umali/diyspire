@@ -4,7 +4,7 @@ import { loginUser, logoutUser, refreshToken, registerUser } from "./auth";
 import { getAllGuides, getGuideByPath } from "./guide";
 import { generateProjectExplanations, generateProjectIdeas, getCommunityGeneratedProjectData, getProjectDataBySlug, incrementCounterOfGeneratedIdea } from "./idea";
 import { searchImages } from "./image";
-import { saveProjectData } from "./project";
+import { getProjectByAccountId, saveProjectData } from "./project";
 import { checkBackEndHealthStatus, subscribeToNewsletter } from "./system";
 
 /** Guides API */
@@ -84,7 +84,7 @@ export const useGenerateProjectExplanations = () => {
   });
 };
 
-export const useCommunityGeneratedIdea = (params: { page?: number; limit?: number; orderBy?: string } = {}) => {
+export const useCommunityGeneratedIdea = (params: { page?: number; limit?: number; sortBy?: string } = {}) => {
   return useQuery({
     queryKey: ["community", params],
     queryFn: () => getCommunityGeneratedProjectData(params),
@@ -113,5 +113,12 @@ export const useCommunityProjectBySlugData = (slug: string) => {
   return useQuery({
     queryKey: ["slug", slug],
     queryFn: () => getProjectDataBySlug(slug),
+  });
+};
+
+export const useProjectByAccountId = (accessToken: string, params: { page?: number; limit?: number; sortBy?: string; orderBy?: string; search?: string; filter?: string[] } = {}) => {
+  return useQuery({
+    queryKey: ["projectaccount", accessToken, params],
+    queryFn: () => getProjectByAccountId(accessToken, params),
   });
 };

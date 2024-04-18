@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "downlevelIteration": true,
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,8 +19,26 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/landing/components/*": [
+        "./app/(landing)/(routes)/community/_components/*",
+        "./app/(landing)/(routes)/community/project-detail/_components/*",
+        "./app/(landing)/(routes)/community/project-detail/[slug]/_components/*",
+        "./app/(landing)/(routes)/faq/_components/*",
+        "./app/(landing)/(routes)/guide/_components/*",
+        "./app/(landing)/(routes)/guide/[guide_name]/_components/*",
+        "./app/(landing)/(routes)/login/_components/*",
+        "./app/(landing)/(routes)/status/_components/*",
+        "./app/(landing)/_components/*"
+      ],
+      "@/account/components/*": [
+        "./app/(account)/(routes)/generate/_components/*",
+        "./app/(account)/_components/*",
+        "./app/(account)/(routes)/diys/_components/*",
+        "./app/(account)/(routes)/project-detail/_components/*"
+      ]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

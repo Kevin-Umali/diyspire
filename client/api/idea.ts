@@ -50,7 +50,7 @@ export const incrementCounterOfGeneratedIdea = (accessToken: string): Promise<vo
   return fetchApi("/v1/counter", { method: HttpMethod.POST, accessToken });
 };
 
-export const getCommunityGeneratedProjectData = <T extends { page?: number; limit?: number; orderBy?: string; onlySlug?: boolean }>(
+export const getCommunityGeneratedProjectData = <T extends { page?: number; limit?: number; sortBy?: string; onlySlug?: boolean }>(
   params: T,
 ): Promise<ApiResponse<T["onlySlug"] extends true ? CommunityProjectSlugData : CommunityProjectData>> => {
   return fetchApi<ApiResponse<T["onlySlug"] extends true ? CommunityProjectSlugData : CommunityProjectData>>("/v1/community", {
