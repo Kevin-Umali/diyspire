@@ -18,7 +18,7 @@ export default async function sitemap() {
   }
 
   const projectDetailsSiteMap: MetadataRoute.Sitemap = allCommunityProjects.map((project) => ({
-    url: `${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${project.slug}`,
+    url: `${process.env.NEXT_PUBLIC_PROJECT_URL}/community/project-detail/${project.slug}`,
     lastmod: new Date(),
   }));
 
@@ -60,7 +60,7 @@ export default async function sitemap() {
       lastModified: new Date(),
     },
     {
-      url: `${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail`,
+      url: `${process.env.NEXT_PUBLIC_PROJECT_URL}/community/project-detail`,
       lastModified: new Date(),
     },
     ...projectDetailsSiteMap,

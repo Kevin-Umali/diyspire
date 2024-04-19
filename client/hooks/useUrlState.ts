@@ -6,12 +6,12 @@ const useURLState = <T>(key: string, defaultValue: T): [T, React.Dispatch<React.
   const router = useRouter();
 
   const getInitialState = (): T => {
-    const value = searchParams.get(key);
+    const value = decodeURIComponent(searchParams.get(key) || "");
     if (value !== null) {
       try {
         return JSON.parse(value) as T;
       } catch (error) {
-        console.error(`Error parsing URL parameter "${key}":`, error);
+        console.info(`Missing or Error parsing URL parameter "${key}"`);
       }
     }
     return defaultValue;
@@ -22,7 +22,7 @@ const useURLState = <T>(key: string, defaultValue: T): [T, React.Dispatch<React.
   const updateURL = useCallback(
     (newValue: T) => {
       const newParams = new URLSearchParams(searchParams);
-      newParams.set(key, JSON.stringify(newValue));
+      newParams.set(key, encodeURIComponent(JSON.stringify(newValue)));
       router.replace(`?${newParams.toString()}`, { scroll: false });
     },
     [key, router, searchParams],

@@ -81,14 +81,14 @@ export const parsePrisma = <T = any>(json: JsonValue): T => {
 export const validateQueryFilter = (
   page?: string | undefined,
   limit?: string | undefined,
-  orderBy?: string | undefined,
+  sortBy?: string | undefined,
   options: {
     DEFAULT_LIMIT: number;
-    DEFAULT_ORDER_BY: string;
+    DEFAULT_SORT_BY: string;
     MAX_LIMIT: number;
-  } = { DEFAULT_LIMIT: 20, DEFAULT_ORDER_BY: "desc", MAX_LIMIT: 100 },
+  } = { DEFAULT_LIMIT: 20, DEFAULT_SORT_BY: "desc", MAX_LIMIT: 100 },
 ) => {
-  const { DEFAULT_LIMIT, DEFAULT_ORDER_BY, MAX_LIMIT } = options;
+  const { DEFAULT_LIMIT, DEFAULT_SORT_BY, MAX_LIMIT } = options;
 
   const limitStr = typeof limit === "string" ? limit : String(DEFAULT_LIMIT);
   const validLimit = parseInt(limitStr, 10);
@@ -96,10 +96,10 @@ export const validateQueryFilter = (
     throw new Error(`Invalid limit. It should be a number between 1 and ${MAX_LIMIT}`);
   }
 
-  const orderByStr = typeof orderBy === "string" ? orderBy : DEFAULT_ORDER_BY;
-  const lowerCasedOrderBy = orderByStr.toLowerCase();
-  if (!["asc", "desc"].includes(lowerCasedOrderBy)) {
-    throw new Error(`Invalid orderBy. It should be '${DEFAULT_ORDER_BY}' or 'desc'`);
+  const sortByStr = typeof sortBy === "string" ? sortBy : DEFAULT_SORT_BY;
+  const lowerCasedSortBy = sortByStr.toLowerCase();
+  if (!["asc", "desc"].includes(lowerCasedSortBy)) {
+    throw new Error(`Invalid sortBy. It should be '${DEFAULT_SORT_BY}' or 'desc'`);
   }
 
   const pageStr = typeof page === "string" ? page : "1"; // Default to page 1 if not specified
@@ -109,7 +109,7 @@ export const validateQueryFilter = (
   }
   const validOffset = (validPage - 1) * validLimit;
 
-  return { validPage, validOffset, validLimit, validOrderBy: lowerCasedOrderBy as "asc" | "desc" };
+  return { validPage, validOffset, validLimit, validSortBy: lowerCasedSortBy as "asc" | "desc" };
 };
 
 const getNestedProperty = (obj: { [key: string]: any }, propPath: string): any => {

@@ -35,7 +35,9 @@ export const authenticateToken = (req: AugmentedRequest, res: Response, next: Ne
   }
 
   try {
-    const decoded = verify(token, process.env.JWT_SECRET_KEY) as UserPayload;
+    const decoded = verify(token, process.env.JWT_SECRET_KEY, {
+      issuer: process.env.BACKEND_URL.slice(0, -1),
+    }) as UserPayload;
     req.user = decoded;
     next();
   } catch (err) {

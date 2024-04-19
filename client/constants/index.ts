@@ -293,8 +293,6 @@ export const budgetOptions: Budget[] = [
   { label: "> 5000", value: "more than 5000" },
 ];
 
-export const currencyList: string[] = ["USD", "EUR", "JPY", "GBP", "CHF", "CAD", "AUD", "CNY", "INR", "BRL", "RUB", "KRW", "SGD", "HKD", "NZD", "ZAR", "MXN", "PHP"];
-
 export const statusIcons: Record<ServiceStatusType, React.ElementType> = {
   Normal: CheckCircle,
   Maintenance: Timer,
@@ -313,3 +311,5 @@ export const statusDown: ApiResponse<HealthCheckData> = {
     openaiStatus: { name: "Openai", status: "Outage", message: "Openai is down" },
   },
 };
+
+export const accountRoutes: string[] = ["generate", "dashboard", "profile", "account", "project-detail", "diys"];

@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:tailwindcss/recommended", "prettier", "plugin:@tanstack/eslint-plugin-query/recommended"],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:tailwindcss/recommended", "plugin:@tanstack/eslint-plugin-query/recommended", "prettier"],
   "plugins": ["@typescript-eslint", "tailwindcss", "import", "@tanstack/query", "unused-imports"],
   "rules": {
     "import/no-unused-modules": "error",
@@ -11,7 +11,7 @@
     "@next/next/no-html-link-for-pages": "off",
     "tailwindcss/no-custom-classname": "off",
     "tailwindcss/migration-from-tailwind-2": "off",
-    "tailwindcss/classnames-order": "error"
+    "tailwindcss/classnames-order": "off"
   },
   "settings": {
     "tailwindcss": {

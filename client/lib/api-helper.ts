@@ -1,6 +1,8 @@
 import { FetchApiOptions, HttpMethod } from "@/interfaces";
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 
+import { serializeParams } from ".";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const api: AxiosInstance = axios.create({
@@ -79,6 +81,7 @@ export const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {
       url: endpoint,
       method: method,
       params: queryParams,
+      paramsSerializer: (params) => serializeParams(params),
       data: body,
       headers: headers,
     });

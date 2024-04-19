@@ -1,10 +1,11 @@
 "use client";
 
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 interface CurrencyContextProps {
   currency: string;
   setCurrency: React.Dispatch<React.SetStateAction<string | undefined>>;
+  currencyList: string[];
 }
 
 const CurrencyContext = createContext<CurrencyContextProps | undefined>(undefined);
@@ -44,6 +45,7 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
   const contextValue = {
     currency: currency ?? "PHP",
     setCurrency,
+    currencyList: ["USD", "EUR", "JPY", "GBP", "CHF", "CAD", "AUD", "CNY", "INR", "BRL", "RUB", "KRW", "SGD", "HKD", "NZD", "ZAR", "MXN", "PHP"],
   };
 
   return <CurrencyContext.Provider value={contextValue}>{children}</CurrencyContext.Provider>;

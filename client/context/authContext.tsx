@@ -14,6 +14,7 @@ interface AuthContextProps {
   user: User | null;
   accessToken: string | null;
   isAuthenticated: boolean;
+  isPending: boolean;
   login: (data: { user: User; token: string }) => void;
   logout: () => void;
 }
@@ -28,7 +29,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  const { mutate: mutateRefreshToken } = useRefreshToken();
+  const { mutate: mutateRefreshToken, isPending } = useRefreshToken();
   const { mutate: mutateLogoutUser } = useLogoutUser();
 
   useEffect(() => {
@@ -79,10 +80,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       user,
       accessToken,
       isAuthenticated: !!user,
+      isPending,
       login,
       logout,
     };
-  }, [user, accessToken, logout]);
+  }, [user, accessToken, isPending, logout]);
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };

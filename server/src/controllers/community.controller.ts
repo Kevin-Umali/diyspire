@@ -7,9 +7,9 @@ import sendResponse from "../utils/response-template";
 
 export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGeneratedIdeaRequest>, res: Response, next: NextFunction) => {
   try {
-    const { page, limit, orderBy, onlySlug } = req.query;
+    const { page, limit, sortBy, onlySlug } = req.query;
 
-    const { validOffset, validLimit, validOrderBy } = validateQueryFilter(page, limit, orderBy);
+    const { validOffset, validLimit, validSortBy } = validateQueryFilter(page, limit, sortBy);
 
     const prisma = req.app.get("prisma") as PrismaClient;
 
@@ -38,7 +38,7 @@ export const getCommunityGeneratedIdea = async (req: QueryRequest<CommunityGener
           },
         },
         orderBy: {
-          createdAt: validOrderBy,
+          createdAt: validSortBy,
         },
         take: validLimit,
         skip: validOffset,

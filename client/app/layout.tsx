@@ -8,10 +8,10 @@ import { AuthProvider } from "@/context/authContext";
 import { CurrencyProvider } from "@/context/currencyContext";
 
 import { Toaster } from "@/components/ui/sonner";
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
+import Footer from "@/landing/components/footer";
+import Navbar from "@/landing/components/navbar";
 
-import TanstackQueryProvider from "./tanstack-query-provider";
+import TanstackQueryProvider from "../context/tanstackContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -60,9 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Toaster position="top-center" richColors />
                 <div className="flex min-h-screen flex-col">
                   <Navbar />
-                  <main className="grow">{children}</main>
-                  <Footer />
+                  <main className="flex-grow">{children}</main>
                 </div>
+                <Footer />
               </CurrencyProvider>
             </AuthProvider>
           </ThemeProvider>
