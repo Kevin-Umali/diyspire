@@ -32,6 +32,7 @@
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "cmdk": "^1.0.0",
     "lucide-react": "^0.370.0",
     "markdown-to-jsx": "^7.4.1",
     "next": "13.5.6",
