@@ -101,7 +101,7 @@ const DataTable = <TData, TValue>({ columns, data, loading, state, onGlobalFilte
               <DropdownMenuContent align="end">
                 {table
                   .getAllColumns()
-                  .filter((column) => column.getCanGlobalFilter())
+                  .filter((column) => column.getCanGlobalFilter() || column.columnDef.enableGlobalFilter)
                   .map((column) => (
                     <DropdownMenuCheckboxItem
                       key={column.id}
