@@ -1,4 +1,6 @@
+import { promises as fs } from "fs";
 import { Request } from "express";
+import nodemailer from "nodemailer";
 import { z, ZodType } from "zod";
 import { JsonValue } from "@prisma/client/runtime/library";
 
@@ -170,4 +172,65 @@ export const extractClientIpFromHeaders = (request: Request): string | null => {
   }
 
   return null;
+};
+
+export const fillTemplate = async (templateSource: string, replacements: Record<string, string>, isHtml = false) => {
+  let template = isHtml ? templateSource : await fs.readFile(templateSource, "utf8");
+
+  for (const [key, value] of Object.entries(replacements)) {
+    template = template.replace(new RegExp(`{{${key}}}`, "g"), value);
+  }
+
+  return template;
+};
+
+export const generateList = (items: string[]): string => items.map((item) => `<li class="list-item">${item}</li>`).join("");
+
+export const generateProjectSteps = (
+  details: {
+    title: string;
+    content: string;
+    tips?: string;
+  }[],
+): string =>
+  details
+    .map(
+      (detail, index) => `
+    <div class="subtitle"><strong>${index + 1}. ${detail.title}</strong></div>
+    <p class="content">${detail.content}</p>
+    <p class="content"><strong>Tips:</strong> ${detail.tips ?? "N/A"}</p>
+  `,
+    )
+    .join("");
+
+export const sendEmail = async ({ to, subject, text, html, unsubscribeUrl }: { to: string; subject: string; text: string; html: string; unsubscribeUrl: string }) => {
+  try {
+    const { EMAIL_USER, EMAIL_PASSWORD, EMAIL_DOMAIN, EMAIL_HOST = "smtp.hostinger.com", EMAIL_PORT } = process.env;
+
+    const transporter = nodemailer.createTransport({
+      host: EMAIL_HOST,
+      port: parseInt(EMAIL_PORT ?? "465", 10),
+      secure: true,
+      auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASSWORD,
+      },
+      list: {
+        unsubscribe: {
+          url: unsubscribeUrl,
+          comment: "Unsubscribe",
+        },
+      },
+    });
+
+    await transporter.sendMail({
+      from: EMAIL_DOMAIN,
+      to,
+      subject,
+      text: text,
+      html: html,
+    });
+  } catch (error) {
+    console.error(`Failed to send to: ${to}`, error);
+  }
 };
