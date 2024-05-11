@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import { join } from "path";
 import OpenAI from "openai";
 import { createApi } from "unsplash-js";
@@ -102,9 +103,9 @@ export const processEmailQueue = async (
       urls: { regular: "https://via.placeholder.com/300x400?text=No+images+found" },
     };
   } else {
-    const results = unsplashResponse.response.results;
-    const randomIndex = Math.floor(Math.random() * results.length);
-    const photo = results[randomIndex];
+    const maxLength = unsplashResponse.response.results.length < 5 ? unsplashResponse.response.results.length : 6;
+    const randomIndex = randomInt(maxLength);
+    const photo = unsplashResponse.response.results[randomIndex];
 
     if (!photo) {
       unsplashImage = {
