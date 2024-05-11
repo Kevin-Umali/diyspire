@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import express, { Express, Response } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import cron from "node-cron";
 import * as nodeFetch from "node-fetch";
 import OpenAI from "openai";
 import { createApi } from "unsplash-js";
@@ -14,11 +13,11 @@ import errorHandlerMiddleware from "./middleware/error-handler";
 import rateLimiterMiddleware from "./middleware/request-limit";
 import userAgentMiddleware from "./middleware/useragent-parser";
 import { authenticationRoutes, communityRoutes, counterRoutes, emailRoutes, guideRoutes, healthcheckRoutes, openaiRoutes, projectRoutes, unsplashRoutes } from "./routes/index.routes";
-import { performMonthlyDiyEmailDistribution } from "./services/monthly-diy-project.services";
 import { allowedOrigins } from "./utils";
 import sendResponse from "./utils/response-template";
 import "./utils/env";
 import { RateLimiterPrisma } from "rate-limiter-flexible";
+import { createEmailQueueAndWorker } from "./queue";
 import logger from "./utils/logger";
 import initRedisClient from "./utils/redis";
 
@@ -36,6 +35,7 @@ const unsplash = createApi({
 });
 const prisma = new PrismaClient();
 const redis = initRedisClient();
+const { emailQueue, emailWorker } = createEmailQueueAndWorker(redis, prisma, openai, unsplash);
 const rateLimiter = new RateLimiterPrisma({
   storeClient: prisma,
   points: 25,
@@ -79,11 +79,6 @@ app.use(
   }),
 );
 
-cron.schedule(process.env.CRON_SCHEDULE, async () => await performMonthlyDiyEmailDistribution(prisma, openai, unsplash), {
-  scheduled: true,
-  timezone: "Asia/Manila",
-});
-
 app.use("/api/v1/healthcheck", healthcheckRoutes);
 app.use("/api/v1/auth", authenticationRoutes);
 app.use("/api/v1/email", emailRoutes);
@@ -102,4 +97,4 @@ app.get("*", (_, res: Response) => sendResponse(res, { success: false, error: "A
 
 app.use(errorHandlerMiddleware);
 
-export { app, prisma, redis };
+export { app, prisma, redis, emailQueue, emailWorker };

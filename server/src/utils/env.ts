@@ -44,10 +44,10 @@ const environmentSchema = z.object({
   EMAIL_USER: z.string().email(),
   EMAIL_PASSWORD: z.string(),
   EMAIL_DOMAIN: z.string().email(),
-  CRON_SCHEDULE: z.string().default("0 12 * * 0"),
   EMAIL_HOST: z.string(),
   EMAIL_PORT: z.string().default("465"),
   EMAIL_SECRET_KEY: z.string(),
+  EMAIL_API_KEY: z.string(),
 
   POSTGRES_HOST: z.string().optional(),
   POSTGRES_USER: z.string().optional(),
@@ -79,10 +79,10 @@ const env = {
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
   EMAIL_DOMAIN: process.env.EMAIL_DOMAIN,
-  CRON_SCHEDULE: process.env.CRON_SCHEDULE,
   EMAIL_HOST: process.env.EMAIL_HOST,
   EMAIL_PORT: process.env.EMAIL_PORT,
   EMAIL_SECRET_KEY: process.env.EMAIL_SECRET_KEY,
+  EMAIL_API_KEY: process.env.EMAIL_API_KEY,
 
   POSTGRES_HOST: process.env.POSTGRES_HOST,
   POSTGRES_USER: process.env.POSTGRES_USER,

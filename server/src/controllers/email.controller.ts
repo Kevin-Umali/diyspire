@@ -1,8 +1,9 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { PrismaClient } from "@prisma/client";
 import { BodyRequest, QueryRequest } from "../middleware/schema-validate";
 import { SubscribeEmailRequest, UnsubscribeEmailQueryRequest } from "../schema/email.schema";
+import { emailQueue } from "../server";
 import sendResponse from "../utils/response-template";
 
 export const unsubscribeEmail = async (req: QueryRequest<UnsubscribeEmailQueryRequest>, res: Response, next: NextFunction) => {
@@ -55,5 +56,37 @@ export const subscribeEmail = async (req: BodyRequest<SubscribeEmailRequest>, re
     } else {
       next(error);
     }
+  }
+};
+
+export const sendSubscriberDiyEmail = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const prisma: PrismaClient = req.app.get("prisma");
+
+    const allEmailSubscribers = await prisma.emailSubscription.findMany({
+      where: {
+        unsubscribe: false,
+      },
+      select: {
+        id: true,
+        address: true,
+        unsubscribe: true,
+      },
+    });
+
+    if (allEmailSubscribers.length === 0) {
+      return sendResponse(res, { success: false, error: "No email subscribers found." }, 404);
+    }
+
+    const existingMonthlyDiyProject = await prisma.generatedMonthlyDIY.findMany();
+
+    const existingProjects: string[] = existingMonthlyDiyProject.map((diyProject) => diyProject.name);
+    const excludedProjectsList: string = existingProjects.join(", ");
+
+    await emailQueue.add("emailQueue", { allEmailSubscribers, excludedProjectsList }, { removeOnComplete: true, removeOnFail: true });
+
+    return sendResponse(res, { success: true, message: `Processing ${allEmailSubscribers.length} emails.` });
+  } catch (error) {
+    next(error);
   }
 };

@@ -1,10 +1,10 @@
 import Redis from "ioredis";
 import logger from "./logger";
 
-const initRedisClient = (): Redis | null => {
+const initRedisClient = (): Redis => {
   if (!process.env.REDIS_URL) {
     logger.error("REDIS_URL environment variable is not set.");
-    return null;
+    throw new Error("REDIS_URL environment variable is not set.");
   }
 
   const maxRetries = 1;
@@ -25,6 +25,7 @@ const initRedisClient = (): Redis | null => {
     },
     enableReadyCheck: true,
     enableOfflineQueue: true,
+    maxRetriesPerRequest: null,
   });
 
   redis.on("connect", () => logger.info("Connected to Redis"));
