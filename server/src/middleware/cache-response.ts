@@ -33,6 +33,12 @@ const unifiedConditionalCacheMiddleware = <T>(duration: string | number) => {
       }
     } catch (error) {
       logger.error(`Error retrieving ${cacheType} cache`, error);
+
+      const apicachiSend = getApicacheMiddleware(duration);
+
+      logger.info(`Fallback to apicache for ${cacheType} cache`);
+
+      return apicachiSend(req, res, next);
     }
 
     const originalSend = res.send.bind(res);
