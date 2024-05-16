@@ -23,6 +23,8 @@ const environmentSchema = z.object({
       "gpt-4-0613",
       "gpt-4-32k",
       "gpt-4-32k-0613",
+      "gpt-4o-2024-05-13",
+      "gpt-4o",
     ])
     .refine((value) => {
       if (["gpt-3.5-turbo-16k", "gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613"].includes(value)) {
