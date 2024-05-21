@@ -22,10 +22,10 @@ export default function Home() {
             <Label className="block text-4xl font-bold tracking-tight sm:text-6xl">DIYspire - Unleash Your Creativity</Label>
             <Label className="mt-6 block text-lg leading-8">Discover unique DIY project ideas with personalized step-by-step guides, powered by OpenAI.</Label>
             <div className="mt-10 flex items-center justify-center gap-x-1">
-              <Link href="/login" className="rounded-md py-2.5 text-sm  ">
+              <Link href="/login" as={"/login"} className="rounded-md py-2.5 text-sm  ">
                 <Button>Get started</Button>
               </Link>
-              <Link href="/guide" className="text-sm leading-6 ">
+              <Link href="/guide" as={"/guide"} className="text-sm leading-6 ">
                 <Button variant="ghost">
                   Learn more <span aria-hidden="true"> →</span>
                 </Button>

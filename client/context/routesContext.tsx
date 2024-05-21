@@ -10,6 +10,7 @@ interface SideBarRoutes {
   hash?: string;
   href?: string;
   icon?: React.ElementType;
+  disabled?: boolean;
 }
 
 interface RoutesContextProps {
@@ -34,24 +35,28 @@ export const RoutesProvider: React.FC<RoutesProviderProps> = ({ children }) => {
           path: "/dashboard",
           hash: "#",
           icon: LayoutDashboard,
+          disabled: true,
         },
         {
           label: "Generate",
           path: "/generate",
           hash: "#",
           icon: Sparkle,
+          disabled: false,
         },
         {
           label: "Projects Details",
           path: "/project-detail",
           hash: "#",
           icon: SquareGanttChart,
+          disabled: false,
         },
         {
           label: "Generated DIYs",
           path: "/diys",
           hash: "#",
           icon: Palette,
+          disabled: false,
         },
       ],
       activePath: pathName,

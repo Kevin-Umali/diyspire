@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useProjectByAccountId } from "@/api/queries";
 import { useAuth } from "@/context/authContext";
 import { GlobalFilterState } from "@/interfaces";
@@ -17,6 +18,7 @@ import { useDIYsColumns } from "./column";
 
 function Diys() {
   const { accessToken } = useAuth();
+  const router = useRouter();
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 5 });
   const [sortBy, setSortBy] = useState<SortingState | undefined>(undefined);
@@ -62,7 +64,7 @@ function Diys() {
                 </TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
-                <Button size="sm" className="h-8 gap-1">
+                <Button size="sm" className="h-8 gap-1" onClick={() => router.push("/generate")}>
                   <PlusCircle className="size-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Generate DIYs Project Idea</span>
                 </Button>
