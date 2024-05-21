@@ -56,13 +56,13 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ projects, className }) => {
           <Separator className="my-2 md:block" />
           <div className="mt-3 flex flex-col items-start space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0">
             <Label className="sm:text-md mb-2 text-lg md:mb-0">Like this idea?</Label>
-            <Link href={{ pathname: "/project-detail", query: { ...project } }} passHref>
+            <Link href={{ pathname: "/project-detail", query: { ...project } }} as={`/project-detail/${project.title}`} passHref>
               <Button className="flex w-full items-center justify-center space-x-1 text-xs md:w-auto md:text-sm">
                 <BookOpen className="size-4" aria-label="Book icon" />
                 <span>Provide Detailed Steps</span>
               </Button>
             </Link>
-            <Link href={{ hash: "#" }} passHref>
+            <Link href={{ hash: "#" }} as={`/project-detail/${project.title}`} passHref>
               <Button disabled className="mt-2 flex w-full items-center justify-center space-x-1 text-xs md:mt-0 md:w-auto md:text-sm">
                 <FlaskConical className="size-4" aria-label="Flask icon" />
                 <span>Generate Ideas Using this Tools/Materials</span>

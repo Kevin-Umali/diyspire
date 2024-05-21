@@ -52,22 +52,22 @@ const Navbar: React.FC = () => {
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
           <nav className="grid gap-2 text-lg font-medium">
-            <Link href="#" className="flex items-center gap-2 text-lg font-semibold">
+            <Link href="#" as={"/"} className="flex items-center gap-2 text-lg font-semibold">
               <Image src="/android-chrome-512x512.png" alt="Logo" width={32} height={32} priority={true} />
               <span className="text-md sm:text-xl lg:text-xl">DIYspire</span>
             </Link>
-            {routes &&
-              routes.map(({ label, path, icon: IconComponent }, index) => (
-                <Link
-                  key={index + path}
-                  href={path}
-                  className={cn("mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-foreground", activePath && path.includes(activePath) ? "text-primary" : "text-muted-foreground")}
-                  onClick={() => setOpen(!open)}
-                >
-                  {IconComponent && <IconComponent size={20} />}
-                  <span className="text-md sm:text-xl lg:text-xl">{label}</span>
-                </Link>
-              ))}
+            {routes?.map(({ label, path, icon: IconComponent }, index) => (
+              <Link
+                key={index + path}
+                href={path}
+                as={path}
+                className={cn("mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-foreground", activePath && path.includes(activePath) ? "text-primary" : "text-muted-foreground")}
+                onClick={() => setOpen(!open)}
+              >
+                {IconComponent && <IconComponent size={20} />}
+                <span className="text-md sm:text-xl lg:text-xl">{label}</span>
+              </Link>
+            ))}
           </nav>
           <div className="mt-auto">
             <Card>
@@ -103,7 +103,14 @@ const Navbar: React.FC = () => {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Link href="https://github.com/Kevin-Umali/diyspire" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository" className="p-2 text-lg lg:text-xl">
+      <Link
+        href="https://github.com/Kevin-Umali/diyspire"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub repository"
+        as={"https://github.com/Kevin-Umali/diyspire"}
+        className="p-2 text-lg lg:text-xl"
+      >
         <Github className="size-5" />
       </Link>
       <Button variant="ghost" aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`} className="rounded-md p-2" onClick={toggleColorMode}>
