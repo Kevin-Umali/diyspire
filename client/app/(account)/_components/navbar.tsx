@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import { useCurrency } from "@/context/currencyContext";
 import { useRoutes } from "@/context/routesContext";
@@ -21,6 +22,7 @@ import AvatarControl from "./avatar-control";
 const Navbar: React.FC = () => {
   const [open, setOpen] = useState(false);
 
+  const router = useRouter(); // Get the router instance
   const { theme, setTheme } = useTheme();
   const { currency, setCurrency, currencyList } = useCurrency();
   const { routes, activePath } = useRoutes();
@@ -31,6 +33,11 @@ const Navbar: React.FC = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
+  const handleNavigation = (path: string) => {
+    setOpen(!open);
+    router.push(path);
+  };
+
   const currencyItems = useMemo(
     () =>
       currencyList.map((value) => (
@@ -38,7 +45,7 @@ const Navbar: React.FC = () => {
           {value}
         </SelectItem>
       )),
-    [],
+    [currencyList],
   );
 
   return (
@@ -52,21 +59,21 @@ const Navbar: React.FC = () => {
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
           <nav className="grid gap-2 text-lg font-medium">
-            <Link href="#" as={"/"} className="flex items-center gap-2 text-lg font-semibold">
+            <Button variant="ghost" onClick={() => handleNavigation("#")} className="flex items-center gap-2 text-lg font-semibold">
               <Image src="/android-chrome-512x512.png" alt="Logo" width={32} height={32} priority={true} />
               <span className="text-md sm:text-xl lg:text-xl">DIYspire</span>
-            </Link>
-            {routes?.map(({ label, path, icon: IconComponent }, index) => (
-              <Link
+            </Button>
+            {routes?.map(({ label, path, icon: IconComponent, disabled }, index) => (
+              <Button
+                disabled={disabled}
+                variant="ghost"
                 key={index + path}
-                href={path}
-                as={path}
                 className={cn("mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-foreground", activePath && path.includes(activePath) ? "text-primary" : "text-muted-foreground")}
-                onClick={() => setOpen(!open)}
+                onClick={() => handleNavigation(path)}
               >
                 {IconComponent && <IconComponent size={20} />}
                 <span className="text-md sm:text-xl lg:text-xl">{label}</span>
-              </Link>
+              </Button>
             ))}
           </nav>
           <div className="mt-auto">
