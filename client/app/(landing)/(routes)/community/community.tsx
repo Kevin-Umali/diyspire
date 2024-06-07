@@ -79,23 +79,24 @@ export default function CommunityGeneratedIdeaList() {
         </Label>
       </div>
       {isLoading ? renderLoadingSkeleton() : isSuccess && communityData.data.totalCount > 0 ? renderProjectCards() : renderNoDataDisplay()}
-      {isSuccess && (
+      {isSuccess && totalPages > 1 && (
         <Pagination className="mt-8 flex items-center justify-center">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious onClick={() => setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))} aria-disabled={currentPage === 1} />
             </PaginationItem>
-
             <PaginationItem>
               <PaginationLink isActive={currentPage === 1} onClick={() => setCurrentPage(1)}>
                 1
               </PaginationLink>
             </PaginationItem>
+
             {currentPage > 3 && (
               <PaginationItem>
                 <PaginationEllipsis />
               </PaginationItem>
             )}
+
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
               const page = currentPage - 2 + i;
               if (page > 1 && page < totalPages) {
@@ -109,18 +110,19 @@ export default function CommunityGeneratedIdeaList() {
               }
               return null;
             }).filter(Boolean)}
+
             {currentPage < totalPages - 2 && (
               <PaginationItem>
                 <PaginationEllipsis />
               </PaginationItem>
             )}
-            {totalPages > 1 && (
-              <PaginationItem>
-                <PaginationLink isActive={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>
-                  {totalPages}
-                </PaginationLink>
-              </PaginationItem>
-            )}
+
+            <PaginationItem>
+              <PaginationLink isActive={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>
+                {totalPages}
+              </PaginationLink>
+            </PaginationItem>
+
             <PaginationItem>
               <PaginationNext onClick={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))} aria-disabled={currentPage === totalPages} />
             </PaginationItem>

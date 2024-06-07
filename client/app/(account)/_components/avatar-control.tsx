@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { HelpCircle, LogOut, Settings } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -8,6 +9,8 @@ interface AvatarControlProps {
 }
 
 const AvatarControl: React.FC<AvatarControlProps> = ({ logout }) => {
+  const router = useRouter();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -18,7 +21,7 @@ const AvatarControl: React.FC<AvatarControlProps> = ({ logout }) => {
       <DropdownMenuContent className="w-50">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem disabled>
+        <DropdownMenuItem onClick={() => router.push("/settings")}>
           <span className="flex items-center space-x-2">
             <Settings size={20} />
             <span>Settings</span>
