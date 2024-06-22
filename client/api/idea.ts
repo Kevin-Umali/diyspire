@@ -50,12 +50,28 @@ export const incrementCounterOfGeneratedIdea = (accessToken: string): Promise<vo
   return fetchApi("/v1/counter", { method: HttpMethod.POST, accessToken });
 };
 
-export const getCommunityGeneratedProjectData = <T extends { page?: number; limit?: number; sortBy?: string; onlySlug?: boolean }>(
+export const getCommunityGeneratedProjectData = async <T extends { page?: number; limit?: number; sortBy?: string; onlySlug?: boolean }>(
   params: T,
 ): Promise<ApiResponse<T["onlySlug"] extends true ? CommunityProjectSlugData : CommunityProjectData>> => {
-  return fetchApi<ApiResponse<T["onlySlug"] extends true ? CommunityProjectSlugData : CommunityProjectData>>("/v1/community", {
-    queryParams: params,
-  });
+  try {
+    return await fetchApi<ApiResponse<T["onlySlug"] extends true ? CommunityProjectSlugData : CommunityProjectData>>("/v1/community", {
+      queryParams: params,
+      timeout: 60000,
+    });
+  } catch (error) {
+    if (params.onlySlug) {
+      const defaultResponse: ApiResponse<CommunityProjectSlugData> = {
+        data: {
+          projects: [{ slug: "default-slug" }],
+          totalCount: 1,
+        },
+        success: false,
+      };
+      return defaultResponse as ApiResponse<T["onlySlug"] extends true ? CommunityProjectSlugData : CommunityProjectData>;
+    } else {
+      throw error;
+    }
+  }
 };
 
 export const getProjectDataBySlug = (slug: string): Promise<ApiResponse<ProjectData>> => {
