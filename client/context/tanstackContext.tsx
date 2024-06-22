@@ -7,7 +7,7 @@ export default function TanstackQueryProvider({ children }: { children: React.Re
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        defaultOptions: { queries: { retry: 2, refetchOnMount: false } },
+        defaultOptions: { queries: { retry: 2, refetchOnMount: false, refetchOnWindowFocus: false } },
       }),
   );
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;

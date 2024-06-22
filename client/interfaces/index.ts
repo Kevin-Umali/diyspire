@@ -1,3 +1,5 @@
+import type { AxiosRequestConfig } from "axios";
+
 export interface FAQ {
   id: string;
   question: string;
@@ -250,7 +252,7 @@ export enum HttpMethod {
   DELETE = "DELETE",
 }
 
-export type FetchApiOptions = {
+export type FetchApiOptions = AxiosRequestConfig & {
   method?: HttpMethod;
   body?: object;
   queryParams?: Record<string, string | number | boolean | string[] | number[] | undefined>;
