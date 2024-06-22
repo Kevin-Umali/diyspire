@@ -55,6 +55,7 @@ export const useCheckBackEndHealthStatus = () => {
   return useQuery({
     queryKey: ["healthcheck"],
     queryFn: () => checkBackEndHealthStatus(),
+    refetchOnWindowFocus: true,
   });
 };
 

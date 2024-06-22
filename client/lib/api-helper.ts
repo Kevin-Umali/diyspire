@@ -64,7 +64,7 @@ api.interceptors.response.use(
   },
 );
 
-export const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {}): Promise<T> => {
+export const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {}, defaultResponse?: T): Promise<T> => {
   const { method = HttpMethod.GET, body, queryParams, accessToken } = options;
 
   if (method === HttpMethod.GET && body) {
@@ -84,11 +84,17 @@ export const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {
       paramsSerializer: (params) => serializeParams(params),
       data: body,
       headers: headers,
+      ...options,
     });
 
     return response.data;
   } catch (error: any) {
     console.error("API Error: ", error.message);
-    throw error;
+
+    if (defaultResponse !== undefined) {
+      return defaultResponse;
+    } else {
+      throw error;
+    }
   }
 };
