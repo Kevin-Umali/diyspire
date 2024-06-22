@@ -30,6 +30,8 @@ export type QueryParamsRequest<Q extends ParsedQs, P extends ParamsDictionary> =
 
 export type FullRequest<B, Q extends ParsedQs, P extends ParamsDictionary> = ZodRequest<B, Q, P>;
 
+export type AnyRequest = ZodRequest<any, ParsedQs, ParamsDictionary>;
+
 const zodValidateMiddleware =
   <B = any, Q extends ParsedQs = ParsedQs, P extends ParamsDictionary = ParamsDictionary>(schemas: { body?: ZodType<B, any, any>; query?: ZodType<Q, any, any>; params?: ZodType<P, any, any> }) =>
   async (req: ZodRequest<B, Q, P>, res: Response, next: NextFunction) => {

@@ -102,12 +102,20 @@ model User {
 }
 
 model Account {
-  id              String            @id @default(uuid())
-  username        String            @unique
-  password        String
-  banned          Boolean           @default(false)
-  refreshTokens   RefreshToken[]
-  accountProjects AccountProjects[]
+  id                String             @id @default(uuid())
+  username          String             @unique
+  password          String
+  banned            Boolean            @default(false)
+  refreshTokens     RefreshToken[]
+  accountProjects   AccountProjects[]
+  profile           Profile?           @relation(fields: [profileId], references: [id])
+  profileId         Int?               @unique
+  notifications     Notification?
+  privacySettings   PrivacySetting?
+  DIYCategory       DIYCategory?
+  DIYProject        DIYProject?
+  DIYRecommendation DIYRecommendation?
+  emailSubscription EmailSubscription?
 }
 
 model AccountProjects {
@@ -142,9 +150,11 @@ model DeviceInfo {
 }
 
 model EmailSubscription {
-  id          Int     @id @default(autoincrement())
-  address     String  @unique
-  unsubscribe Boolean @default(false)
+  id          Int      @id @default(autoincrement())
+  address     String   @unique
+  unsubscribe Boolean  @default(false)
+  accountId   String?  @unique
+  account     Account? @relation(fields: [accountId], references: [id])
 }
 
 model GeneratedMonthlyDIY {
@@ -156,4 +166,51 @@ model RateLimiterFlexible {
   key    String    @id
   points Int
   expire DateTime?
+}
+
+model Profile {
+  id       Int      @id @default(autoincrement())
+  fullName String
+  email    String   @unique
+  account  Account?
+}
+
+model Notification {
+  id        Int     @id @default(autoincrement())
+  type      String
+  isEnabled Boolean @default(true)
+  accountId String  @unique
+  account   Account @relation(fields: [accountId], references: [id])
+}
+
+model PrivacySetting {
+  id                            Int     @id @default(autoincrement())
+  isProfileVisible              Boolean @default(true)
+  isSearchEngineIndexingAllowed Boolean @default(false)
+  accountId                     String  @unique
+  account                       Account @relation(fields: [accountId], references: [id])
+}
+
+model DIYCategory {
+  id         Int         @id @default(autoincrement())
+  name       String
+  accountId  String      @unique
+  account    Account     @relation(fields: [accountId], references: [id])
+  DIYProject DIYProject?
+}
+
+model DIYProject {
+  id         Int         @id @default(autoincrement())
+  title      String
+  accountId  String      @unique
+  categoryId Int         @unique
+  account    Account     @relation(fields: [accountId], references: [id])
+  category   DIYCategory @relation(fields: [categoryId], references: [id])
+}
+
+model DIYRecommendation {
+  id        Int     @id @default(autoincrement())
+  isEnabled Boolean @default(true)
+  accountId String  @unique
+  account   Account @relation(fields: [accountId], references: [id])
 }
