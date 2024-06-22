@@ -41,10 +41,11 @@ export default async function sitemap() {
       page++;
     }
 
-    const projectDetailsSiteMap: MetadataRoute.Sitemap = allCommunityProjects.map((project) => ({
-      url: `${NEXT_PUBLIC_PROJECT_URL}/community/project-detail/${project.slug}`,
-      lastmod: new Date(),
-    }));
+    const projectDetailsSiteMap: MetadataRoute.Sitemap =
+      allCommunityProjects.map((project) => ({
+        url: `${NEXT_PUBLIC_PROJECT_URL}/community/project-detail/${project.slug}`,
+        lastmod: new Date(),
+      })) ?? [];
 
     return [...baseSitemap, ...projectDetailsSiteMap];
   } catch (error) {

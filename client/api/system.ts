@@ -12,7 +12,7 @@ export const checkBackEndHealthStatus = (): Promise<ApiResponse<HealthCheckData>
     {
       data: {
         uptime: 0,
-        responseTime: [],
+        responseTime: [0, 0],
         message: "Service unavailable",
         timeStamp: Date.now(),
         openaiStatus: {

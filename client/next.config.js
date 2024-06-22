@@ -8,7 +8,7 @@ const nextConfig = {
     return process.env.NEXT_PUBLIC_SHOW_MAINTENANCE === "true"
       ? [
           {
-            source: "/((?!maintenance).*)",
+            source: "/((?!maintenance|status).*)",
             destination: "/maintenance",
             permanent: false,
           },
