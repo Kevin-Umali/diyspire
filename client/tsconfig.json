@@ -37,7 +37,8 @@
         "./app/(account)/(routes)/generate/_components/*",
         "./app/(account)/_components/*",
         "./app/(account)/(routes)/diys/_components/*",
-        "./app/(account)/(routes)/project-detail/_components/*"
+        "./app/(account)/(routes)/project-detail/_components/*",
+        "./app/(account)/(routes)/settings/_components/*"
       ]
     }
   },

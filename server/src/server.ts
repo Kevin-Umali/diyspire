@@ -12,7 +12,7 @@ import { PrismaClient } from "@prisma/client";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import rateLimiterMiddleware from "./middleware/request-limit";
 import userAgentMiddleware from "./middleware/useragent-parser";
-import { authenticationRoutes, communityRoutes, counterRoutes, emailRoutes, guideRoutes, healthcheckRoutes, openaiRoutes, projectRoutes, unsplashRoutes } from "./routes/index.routes";
+import { accountRoutes, authenticationRoutes, communityRoutes, counterRoutes, emailRoutes, guideRoutes, healthcheckRoutes, openaiRoutes, projectRoutes, unsplashRoutes } from "./routes/index.routes";
 import { allowedOrigins } from "./utils";
 import sendResponse from "./utils/response-template";
 import "./utils/env";
@@ -83,6 +83,7 @@ app.use("/api/v1/healthcheck", healthcheckRoutes);
 app.use("/api/v1/auth", authenticationRoutes);
 app.use("/api/v1/email", emailRoutes);
 app.use("/api/v1/counter", counterRoutes);
+app.use("/api/v1/account", accountRoutes);
 
 // One day cache
 app.use("/api/v1/guide", guideRoutes);

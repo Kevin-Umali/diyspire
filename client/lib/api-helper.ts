@@ -65,7 +65,7 @@ api.interceptors.response.use(
 );
 
 export const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {}, defaultResponse?: T): Promise<T> => {
-  const { method = HttpMethod.GET, body, queryParams, accessToken } = options;
+  const { method = HttpMethod.GET, body, queryParams, accessToken, signal } = options;
 
   if (method === HttpMethod.GET && body) {
     throw new Error("GET request should not contain a body.");
@@ -84,6 +84,7 @@ export const fetchApi = async <T>(endpoint: string, options: FetchApiOptions = {
       paramsSerializer: (params) => serializeParams(params),
       data: body,
       headers: headers,
+      signal: signal,
       ...options,
     });
 

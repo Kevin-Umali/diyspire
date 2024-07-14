@@ -107,7 +107,7 @@ function ProjectDetail() {
               accessToken: accessToken!,
             },
             {
-              onSuccess: ({ data }) => setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${data.slug}`),
+              onSuccess: ({ data }) => setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/community/project-detail/${data.slug}`),
               onError: handleError,
             },
           );

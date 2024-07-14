@@ -102,12 +102,16 @@ model User {
 }
 
 model Account {
-  id              String            @id @default(uuid())
-  username        String            @unique
-  password        String
-  banned          Boolean           @default(false)
-  refreshTokens   RefreshToken[]
-  accountProjects AccountProjects[]
+  id                String             @id @default(uuid())
+  username          String             @unique
+  password          String
+  banned            Boolean            @default(false)
+  refreshTokens     RefreshToken[]
+  accountProjects   AccountProjects[]
+  profile           Profile?           @relation(fields: [profileId], references: [id])
+  profileId         Int?               @unique
+  notifications     Notification?
+  emailSubscription EmailSubscription?
 }
 
 model AccountProjects {
@@ -142,9 +146,11 @@ model DeviceInfo {
 }
 
 model EmailSubscription {
-  id          Int     @id @default(autoincrement())
-  address     String  @unique
-  unsubscribe Boolean @default(false)
+  id          Int      @id @default(autoincrement())
+  address     String   @unique
+  unsubscribe Boolean  @default(false)
+  accountId   String?  @unique
+  account     Account? @relation(fields: [accountId], references: [id])
 }
 
 model GeneratedMonthlyDIY {
@@ -156,4 +162,19 @@ model RateLimiterFlexible {
   key    String    @id
   points Int
   expire DateTime?
+}
+
+model Profile {
+  id       Int      @id @default(autoincrement())
+  fullName String
+  email    String   @unique
+  account  Account?
+}
+
+model Notification {
+  id                  Int     @id @default(autoincrement())
+  isNewsletterEnabled Boolean @default(false)
+  isUpdatesEnabled    Boolean @default(false)
+  accountId           String  @unique
+  account             Account @relation(fields: [accountId], references: [id])
 }

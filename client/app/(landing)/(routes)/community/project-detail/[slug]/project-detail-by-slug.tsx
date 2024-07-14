@@ -54,7 +54,7 @@ export default function ProjectDetailBySlug({ params }: { params: { slug: string
               relatedImages={communityProjectData.data.projectImage}
               projectTitle={communityProjectData.data.projectDetails.title}
               onOpen={() => {
-                setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/project-detail/${params.slug}`);
+                setShareLink(`${process.env.NEXT_PUBLIC_PROJECT_URL}/community/project-detail/${params.slug}`);
                 setIsOpen(true);
               }}
             />
