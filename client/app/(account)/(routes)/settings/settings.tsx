@@ -54,11 +54,11 @@ const Settings = () => {
   useEffect(() => {
     if (accountSettings) {
       methods.reset({
-        username: accountSettings?.data.username,
-        email: accountSettings?.data.profile.email,
-        fullName: accountSettings?.data.profile.fullName,
-        newsletter: accountSettings?.data.notifications.isNewsletterEnabled,
-        updates: accountSettings?.data.notifications.isUpdatesEnabled,
+        username: accountSettings?.data?.username ?? "",
+        email: accountSettings?.data?.profile?.email ?? "",
+        fullName: accountSettings?.data?.profile?.fullName ?? "",
+        newsletter: accountSettings?.data?.notifications?.isNewsletterEnabled ?? false,
+        updates: accountSettings?.data?.notifications?.isUpdatesEnabled ?? false,
       });
       setInitialUsername(accountSettings?.data.username);
     }
@@ -82,7 +82,6 @@ const Settings = () => {
       },
       {
         onSuccess: () => {
-          console.log(data.username, initialUsername);
           if (data.username !== initialUsername) {
             toast.info("Settings saved successfully! Logging out in 3 seconds...");
             setTimeout(() => {

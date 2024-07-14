@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { getAccountSettings, saveAccountSettings } from "./account";
 import { loginUser, logoutUser, refreshToken, registerUser } from "./auth";
@@ -137,11 +137,7 @@ export const useAccountSettings = (accessToken: string) => {
 };
 
 export const useSaveAccountSettings = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: saveAccountSettings,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["account"] });
-    },
   });
 };
