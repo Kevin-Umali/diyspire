@@ -312,4 +312,4 @@ export const statusDown: ApiResponse<HealthCheckData> = {
   },
 };
 
-export const accountRoutes: string[] = ["generate", "dashboard", "profile", "account", "project-detail", "diys"];
+export const accountRoutes: string[] = ["generate", "dashboard", "profile", "account", "project-detail", "diys", "settings", "maintenance"];

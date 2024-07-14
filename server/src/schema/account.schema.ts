@@ -1,43 +1,39 @@
 import { z } from "zod";
 import { createRequiredString } from "../utils";
 
-const ProfileSchema = z.object({
-  fullName: createRequiredString("Full name is required"),
-  email: createRequiredString("Email is required"),
-});
-
-const PrivacySettingSchema = z.object({
-  isProfileVisible: z.boolean(),
-  isSearchEngineIndexingAllowed: z.boolean(),
-});
-
-const DIYCategorySchema = z.object({
-  name: createRequiredString("Category name is required"),
-});
-
-const DIYProjectSchema = z.object({
-  title: createRequiredString("Project title is required"),
-  categoryId: z.number(),
-});
-
-const DIYRecommendationSchema = z.object({
-  isEnabled: z.boolean(),
-});
-
-const EmailSubscriptionSchema = z.object({
-  address: createRequiredString("Email address is required"),
-  unsubscribe: z.boolean(),
-});
-
-const UpdateAccountSettingsSchema = z.object({
-  profile: ProfileSchema,
-  privacySettings: PrivacySettingSchema,
-  DIYCategory: DIYCategorySchema,
-  DIYProject: DIYProjectSchema,
-  DIYRecommendation: DIYRecommendationSchema,
-  emailSubscriptions: z.array(EmailSubscriptionSchema),
-});
-
-export { UpdateAccountSettingsSchema, ProfileSchema, PrivacySettingSchema, DIYCategorySchema, DIYProjectSchema, DIYRecommendationSchema, EmailSubscriptionSchema };
+export const UpdateAccountSettingsSchema = z
+  .object({
+    username: createRequiredString("Username is required"),
+    email: createRequiredString("Email is required"),
+    fullName: createRequiredString("Full name is required"),
+    newsletter: z.boolean().optional(),
+    updates: z.boolean().optional(),
+    currentPassword: z.string().optional(),
+    newPassword: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.currentPassword && !data.newPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "New password is required if current password is provided",
+      path: ["newPassword"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.newPassword && !data.currentPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Current password is required if new password is provided",
+      path: ["currentPassword"],
+    },
+  );
 
 export type UpdateAccountSettingsRequest = z.infer<typeof UpdateAccountSettingsSchema>;

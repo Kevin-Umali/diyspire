@@ -1,3 +1,5 @@
+import type { AxiosRequestConfig } from "axios";
+
 export interface FAQ {
   id: string;
   question: string;
@@ -218,13 +220,6 @@ export interface CommunityProjectImages {
   alt_description?: string;
 }
 
-type StatusType = "Normal" | "Maintenance" | "Outage";
-
-export interface ServiceStatusProps {
-  serviceName: string;
-  status: StatusType;
-}
-
 export interface HealthCheckData {
   uptime: number;
   responseTime: number[];
@@ -243,6 +238,24 @@ export interface HealthCheckStatus {
 
 export type ServiceStatusType = "Normal" | "Maintenance" | "Outage";
 
+export interface AccountSettingsData {
+  username: string;
+  profile: Profile;
+  notifications: Notifications;
+}
+
+export interface Profile {
+  id: string;
+  fullName: string;
+  email: string;
+}
+
+export interface Notifications {
+  id: string;
+  isNewsletterEnabled: boolean;
+  isUpdatesEnabled: boolean;
+}
+
 export enum HttpMethod {
   GET = "GET",
   POST = "POST",
@@ -250,11 +263,12 @@ export enum HttpMethod {
   DELETE = "DELETE",
 }
 
-export type FetchApiOptions = {
+export type FetchApiOptions = AxiosRequestConfig & {
   method?: HttpMethod;
   body?: object;
   queryParams?: Record<string, string | number | boolean | string[] | number[] | undefined>;
   accessToken?: string;
+  signal?: AbortSignal;
 };
 
 /*--------------*/

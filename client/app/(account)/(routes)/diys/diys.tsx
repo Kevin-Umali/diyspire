@@ -71,7 +71,7 @@ function Diys() {
               </div>
             </div>
             <TabsContent value="all">
-              <Card x-chunk="dashboard-06-chunk-0">
+              <Card className="bg-transparent" x-chunk="dashboard-06-chunk-0">
                 <CardHeader>
                   <CardTitle>DIYS Project Ideas</CardTitle>
                   <CardDescription>Check out your DIYS projects</CardDescription>

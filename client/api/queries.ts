@@ -1,5 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { getAccountSettings, saveAccountSettings } from "./account";
 import { loginUser, logoutUser, refreshToken, registerUser } from "./auth";
 import { getAllGuides, getGuideByPath } from "./guide";
 import { generateProjectExplanations, generateProjectIdeas, getCommunityGeneratedProjectData, getProjectDataBySlug, incrementCounterOfGeneratedIdea } from "./idea";
@@ -55,6 +56,7 @@ export const useCheckBackEndHealthStatus = () => {
   return useQuery({
     queryKey: ["healthcheck"],
     queryFn: () => checkBackEndHealthStatus(),
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -120,5 +122,26 @@ export const useProjectByAccountId = (accessToken: string, params: { page?: numb
   return useQuery({
     queryKey: ["projectaccount", accessToken, params],
     queryFn: () => getProjectByAccountId(accessToken, params),
+    enabled: !!accessToken,
+  });
+};
+
+/** Account API */
+
+export const useAccountSettings = (accessToken: string) => {
+  return useQuery({
+    queryKey: ["account", accessToken],
+    queryFn: () => getAccountSettings(accessToken),
+    enabled: !!accessToken,
+  });
+};
+
+export const useSaveAccountSettings = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: saveAccountSettings,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["account"] });
+    },
   });
 };

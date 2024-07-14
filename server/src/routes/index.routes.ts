@@ -1,4 +1,5 @@
 import express from "express";
+import accountRoutes from "./account.routes";
 import authenticationRoutes from "./authentication.routes";
 import communityRoutes from "./community.routes";
 import counterRoutes from "./counter.routes";
@@ -20,5 +21,6 @@ router.use("/community", communityRoutes);
 router.use("/auth", authenticationRoutes);
 router.use("/healthcheck", healthcheckRoutes);
 router.use("/email", emailRoutes);
+router.use("/account", accountRoutes);
 
-export { openaiRoutes, unsplashRoutes, guideRoutes, projectRoutes, counterRoutes, communityRoutes, authenticationRoutes, healthcheckRoutes, emailRoutes };
+export { openaiRoutes, unsplashRoutes, guideRoutes, projectRoutes, counterRoutes, communityRoutes, authenticationRoutes, healthcheckRoutes, emailRoutes, accountRoutes };

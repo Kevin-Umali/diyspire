@@ -8,3 +8,5 @@ const router = express.Router();
 
 router.get("/", authenticateToken, zodValidateMiddleware({}), getAccountSettings);
 router.post("/", authenticateToken, zodValidateMiddleware({ body: UpdateAccountSettingsSchema }), updateAccountSettings);
+
+export default router;
