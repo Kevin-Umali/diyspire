@@ -149,8 +149,8 @@ export const processEmailQueue = async (
   }
 
   const generatedHtml = await fillTemplate(join(__dirname, "..", "template", "index.html"), {
-    header_image: "https://www.diyspire.online/android-chrome-192x192.png",
-    header_alt: "DIYspire - diyspire.online logo",
+    header_image: "https://www.diyspire.com/android-chrome-192x192.png",
+    header_alt: "DIYspire - diyspire.com logo",
     header_title: "DIYspire",
     welcome_title: projectIdea.welcome.title,
     welcome_content: projectIdea.welcome.content,
@@ -167,7 +167,7 @@ export const processEmailQueue = async (
     project_time: projectIdea.time,
     project_budget: projectIdea.budget,
     project_currency: projectIdea.currency,
-    cta_url: "https://www.diyspire.online/?is_safe=false",
+    cta_url: "https://www.diyspire.com/?is_safe=false",
     project_steps: generateProjectSteps(projectIdea.details),
   });
 

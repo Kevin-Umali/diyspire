@@ -1,4 +1,26 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# Get the current branch name
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+
+# Define your allowed patterns
+main_branch="main"
+feature_branch_pattern="^TL-DYS-[0-9]+$"
+
+# Check if branch name is valid
+if [ "$branch_name" != "$main_branch" ] && ! echo "$branch_name" | grep -Eq "$feature_branch_pattern"; then
+  echo "Warning: Branch name '$branch_name' is invalid. Must be '$main_branch' or match pattern 'TL-DYS-<NUMBER>'."
+  
+  # Ask the user if they want to bypass the check
+  echo "Do you want to bypass the branch name check and continue? (yes/no)"
+  read -r answer
+
+  if [ "$answer" != "yes" ]; then
+    echo "Commit/push aborted due to invalid branch name."
+    exit 1
+  fi
+fi
+
+# Run the rest of the pre-commit/pre-push hook (e.g., lint-staged)
 npx lint-staged --concurrent false --relative
