@@ -25,6 +25,9 @@ const environmentSchema = z.object({
       "gpt-4-32k-0613",
       "gpt-4o-2024-05-13",
       "gpt-4o",
+      "gpt-4o-mini",
+      "openai-o1-preview",
+      "openai-o1-mini",
     ])
     .refine((value) => {
       if (["gpt-3.5-turbo-16k", "gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613"].includes(value)) {
@@ -33,7 +36,7 @@ const environmentSchema = z.object({
 
       return true;
     })
-    .default("gpt-3.5-turbo-0613"),
+    .default("gpt-4o-mini"),
   WEBSITE_URL: z.string(),
   UNSPLASH_ACCESS_KEY: z.string(),
   UNSPLASH_SECRET_KEY: z.string(),
