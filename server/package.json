@@ -74,7 +74,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/memory-cache": "^0.2.5",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^20.11.25",
+    "@types/node": "^22.10.1",
     "@types/nodemailer": "^6.4.14",
     "@types/qs": "^6.9.12",
     "@types/supertest": "^6.0.2",
