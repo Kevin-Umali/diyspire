@@ -21,7 +21,7 @@ const useURLState = <T>(key: string, defaultValue: T): [T, React.Dispatch<React.
 
   const updateURL = useCallback(
     (newValue: T) => {
-      const newParams = new URLSearchParams(searchParams);
+      const newParams = new URLSearchParams(searchParams.toString());
       newParams.set(key, encodeURIComponent(JSON.stringify(newValue)));
       router.replace(`?${newParams.toString()}`, { scroll: false });
     },

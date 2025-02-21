@@ -12,7 +12,7 @@ const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
 
     useEffect(() => {
       if (!isAuthenticated) {
-        const searchParamsString = new URLSearchParams(searchParams).toString();
+        const searchParamsString = new URLSearchParams(searchParams.toString()).toString();
         const redirectPath = `/login?redirect=${encodeURIComponent(pathname + (searchParamsString ? `?${searchParamsString}` : ""))}`;
 
         redirect(redirectPath);
