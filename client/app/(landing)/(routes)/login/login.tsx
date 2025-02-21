@@ -28,11 +28,11 @@ export default function Login() {
   const { mutate: mutateRegister, isPending: registerPending } = useRegisterUser();
 
   useEffect(() => {
-    const redirectString = decodeURIComponent(urlSearchParams.get("redirect") || "/generate");
+    const redirectString = decodeURIComponent(urlSearchParams.get("redirect") ?? "/generate");
 
     setRedirectTo(redirectString.startsWith("/") ? redirectString : `/${redirectString}`);
 
-    const otherParams = new URLSearchParams(urlSearchParams);
+    const otherParams = new URLSearchParams(urlSearchParams.toString());
     otherParams.delete("redirect");
     const paramsString = otherParams.toString();
 
