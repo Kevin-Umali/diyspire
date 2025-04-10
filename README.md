@@ -23,4 +23,4 @@ A platform that provides unique DIY (Do It Yourself) project suggestions using O
 </video>
 
 ### Raw Video Link:
-If the video above doesn't work, you can watch it [here](https://1drv.ms/v/c/98150728dfebfa2e/IQSsM5_IN6E_RpO88r4BTdgMAbzYOXZB7rgmqXY1g2ooYiU).
+If the video above doesn't work, you can watch it [here](https://1drv.ms/v/c/98150728dfebfa2e/Eawzn8g3oT9Gk7zyvgFN2AwBdlDbaiI66cCbLoZvRBsr6g).
